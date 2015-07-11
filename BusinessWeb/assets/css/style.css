@@ -5507,3 +5507,8 @@ div.radio.disabled:hover {
   border-color: #88CA6E;
   color: #FFFFFF;
 }
+
+
+.dropdown-menu .divider {
+  margin: 2px 1px;
+}
