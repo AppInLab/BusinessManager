@@ -418,7 +418,7 @@ Header and header elements.
 }
 
 .header .nav > li.dropdown.user .dropdown-toggle {
-  padding: 7px 4px 6px 9px;
+  padding: 10px 4px 12px 9px;
 }
 
 .header .nav > li.dropdown.user .dropdown-toggle:hover {
@@ -5474,4 +5474,36 @@ div.checker.disabled.active span{
 div.checker.disabled:hover,
 div.radio.disabled:hover {
     cursor: not-allowed;  
+}
+
+#datejour{
+  padding-top: -1px;
+  margin-right: 0px;
+  margin-top: -8px;
+  padding: 8px;
+  padding-bottom: 7px;
+  cursor: pointer;
+  color: #fff;
+  background-color: #e02222;
+}
+
+.text-white{
+      color: #fff !important;
+}
+
+
+.alert {
+  margin-bottom: 0px;
+}
+
+.alert-danger{
+    background-color: #E37373;
+  border-color: #E9BBBB;
+  color: #FFFFFF;
+}
+
+.alert-success {
+  background-color: #88CA6E;
+  border-color: #88CA6E;
+  color: #FFFFFF;
 }
