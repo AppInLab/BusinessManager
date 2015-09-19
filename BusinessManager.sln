@@ -8,7 +8,7 @@ EndProject
 Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "BusinessWeb", "http://localhost:42832", "{2055560E-4168-4172-BF1F-D7B24260510B}"
 	ProjectSection(WebsiteProperties) = preProject
 		UseIISExpress = "true"
-		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.5"
 		ProjectReferences = "{06acf43b-01ce-4832-8ac0-2f22027d404e}|BusinessEngine.dll;"
 		Debug.AspNetCompiler.VirtualPath = "/localhost_42832"
 		Debug.AspNetCompiler.PhysicalPath = "BusinessWeb\"
