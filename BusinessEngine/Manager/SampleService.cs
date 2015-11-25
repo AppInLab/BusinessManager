@@ -1,4 +1,5 @@
-﻿using System;
+﻿using System.Collections.Generic;
+using BusinessEngine.Models;
 using NHibernate;
 
 namespace BusinessEngine.Manager
@@ -15,11 +16,12 @@ namespace BusinessEngine.Manager
             return _instance;
         }
 
-        public String GetData()
+        public List<Categorie> GetData()
         {
             using (ISession session = Dao.GetCurrentSession())
             {
-                return "Good";
+                IQuery req = session.CreateQuery("SELECT c FROM Categorie c");
+                return (List<Categorie>)req.List<Categorie>();
             }
         }
     }
