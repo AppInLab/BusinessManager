@@ -16,93 +16,104 @@ app.config(["$routeProvider",
 
             //Acueil            
             $routeProvider.when("/home", {
-                templateUrl : "views/home.html",
+                templateUrl: "views/home.html",
                 controller: "HomeController"
-            })
+            });
 
             //Achat rapide            
             $routeProvider.when("/AchatRapide", {
                 templateUrl: "views/AchatRapide.html",
                 controller: "AchatRapideController"
-            })
+            });
 
             //Produits            
             $routeProvider.when("/Produits", {
                 templateUrl: "views/Produits.html",
                 controller: "ProduitsController"
-            })
+            });
 
             //Clients            
             $routeProvider.when("/Clients", {
                 templateUrl: "views/Clients.html",
                 controller: "ClientsController"
-            })
+            });
 
             //Chineurs            
             $routeProvider.when("/Chineurs", {
                 templateUrl: "views/Chineurs.html",
                 controller: "ChineursController"
-            })
+            });
 
             //Fournisseurs            
             $routeProvider.when("/Fournisseurs", {
                 templateUrl: "views/Fournisseurs.html",
                 controller: "FournisseursController"
-            })
+            });
 
             //Fournisseurs            
             $routeProvider.when("/BonLivraison", {
                 templateUrl: "views/BonLivraison.html",
                 controller: "BonLivraisonController"
-            })
+            });
 
             //PointJournee            
             $routeProvider.when("/PointJour", {
                 templateUrl: "views/PointJour.html",
                 controller: "PointJourController"
-            })
+            });
 
             //Depenses            
             $routeProvider.when("/Depenses", {
                 templateUrl: "views/Depenses.html",
                 controller: "DepensesController"
-            })
+            });
 
-            //Login
-            .when("/login", {
+                //Login
+            $routeProvider.when("/login", {
                 templateUrl: "views/login.html",
                 controller: "LoginController"
-            })
-
+            });
+            
             /* Menus Administrateurs */
 
-            //Produits et catégories de produits            
+            //Gestion des magasins           
+            $routeProvider.when("/AdminMagasins", {
+                templateUrl: "views/Admin/AdminMagasins.html",
+                controller: "AdminMagasinsController"
+            });
+
+            //Gestion des catégories de produits            
+            $routeProvider.when("/AdminCategories", {
+                templateUrl: "views/Admin/AdminCategories.html",
+                controller: "AdminCategoriesController"
+            });
+
+            //Gestion des Produits          
             $routeProvider.when("/AdminProduits", {
                 templateUrl: "views/Admin/AdminProduits.html",
                 controller: "AdminProduitsController"
-            })
+            });
 
             //Gestion des fornisseurs      
             $routeProvider.when("/AdminFournisseurs", {
                 templateUrl: "views/Admin/AdminFournisseurs.html",
                 controller: "AdminFournisseursController"
-            })
+            });
 
             //Gestion des Chineurs      
             $routeProvider.when("/AdminChineurs", {
                 templateUrl: "views/Admin/AdminChineurs.html",
                 controller: "AdminChineursController"
-            })
+            });
 
             //Gestion des Utilisateurs      
             $routeProvider.when("/AdminUtilisateurs", {
-                templateUrl: "views/Admin/AdminUtilisateurs.html",
-                controller: "AdminUtilisateursController"
-            })
-
-            .otherwise({
-                redirectTo:"/home"
-            })
+                    templateUrl: "views/Admin/AdminUtilisateurs.html",
+                    controller: "AdminUtilisateursController"
+                })
+                .otherwise({
+                    redirectTo: "/home"
+                });
 
         }]);
 

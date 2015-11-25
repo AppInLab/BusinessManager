@@ -57,7 +57,10 @@
   <ItemGroup>
     <Compile Include="Dao.cs" />
     <Compile Include="Manager\SampleService.cs" />
-    <Compile Include="Models\Achat.cs" />
+    <Compile Include="Models\Chineur.cs" />
+    <Compile Include="Models\ProduitsSortieChineur.cs" />
+    <Compile Include="Models\SortieChineur.cs" />
+    <Compile Include="Models\SortieClient.cs" />
     <Compile Include="Models\Approvisionnement.cs" />
     <Compile Include="Models\BonLivraison.cs" />
     <Compile Include="Models\Categorie.cs" />
@@ -66,11 +69,13 @@
     <Compile Include="Models\Privilege.cs" />
     <Compile Include="Models\PrivilegesUser.cs" />
     <Compile Include="Models\Produit.cs" />
-    <Compile Include="Models\ProduitsAchat.cs" />
+    <Compile Include="Models\ProduitsSortieClient.cs" />
     <Compile Include="Models\ProduitsApprovisionnement.cs" />
     <Compile Include="Models\ProduitsBonLivraison.cs" />
-    <Compile Include="Models\TypeClient.cs" />
+    <Compile Include="Models\Magasin.cs" />
+    <Compile Include="Models\TypeTransaction.cs" />
     <Compile Include="Models\User.cs" />
+    <Compile Include="Models\Transaction.cs" />
     <Compile Include="Models\Versement.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -79,7 +84,10 @@
     <Content Include="ExternalDLLs\MySql.Data.dll" />
     <Content Include="ExternalDLLs\Newtonsoft.Json.dll" />
     <Content Include="ExternalDLLs\NHibernate.dll" />
-    <Content Include="Hibernates\Achat.hbm.xml" />
+    <Content Include="Hibernates\ProduitsSortieChineur.hbm.xml" />
+    <Content Include="Hibernates\SortieChineur.hbm.xml" />
+    <Content Include="Hibernates\Chineur.hbm.xml" />
+    <Content Include="Hibernates\SortieClient.hbm.xml" />
     <Content Include="Hibernates\Approvisionnement.hbm.xml" />
     <Content Include="Hibernates\BonLivraison.hbm.xml" />
     <Content Include="Hibernates\Categorie.hbm.xml" />
@@ -88,11 +96,13 @@
     <Content Include="Hibernates\Privilege.hbm.xml" />
     <Content Include="Hibernates\PrivilegesUser.hbm.xml" />
     <Content Include="Hibernates\Produit.hbm.xml" />
-    <Content Include="Hibernates\ProduitsAchat.hbm.xml" />
+    <Content Include="Hibernates\ProduitsSortieClient.hbm.xml" />
     <Content Include="Hibernates\ProduitsApprovisionnement.hbm.xml" />
     <Content Include="Hibernates\ProduitsBonLivraison.hbm.xml" />
-    <Content Include="Hibernates\TypeClient.hbm.xml" />
+    <Content Include="Hibernates\Magasin.hbm.xml" />
+    <Content Include="Hibernates\TypeTransaction.hbm.xml" />
     <Content Include="Hibernates\User.hbm.xml" />
+    <Content Include="Hibernates\Transaction.hbm.xml" />
     <Content Include="Hibernates\Versement.hbm.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

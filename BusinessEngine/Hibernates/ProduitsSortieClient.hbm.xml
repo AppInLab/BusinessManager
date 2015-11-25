@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="BusinessEngine.Models" assembly="BusinessEngine">
+  <class name="ProduitsSortieClient" table="ProduitsSortieClient" lazy="false">
+    
+    <composite-id name="PKs" class="ProduitsClientPk">
+        <key-property name="ProduitId" column="ProduitId" />
+        <key-property name="SortieClientId" column="SortieClientId" />
+    </composite-id>
+    
+  </class>
+</hibernate-mapping>

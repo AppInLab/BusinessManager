@@ -198,6 +198,27 @@ function ($rootScope, $scope, $http) {
 
 }]);
 
+
+//AdminMagasinsController
+MainController.controller('AdminMagasinsController', ['$rootScope', '$scope', '$http',
+function ($rootScope, $scope, $http) {
+
+    $rootScope.PageName = "Magasins";
+    $rootScope.PageDescription = "Administration des magasins";
+
+
+}]);
+
+//AdminCategoriesController
+MainController.controller('AdminCategoriesController', ['$rootScope', '$scope', '$http',
+function ($rootScope, $scope, $http) {
+
+    $rootScope.PageName = "Catégories";
+    $rootScope.PageDescription = "Administration des catégories";
+
+
+}]);
+
 //AdminProduitsController
 MainController.controller('AdminProduitsController', ['$rootScope', '$scope', '$http',
 function ($rootScope, $scope, $http) {

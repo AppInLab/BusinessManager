@@ -8,50 +8,50 @@ namespace BusinessEngine
 {
     public class Dao
     {
-        private static ISessionFactory SessionFactory; 
+        private static ISessionFactory _sessionFactory; 
 
-        private string configFile;
+        private readonly string _configFile;
 
         public Dao(string configFile)
         {
-            this.configFile = configFile;
+            this._configFile = configFile;
         }
 
         private void OpenSession(string configFile)
         {
             {
-                SessionFactory = new Configuration().Configure(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, configFile)).BuildSessionFactory();
+                _sessionFactory = new Configuration().Configure(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, configFile)).BuildSessionFactory();
             }
         }
 
         public ISession GetSession()
         {
-            if (SessionFactory == null)
-                this.OpenSession(this.configFile);
+            if (_sessionFactory == null)
+                this.OpenSession(this._configFile);
 
-            return SessionFactory.OpenSession();
+            return _sessionFactory.OpenSession();
         }
 
         private static void OpenSession()
         {
-            Configuration configuration = new Configuration();
-            SessionFactory = new Configuration().Configure().BuildSessionFactory();
+            var configuration = new Configuration();
+            _sessionFactory = new Configuration().Configure().BuildSessionFactory();
             configuration.AddAssembly(Assembly.GetCallingAssembly());
-            SessionFactory = configuration.BuildSessionFactory();
+            _sessionFactory = configuration.BuildSessionFactory();
         }
 
         public static ISession GetCurrentSession()
         {
-            if (SessionFactory == null)
+            if (_sessionFactory == null)
                 Dao.OpenSession();
 
-            return SessionFactory.OpenSession();
+            return _sessionFactory.OpenSession();
         }
 
         public static void CloseSessionFactory()
         {
-            if (SessionFactory != null)
-                SessionFactory.Close();
+            if (_sessionFactory != null)
+                _sessionFactory.Close();
         }
     }
 }

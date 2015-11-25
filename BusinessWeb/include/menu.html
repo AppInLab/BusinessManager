@@ -115,11 +115,23 @@
         </a>
         <ul class="sub-menu">
             <!--<li>
-                <a class="ajaxify" href="layout_ajax_content_2.html">
-                    <i class="icon-reorder"></i>
-                    Catégories de produits
+                    <a class="ajaxify" href="layout_ajax_content_2.html">
+                        <i class="icon-reorder"></i>
+                        Catégories de produits
+                    </a>
+                </li>-->
+            <li ng-class="{active:isActive('/AdminMagasins')}">
+                <a href="#/AdminMagasins">
+                    <i class="icon-home"></i>
+                    Magasins
                 </a>
-            </li>-->
+            </li>
+            <li ng-class="{active:isActive('/AdminCategories')}">
+                <a href="#/AdminCategories">
+                    <i class="icon-reorder"></i>
+                    Catégories
+                </a>
+            </li>
             <li ng-class="{active:isActive('/AdminProduits')}">
                 <a href="#/AdminProduits">
                     <i class="icon-barcode"></i>

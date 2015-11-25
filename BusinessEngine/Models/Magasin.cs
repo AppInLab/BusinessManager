@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BusinessEngine.Models
 {
-    public class TypeClient
+    public class Magasin
     {
         virtual public int Id { get; set; }
     }
