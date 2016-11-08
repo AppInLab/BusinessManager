@@ -140,7 +140,7 @@ var App = function () {
         var height;
 
         if (body.hasClass("page-footer-fixed") === true && body.hasClass("page-sidebar-fixed") === false) {
-            var available_height = $(window).height() - $('.footer').height();
+            var available_height = $(window).height() - $('.footer').height() ;
             if (content.height() <  available_height) {
                 content.attr('style', 'min-height:' + available_height + 'px !important');
             }
@@ -150,6 +150,9 @@ var App = function () {
             } else {
                 height = sidebar.height() + 20;
             }
+			
+			height -= 43;
+			
             if (height >= content.height()) {
                 content.attr('style', 'min-height:' + height + 'px !important');
             } 

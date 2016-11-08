@@ -15,15 +15,15 @@ app.config(["$routeProvider",
         function ($routeProvider) {
 
             //Acueil            
-            $routeProvider.when("/home", {
+            $routeProvider.when("/Home", {
                 templateUrl: "views/home.html",
                 controller: "HomeController"
             });
 
             //Achat rapide            
-            $routeProvider.when("/AchatRapide", {
-                templateUrl: "views/AchatRapide.html",
-                controller: "AchatRapideController"
+            $routeProvider.when("/VenteComptoir", {
+                templateUrl: "views/Vente.html",
+                controller: "VenteController"
             });
 
             //Produits            
@@ -69,10 +69,10 @@ app.config(["$routeProvider",
             });
 
                 //Login
-            $routeProvider.when("/login", {
-                templateUrl: "views/login.html",
-                controller: "LoginController"
-            });
+            //$routeProvider.when("/Login", {
+            //    //templateUrl: "views/login.html",
+            //    controller: "LoginController"
+            //});
             
             /* Menus Administrateurs */
 
@@ -112,7 +112,7 @@ app.config(["$routeProvider",
                     controller: "AdminUtilisateursController"
                 })
                 .otherwise({
-                    redirectTo: "/home"
+                    redirectTo: "/Home"
                 });
 
         }]);

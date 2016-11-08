@@ -1,8 +1,8 @@
 var MainController = angular.module('MainController', []);
 
 //Controleur du GlobalController
-MainController.controller('GlobalController', ['$rootScope', '$scope', '$http','$location',
-function ($rootScope, $scope, $http, $location) {
+MainController.controller('GlobalController', ['$rootScope', '$scope', '$http','$location','$cookies','$cookieStore',
+function ($rootScope, $scope, $http, $location, $cookies, $cookieStore) {
 
     $rootScope.DateToday = new Date();
     $scope.user = {};
@@ -60,17 +60,63 @@ function ($rootScope, $scope, $http, $location) {
     $rootScope.PageName = "";
     $rootScope.PageDescription = "";
 
-    $rootScope.user = {};
-    $rootScope.showSidebar = true;
-    //$rootScope.login = null;
+    //Start Connexion-------------------------------
+    $rootScope.admin = {};
+    $rootScope.connexionSuccess = false;
+    $rootScope.profil = {};
 
-    console.log($rootScope.user);
+    $rootScope.CheckConnexionState = function () {
+        if ($cookies.connexionSuccess) {
+            $rootScope.connexionSuccess = $cookies.connexionSuccess;
+            //$rootScope.profil = JSON.parse($cookies.adminProfil);
+        }
+    }
+
+    $rootScope.Connexion = function (admin) {
+        $http.get($rootScope.url + "ConnectHandler.ashx?login=" + admin.Login + "&password=" + admin.Password)
+            .success(function (response) {
+                console.log(response);
+                if (response.ReturnCode == 1) {
+                    $("#errorAlert").removeClass("hidden").html(response.Message);
+                }
+                if (response.ReturnCode == 0) {
+                    $cookies.connexionSuccess = true;
+                    $cookies.adminProfil = JSON.stringify(response.Data);
+                    window.location = "index.html";
+                }
+            })
+            .error(function (data) {
+                $("#errorAlert").removeClass("hidden").html(data.Message);
+                $scope.loginError = true;
+            });
+    }
+
+    $rootScope.Deconnexion = function () {
+        $cookieStore.remove('connexionSuccess');
+        $cookieStore.remove('adminProfil');
+        window.location = "index.html";
+    }
+
+
+    //ESSAI
+    $rootScope.connecter = function () {
+        $cookies.connexionSuccess = true;
+        //$cookies.adminProfil = JSON.stringify(response.Data);
+        window.location = "index.html";
+    }
+
+    $rootScope.CheckConnexionState();
+    //End Connexion ------------------------------
 
 }]);
 
 //Controleur du contenu Principal
-MainController.controller('HomeController', ['$rootScope', '$scope', '$http',
-function ($rootScope, $scope, $http) {
+MainController.controller('HomeController', ['$rootScope', '$scope', '$http','$cookies','$cookieStore',
+function ($rootScope, $scope, $http, $cookies, $cookieStore) {
+
+    //$rootScope.showSidebar = false;
+
+    $rootScope.connexion = {};
 
     $rootScope.PageName = "Dashboard";
     $rootScope.PageDescription = "Vue d'ensemble";
@@ -78,60 +124,20 @@ function ($rootScope, $scope, $http) {
     console.log("Home result : ");
     console.log($rootScope.user);
 
-    $http.get("../handlers/Test.ashx")
-    .success(function (data) {
-        console.log(data);
-    })
-    .error(function (data) { $("#loading").fadeOut("fast"); });
+    //$http.get("../handlers/Test.ashx")
+    //.success(function (data) {
+    //    console.log(data);
+    //})
+    //.error(function (data) { $("#loading").fadeOut("fast"); });
 
-}]);
-
-//Controleur d'authentification
-MainController.controller('LoginController', ['$rootScope', '$scope', '$http',
-function ($rootScope, $scope, $http) {
-    
-    $rootScope.showSidebar = false;
-    $scope.connexion = { modeavance: false };
-
-    //console.log("Controleur d'authentification");
-    $scope.connecter = function () {
-
-        $rootScope.user = $scope.connexion;
-        console.log($rootScope.user);
-
-        window.location = '#/home';
-        $rootScope.showSidebar = true;
-
-        //var fd = { login: 'anicet', password: 'anicet' };
-        //$("#loading").fadeIn("slow");
-        //$http.get("Handlers/ConnexionHandler.ashx")
-        //.success(function (data) {
-        //    if (data["succes"]) {
-        //        $("#loading").fadeOut("fast");
-        //        //alert("Welcome !");
-        //        if (data["Config"]["IsConfig"])
-        //            document.location = "index.html#/home";
-        //        else
-        //            window.location = "startconfig.html";
-        //    } else {
-        //        $("#loading").fadeOut("fast");
-        //        $("#login-form").hide();
-
-        //        $("#error-login").css("display", "table");
-        //        $("#error-login").html('<i class="glyphicon glyphicon-remove-circle"></i> ' + data['message']);
-        //    }
-        //})
-        //.error(function (data) { $("#loading").fadeOut("fast"); });
-    }
-    //$scope.connecter();
 }]);
 
 //AchatRapideController
-MainController.controller('AchatRapideController', ['$rootScope', '$scope', '$http',
+MainController.controller('VenteController', ['$rootScope', '$scope', '$http',
 function ($rootScope, $scope, $http) {
 
-    $rootScope.PageName = "Achat rapide";
-    $rootScope.PageDescription = "Effectuer un achat rapide";
+    $rootScope.PageName = "Vente au comptoir";
+    $rootScope.PageDescription = "Effectuer une vente au comptoir";
 
 }]);
 

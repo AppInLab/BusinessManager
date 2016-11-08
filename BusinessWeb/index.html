@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
 <!--[if IE 9]> <html lang="en" class="ie9"> <![endif]-->
-<!--[if !IE]><!--> 
+<!--[if !IE]><!-->
 <html lang="fr-fr" ng-app="poissonnerie">
  <!--<![endif]-->
 <!-- BEGIN HEAD -->
@@ -9,21 +9,23 @@
 
     <meta charset="utf-8" />
     <title>Business Manager</title>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport" /> 
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <meta content="" name="description" />
     <meta content="" name="author" />
 
 
     <!-- BEGIN GLOBAL MANDATORY STYLES -->
-    <link href="assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-    <link href="assets/plugins/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet" type="text/css" />
-    <link href="assets/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
-    <link href="assets/css/style-metro.css" rel="stylesheet" type="text/css" />
-    <link href="assets/css/style.css" rel="stylesheet" type="text/css" />
-    <link href="assets/css/style-responsive.css" rel="stylesheet" type="text/css" />
-    <link href="assets/css/themes/blue.css" rel="stylesheet" type="text/css" id="style_color" />
-    <link href="assets/plugins/uniform/css/uniform.default.css" rel="stylesheet" type="text/css" />
-   
+    <link href="assets/plugins/bootstrap/css/bootstrap.min.css" rel="newer  stylesheet" type="text/css" />
+    <link href="assets/plugins/bootstrap/css/bootstrap-responsive.min.css" rel="newer stylesheet" type="text/css" />
+    <link href="assets/plugins/font-awesome/css/font-awesome.min.css" rel="newer stylesheet" type="text/css" />
+    <link href="assets/css/style-metro.css" rel="newer stylesheet" type="text/css" />
+    <link href="assets/css/style.css" rel="newer stylesheet" type="text/css" />
+    <link href="assets/css/style-responsive.css" rel="newer stylesheet" type="text/css" />
+    <link href="assets/css/themes/blue.css" rel="newer stylesheet" type="text/css" id="style_color" />
+    <link href="assets/plugins/uniform/css/uniform.default.css" rel="newer stylesheet" type="text/css"/>
+    <!--<link href="assets/css/bootstrap.custom.css" rel="old stylesheet" />-->
+
+
      <!-- END GLOBAL MANDATORY STYLES -->
     <!-- BEGIN PAGE LEVEL STYLES -->
     <link rel="stylesheet" type="text/css" href="assets/plugins/select2/select2_metro.css" />
@@ -81,11 +83,13 @@
 <!-- END HEAD -->
 <!-- BEGIN BODY -->
 <body class="page-header-fixed page-sidebar-fixed login" ng-controller="GlobalController">
-
-    <div ng-if="!showSidebar" ng-view></div>
+    <div ng-if="!connexionSuccess">
+        <!--LOGIN-->
+        <div ng-include="'include/login.html'"></div>
+    </div>
 
     <!-- BEGIN HEADER -->
-    <div ng-if="showSidebar" class="header navbar navbar-inverse navbar-fixed-top">
+    <div ng-if="connexionSuccess"  class="header navbar navbar-inverse navbar-fixed-top">
         <!-- BEGIN TOP NAVIGATION BAR -->
         <div class="navbar-inner">
             <div class="container-fluid">
@@ -103,52 +107,52 @@
                 <!-- END RESPONSIVE MENU TOGGLER -->
                 <!-- BEGIN TOP NAVIGATION MENU -->
                 <ul class="nav pull-right">
-                    <li class="dropdown user">
-                        <a href="" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
-                            <i class="icon-shopping-cart"></i> PANIER EN COURS : 
-                            <span class="username">1 Produit(s)</span>
-                            <span>(2500 FCFA)</span>
-                            <i class="icon-angle-down"></i>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a href="">
-                                    <span class="col-md-12">dfdffd</span>
+                    <!-- <li class="dropdown user">
+                                <a href="" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                                    <i class="icon-shopping-cart"></i> PANIER EN COURS :
+                                    <span class="username">1 Produit(s)</span>
+                                    <span>(2500 FCFA)</span>
+                                    <i class="icon-angle-down"></i>
                                 </a>
-                            </li>
-                            <li>
-                                <a href="">
-                                    <span class="col-md-12">dfdffd</span>
-                                </a>
-                            </li>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a href="">
+                                            <span class="col-md-12">dfdffd</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="">
+                                            <span class="col-md-12">dfdffd</span>
+                                        </a>
+                                    </li>
 
 
-                            <li class="divider">
-                                <a href="">
-                                    <i class="icon-list-ol"></i>
-                                    Produit 2
-                                </a>
-                            </li>
-                            <li>
-                                <a href="">
-                                    TOTAL : <strong>2500 FCFA</strong> 
-                                </a>
-                                <button class="green-stripe btn"><i class="icon-ok"></i> Valider la commander</button>
-                            </li>
-                            <!--<li><a href="extra_profile.html"><i class="icon-user"></i> My Profile</a></li>
-            <li><a href="page_calendar.html"><i class="icon-calendar"></i> My Calendar</a></li>
-            <li><a href="inbox.html"><i class="icon-envelope"></i> My Inbox <span class="badge badge-important">3</span></a></li>
-            <li><a href="#"><i class="icon-tasks"></i> My Tasks <span class="badge badge-success">8</span></a></li>
-            <li class="divider"></li>
-            <li><a href="javascript:;" id="trigger_fullscreen"><i class="icon-move"></i> Full Screen</a></li>
-            <li><a href="extra_lock.html"><i class="icon-lock"></i> Lock Screen</a></li>
-            <li><a href="login.html"><i class="icon-key"></i> Log Out</a></li>-->
-                        </ul>
-                    </li>
+                                    <li class="divider">
+                                        <a href="">
+                                            <i class="icon-list-ol"></i>
+                                            Produit 2
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="">
+                                            TOTAL : <strong>2500 FCFA</strong>
+                                        </a>
+                                        <button class="green-stripe btn"><i class="icon-ok"></i> Valider la commander</button>
+                                    </li>
+                                    <!--<li><a href="extra_profile.html"><i class="icon-user"></i> My Profile</a></li>
+                    <li><a href="page_calendar.html"><i class="icon-calendar"></i> My Calendar</a></li>
+                    <li><a href="inbox.html"><i class="icon-envelope"></i> My Inbox <span class="badge badge-important">3</span></a></li>
+                    <li><a href="#"><i class="icon-tasks"></i> My Tasks <span class="badge badge-success">8</span></a></li>
+                    <li class="divider"></li>
+                    <li><a href="javascript:;" id="trigger_fullscreen"><i class="icon-move"></i> Full Screen</a></li>
+                    <li><a href="extra_lock.html"><i class="icon-lock"></i> Lock Screen</a></li>
+                    <li><a href="login.html"><i class="icon-key"></i> Log Out</a></li>
+                                </ul>
+                            </li> -->
                     <li class="dropdown user">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
-                            <i class="icon-user"></i> Vous êtes connécté 
-                            <span class="username">Bob Nilson</span>
+                            <i class="icon-user"></i> Vous êtes connecté
+                            <span class="username">WILLY Falone</span>
                             <i class="icon-angle-down"></i>
                         </a>
                         <ul class="dropdown-menu">
@@ -184,7 +188,7 @@
     </div>
     <!-- END HEADER -->
     <!-- BEGIN CONTAINER -->
-    <div ng-if="showSidebar" class="page-container row-fluid">
+    <div ng-if="connexionSuccess" class="page-container row-fluid">
         <!-- BEGIN SAMPLE PORTLET CONFIGURATION MODAL FORM-->
         <!--<div id="portlet-config" class="modal hide">
             <div class="modal-header">
@@ -197,62 +201,56 @@
         </div>-->
         <!-- END SAMPLE PORTLET CONFIGURATION MODAL FORM-->
         <!-- BEGIN SIDEBAR1 -->
-        <div ng-if="showSidebar" class="page-sidebar nav-collapse collapse">
+        <div class="page-sidebar nav-collapse collapse">
             <!-- BEGIN SIDEBAR MENU1 -->
             <div ng-include="'include/menu.html'"></div>
             <!-- END SIDEBAR MENU1 -->
         </div>
-        <!-- END SIDEBAR1 --> 
+        <!-- END SIDEBAR1 -->
         <!-- BEGIN PAGE -->
-        <div class="col-lg-6" style="position:fixed; z-index:1000; right:0">
-            <div id="alertbox" class="alert alert-{{alertType}}">
-                <i class="fa {{alertIcon}}"></i> {{alertMessage}}
-            </div>
-        </div>
-
 
         <div class="page-content">
-                <!-- BEGIN PAGE CONTAINER-->
-                <div class="container-fluid">
-                    <!-- BEGIN PAGE HEADER-->
-                    <div class="row-fluid">
-                        <div class="span12">
-                            <!-- BEGIN PAGE TITLE & BREADCRUMB-->
-                            <h3 class="page-title">
-                                {{PageName}} <small>{{PageDescription}}</small>
-                            </h3>
-                            <ul class="breadcrumb">
-                                <li>
-                                    <i class="icon-home"></i>
-                                    <a href="index.html">Home</a>
-                                    <i class="icon-angle-right"></i>
-                                </li>
-                                <li><a href="#">{{PageName}}</a></li>
-                                <li class="pull-right no-text-shadow">
-                                    <div id="datejour">
-                                        <span class="text-white">{{DateToday}}</span>
-                                    </div>
-                                </li>
-                            </ul>
-                            <!-- END PAGE TITLE & BREADCRUMB-->
-                        </div>
+            <!-- BEGIN PAGE CONTAINER-->
+            <div class="container-fluid">
+                <!-- BEGIN PAGE HEADER-->
+                <div class="row-fluid">
+                    <div class="span12">
+                        <!-- BEGIN PAGE TITLE & BREADCRUMB-->
+                        <!--<h3 class="page-title">
+                            {{PageName}} <small>{{PageDescription}}</small>
+                        </h3>-->
+                        <h3 class="page-title"></h3>
+                        <ul class="breadcrumb ">
+                            <li>
+                                <i class="icon-home"></i>
+                                <a href="index.html">Home</a>
+                                <i class="icon-angle-right"></i>
+                            </li>
+                            <li><a href="#">{{PageName}}</a></li>
+                            <li class="pull-right no-text-shadow">
+                                <div id="datejour">
+                                    <span class="text-white">{{DateToday | date:'dd/MM/yyyy HH:mm'}}</span>
+                                </div>
+                            </li>
+                        </ul>
+                        <!-- END PAGE TITLE & BREADCRUMB-->
                     </div>
-                    <!-- END PAGE HEADER-->
+                </div>
+                <!-- END PAGE HEADER-->
                 <div ng-view>
                 </div>
 
-                </div>
-                <!-- END PAGE CONTAINER--> 
-
+            </div>
+            <!-- END PAGE CONTAINER-->
             <!-- HERE WILL BE LOADED AN AJAX CONTENT -->
         </div>
         <!-- BEGIN PAGE -->
     </div>
     <!-- END CONTAINER -->
     <!-- BEGIN FOOTER -->
-    <div ng-if="showSidebar" class="footer">
+    <div ng-if="connexionSuccess" class="footer">
         <div class="footer-inner">
-            2015 &copy; InnovManager by InnovAppsLabs.
+            2016 &copy; InnovManager by InnovAppsLabs.
         </div>
         <div class="footer-tools">
             <span class="go-top">
@@ -293,13 +291,14 @@
     <!-- END PAGE LEVEL PLUGINS -->
     <!-- BEGIN PAGE LEVEL PLUGINS -->
     <script src="assets/plugins/jquery-validation/dist/jquery.validate.min.js" type="text/javascript"></script>
-    <script src="assets/plugins/backstretch/jquery.backstretch.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="assets/plugins/jquery-inputmask/jquery.inputmask.bundle.min.js"></script>
+    <!-- <script src="assets/plugins/backstretch/jquery.backstretch.min.js" type="text/javascript"></script> -->
     <script type="text/javascript" src="assets/plugins/select2/select2.min.js"></script>
     <!-- END PAGE LEVEL PLUGINS -->
     <!-- BEGIN PAGE LEVEL SCRIPTS -->
     <script src="assets/scripts/app.js" type="text/javascript"></script>
     <script src="assets/scripts/index.js" type="text/javascript"></script>
-    <script src="assets/scripts/login-soft.js" type="text/javascript"></script>
+    <!-- <script src="assets/scripts/login-soft.js" type="text/javascript"></script> -->
     <script src="assets/scripts/tasks.js" type="text/javascript"></script>
     <!-- END PAGE LEVEL SCRIPTS -->
 
@@ -314,8 +313,9 @@
             //Index.initDashboardDaterange();
             //Index.initIntro();
             Tasks.initDashboardWidget();
+            //FormComponents.init();
 
-            Login.init();
+            //Login.init();
 
             $(".page-sidebar-menu li a").addClass("ajaxify");
         });
