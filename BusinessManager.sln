@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+VisualStudioVersion = 12.0.40629.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessEngine", "BusinessEngine\BusinessEngine.csproj", "{06ACF43B-01CE-4832-8AC0-2F22027D404E}"
 EndProject
@@ -28,6 +28,10 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "BusinessWeb", "http://local
 		DefaultWebSiteLanguage = "Visual C#"
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PoissonnerieApi", "PoissonnerieApi\PoissonnerieApi.csproj", "{FAF49DCC-D888-4FCC-8A76-B40A3EEBC4C7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PoissonnerieApi.Tests", "PoissonnerieApi.Tests\PoissonnerieApi.Tests.csproj", "{BCD27230-1152-4B93-903E-D75AB6B9E514}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,6 +46,14 @@ Global
 		{2055560E-4168-4172-BF1F-D7B24260510B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2055560E-4168-4172-BF1F-D7B24260510B}.Release|Any CPU.ActiveCfg = Debug|Any CPU
 		{2055560E-4168-4172-BF1F-D7B24260510B}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{FAF49DCC-D888-4FCC-8A76-B40A3EEBC4C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FAF49DCC-D888-4FCC-8A76-B40A3EEBC4C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FAF49DCC-D888-4FCC-8A76-B40A3EEBC4C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FAF49DCC-D888-4FCC-8A76-B40A3EEBC4C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BCD27230-1152-4B93-903E-D75AB6B9E514}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BCD27230-1152-4B93-903E-D75AB6B9E514}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BCD27230-1152-4B93-903E-D75AB6B9E514}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BCD27230-1152-4B93-903E-D75AB6B9E514}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

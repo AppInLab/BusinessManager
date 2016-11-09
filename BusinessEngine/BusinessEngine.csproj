@@ -72,7 +72,7 @@
     <Compile Include="Models\ProduitsSortieClient.cs" />
     <Compile Include="Models\ProduitsApprovisionnement.cs" />
     <Compile Include="Models\ProduitsBonLivraison.cs" />
-    <Compile Include="Models\Magasin.cs" />
+    <Compile Include="Models\Depot.cs" />
     <Compile Include="Models\TypeTransaction.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\Transaction.cs" />
@@ -99,7 +99,7 @@
     <EmbeddedResource Include="Hibernates\ProduitsSortieClient.hbm.xml" />
     <EmbeddedResource Include="Hibernates\ProduitsApprovisionnement.hbm.xml" />
     <EmbeddedResource Include="Hibernates\ProduitsBonLivraison.hbm.xml" />
-    <EmbeddedResource Include="Hibernates\Magasin.hbm.xml" />
+    <EmbeddedResource Include="Hibernates\Depot.hbm.xml" />
     <EmbeddedResource Include="Hibernates\TypeTransaction.hbm.xml" />
     <EmbeddedResource Include="Hibernates\User.hbm.xml" />
     <EmbeddedResource Include="Hibernates\Transaction.hbm.xml" />

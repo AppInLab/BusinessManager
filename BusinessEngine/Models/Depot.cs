@@ -1,7 +1,7 @@
 ﻿
 namespace BusinessEngine.Models
 {
-    public class Magasin
+    public class Depot
     {
         public int Id { get; set; }
     }
