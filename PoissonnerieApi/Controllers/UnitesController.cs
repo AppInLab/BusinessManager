@@ -11,16 +11,16 @@ using System.Web.Http;
 
 namespace PoissonnerieApi.Controllers
 {
-    public class DepotsController : ApiController
+    public class UnitesController : ApiController
     {
 
-        // GET api/depots
+        // GET api/unites
         public object GetAll()
         {
             ResponseData responseData;
             try
             {
-                responseData = ResponseData.GetSuccess(DataManager.GetAllDepots());
+                responseData = ResponseData.GetSuccess(DataManager.GetAllUnites());
             }
             catch (Exception ex)
             {
@@ -30,13 +30,13 @@ namespace PoissonnerieApi.Controllers
             return responseData;
         }
 
-        // GET api/depots/5
+        // GET api/unites/5
         public object Get(int id)
         {
             ResponseData responseData;
             try
             {
-                responseData = ResponseData.GetSuccess(DataManager.GetDepot(id));
+                responseData = ResponseData.GetSuccess(DataManager.GetUnite(id));
             }
             catch (Exception ex)
             {
@@ -46,13 +46,13 @@ namespace PoissonnerieApi.Controllers
             return responseData;
         }
 
-        // POST api/depots
+        // POST api/unites
         public object Post([FromBody]JToken data)
         {
             ResponseData responseData;
             try
             {
-                var _data = data.ToObject<Depot>();
+                var _data = data.ToObject<Unite>();
                 DataManager.Save(_data);
                 responseData = ResponseData.GetSuccess(_data);
             }

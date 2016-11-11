@@ -1,7 +1,7 @@
 ﻿
 namespace BusinessEngine.Models
 {
-    public class SortieClient
+    public class SortieClient : Entity
     {
         virtual public int Id { get; set; } 
     }

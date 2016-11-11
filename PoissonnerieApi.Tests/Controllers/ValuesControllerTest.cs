@@ -13,69 +13,69 @@ namespace PoissonnerieApi.Tests.Controllers
     [TestClass]
     public class ValuesControllerTest
     {
-        [TestMethod]
-        public void Get()
-        {
-            // Réorganiser
-            ValuesController controller = new ValuesController();
+        //[TestMethod]
+        //public void Get()
+        //{
+        //    // Réorganiser
+        //    ValuesController controller = new ValuesController();
 
-            // Agir
-            IEnumerable<string> result = controller.Get();
+        //    // Agir
+        //    IEnumerable<string> result = controller.Get();
 
-            // Déclarer
-            Assert.IsNotNull(result);
-            Assert.AreEqual(2, result.Count());
-            Assert.AreEqual("value1", result.ElementAt(0));
-            Assert.AreEqual("value2", result.ElementAt(1));
-        }
+        //    // Déclarer
+        //    Assert.IsNotNull(result);
+        //    Assert.AreEqual(2, result.Count());
+        //    Assert.AreEqual("value1", result.ElementAt(0));
+        //    Assert.AreEqual("value2", result.ElementAt(1));
+        //}
 
-        [TestMethod]
-        public void GetById()
-        {
-            // Réorganiser
-            ValuesController controller = new ValuesController();
+        //[TestMethod]
+        //public void GetById()
+        //{
+        //    // Réorganiser
+        //    ValuesController controller = new ValuesController();
 
-            // Agir
-            string result = controller.Get(5);
+        //    // Agir
+        //    string result = controller.Get(5);
 
-            // Déclarer
-            Assert.AreEqual("value", result);
-        }
+        //    // Déclarer
+        //    Assert.AreEqual("value", result);
+        //}
 
-        [TestMethod]
-        public void Post()
-        {
-            // Réorganiser
-            ValuesController controller = new ValuesController();
+        //[TestMethod]
+        //public void Post()
+        //{
+        //    // Réorganiser
+        //    ValuesController controller = new ValuesController();
 
-            // Agir
-            controller.Post("value");
+        //    // Agir
+        //    controller.Post("value");
 
-            // Déclarer
-        }
+        //    // Déclarer
+        //}
 
-        [TestMethod]
-        public void Put()
-        {
-            // Réorganiser
-            ValuesController controller = new ValuesController();
+        //[TestMethod]
+        //public void Put()
+        //{
+        //    // Réorganiser
+        //    ValuesController controller = new ValuesController();
 
-            // Agir
-            controller.Put(5, "value");
+        //    // Agir
+        //    controller.Put(5, "value");
 
-            // Déclarer
-        }
+        //    // Déclarer
+        //}
 
-        [TestMethod]
-        public void Delete()
-        {
-            // Réorganiser
-            ValuesController controller = new ValuesController();
+        //[TestMethod]
+        //public void Delete()
+        //{
+        //    // Réorganiser
+        //    ValuesController controller = new ValuesController();
 
-            // Agir
-            controller.Delete(5);
+        //    // Agir
+        //    controller.Delete(5);
 
-            // Déclarer
-        }
+        //    // Déclarer
+        //}
     }
 }

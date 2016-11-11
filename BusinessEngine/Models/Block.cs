@@ -1,7 +1,7 @@
 ﻿
 namespace BusinessEngine.Models
 {
-    public class Depot : Entity
+    public class Block : Entity
     {
         public int Id { get; set; }
         public string Libelle { get; set; }

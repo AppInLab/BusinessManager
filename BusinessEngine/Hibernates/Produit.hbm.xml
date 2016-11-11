@@ -5,11 +5,42 @@
       <column name="Id"/>
       <generator class="native"/>
     </id>
-    <!--<property name="Pseudo">
-      <column name="Pseudo"/>
+
+    <property name="DateCreation">
+      <column name="DateCreation"/>
     </property>
-    <property name="Password">
-      <column name="Password"/>
-    </property>-->
+    
+    <property name="Libelle">
+      <column name="Libelle"/>
+    </property>
+    
+    <property name="PrixAchat">
+      <column name="PrixAchat"/>
+    </property>
+
+    <property name="PrixVenteParDefaut">
+      <column name="PrixVenteParDefaut"/>
+    </property>
+
+    <property name="QuantiteStock">
+      <column name="QuantiteStock"/>
+    </property>
+
+    <property name="StockMinimum">
+      <column name="StockMinimum"/>
+    </property>
+
+    <property name="UniteParBlock">
+      <column name="UniteParBlock"/>
+    </property>
+
+    <property name="DateModification">
+      <column name="DateModification"/>
+    </property>
+
+    <many-to-one name ="Block" lazy="false" class ="Block" column="Block"/>
+    <many-to-one name ="Unite" lazy="false" class ="Unite" column="Unite"/>
+    <many-to-one name ="Categorie" lazy="false" class ="Categorie" column="Categorie"/>
+    <many-to-one name ="Depot" lazy="false" class ="Depot" column="Depot"/>
   </class>
 </hibernate-mapping>

@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace BusinessEngine.Models
 {
-    public class ProduitsApprovisionnement
+    public class ProduitsApprovisionnement : Entity
     {
         virtual public ProduitsApprovisionnementPK PKs { get; set; }
     }
 
     [Serializable]
-    public class ProduitsApprovisionnementPK
+    public class ProduitsApprovisionnementPK : Entity
     {
         public int produitId { get; set; }
         public int approvisionnementId { get; set; }

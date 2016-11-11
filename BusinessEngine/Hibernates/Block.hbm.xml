@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="BusinessEngine.Models" assembly="BusinessEngine">
-  <class name="Depot" table="Depot" lazy="false">
+  <class name="Block" table="Block" lazy="false">
     <id name="Id">
       <column name="Id"/>
       <generator class="native"/>

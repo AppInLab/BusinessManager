@@ -20,16 +20,28 @@ app.config(["$routeProvider",
                 controller: "HomeController"
             });
 
-            //Achat rapide            
-            $routeProvider.when("/VenteComptoir", {
-                templateUrl: "views/Vente.html",
-                controller: "VenteController"
+            //Depots
+            $routeProvider.when("/Depots", {
+                templateUrl: "views/depot.html",
+                controller: "DepotController"
+            });
+
+            //Categories
+            $routeProvider.when("/Categories", {
+                templateUrl: "views/categorie.html",
+                controller: "CategorieController"
             });
 
             //Produits            
             $routeProvider.when("/Produits", {
-                templateUrl: "views/Produits.html",
+                templateUrl: "views/produit.html",
                 controller: "ProduitsController"
+            });
+
+            //Achat rapide            
+            $routeProvider.when("/VenteComptoir", {
+                templateUrl: "views/Vente.html",
+                controller: "VenteController"
             });
 
             //Clients            
@@ -67,12 +79,6 @@ app.config(["$routeProvider",
                 templateUrl: "views/Depenses.html",
                 controller: "DepensesController"
             });
-
-                //Login
-            //$routeProvider.when("/Login", {
-            //    //templateUrl: "views/login.html",
-            //    controller: "LoginController"
-            //});
             
             /* Menus Administrateurs */
 

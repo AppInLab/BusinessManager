@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace BusinessEngine.Models
 {
-    public class PrivilegesUser
+    public class PrivilegesUser : Entity
     {
         virtual public PrivilegesUserPK PKs { get; set; }
     }
 
     [Serializable]
-    public class PrivilegesUserPK
+    public class PrivilegesUserPK : Entity
     {
         public int PrivilegeId { get; set; }
         public int UserId { get; set; }

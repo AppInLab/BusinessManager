@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace BusinessEngine.Models
 {
-    public class Categorie
+    public class Categorie : Entity
     {
-        virtual public int Id { get; set; }
-        virtual public String Libelle { get; set; }
+        virtual public long Id { get; set; }
+        virtual public string Libelle { get; set; }
     }
 }

@@ -43,19 +43,83 @@ function ($rootScope, $scope, $http, $location, $cookies, $cookieStore) {
     }
 
     //$rootScope.ServerURL = "http://10.18.8.58:91/api/";
-    $rootScope.ServerURL = "http://svr-eastest-01/p10/service/api/";
+    $rootScope.ServerURL = "http://localhost:26686/api/";
 
     $scope.isActive = function (route) {
         return route === $location.path();
     }
 
-    $rootScope.LISTE_DES_AGENTS = function () {
-        $http.get($rootScope.ServerURL + "Agent")
-       .success(function (response) {
-           $scope.agents = response._responseData;
-           ////console.log(response);
-       });
+    //DEPOTS
+    $rootScope.LISTE_DEPOTS_DATA = function () {
+        $http.get($rootScope.ServerURL + "Depots")
+        .success(function (response) {
+            console.log(response);
+            if (response.ResponseCode == 0) {
+                $scope.Depots = response.Data;
+            } else {//Error
+                console.log(response);
+            }
+        })
+        .error(function (response) { console.log(response); });
     }
+
+    //CATEGORIES
+    $rootScope.LISTE_CATEGORIES_DATA = function () {
+        $http.get($rootScope.ServerURL + "Categories")
+        .success(function (response) {
+            console.log(response);
+            if (response.ResponseCode == 0) {
+                $scope.Categories = response.Data;
+            } else {//Error
+                console.log(response);
+            }
+        })
+        .error(function (response) { console.log(response); });
+    }
+
+    //UNITES
+    $rootScope.LISTE_UNITES_DATA = function () {
+        $http.get($rootScope.ServerURL + "Unites")
+        .success(function (response) {
+            console.log(response);
+            if (response.ResponseCode == 0) {
+                $scope.Unites = response.Data;
+            } else {//Error
+                console.log(response);
+            }
+        })
+        .error(function (response) { console.log(response); });
+    }
+
+    //BLOCKS
+    $rootScope.LISTE_BLOCKS_DATA = function () {
+        $http.get($rootScope.ServerURL + "Blocks")
+        .success(function (response) {
+            console.log(response);
+            if (response.ResponseCode == 0) {
+                $scope.Blocks = response.Data;
+            } else {//Error
+                console.log(response);
+            }
+        })
+        .error(function (response) { console.log(response); });
+    }
+
+    //PRODUITS
+    $rootScope.LISTE_PRODUITS_DATA = function () {
+        $http.get($rootScope.ServerURL + "Produits")
+        .success(function (response) {
+            console.log(response);
+            if (response.ResponseCode == 0) {
+                $scope.Produits = response.Data;
+            } else {//Error
+                console.log(response);
+            }
+        })
+        .error(function (response) { console.log(response); });
+    }
+
+    //-END LISTE
 
     $rootScope.PageName = "";
     $rootScope.PageDescription = "";
@@ -114,8 +178,6 @@ function ($rootScope, $scope, $http, $location, $cookies, $cookieStore) {
 MainController.controller('HomeController', ['$rootScope', '$scope', '$http','$cookies','$cookieStore',
 function ($rootScope, $scope, $http, $cookies, $cookieStore) {
 
-    //$rootScope.showSidebar = false;
-
     $rootScope.connexion = {};
 
     $rootScope.PageName = "Dashboard";
@@ -124,11 +186,120 @@ function ($rootScope, $scope, $http, $cookies, $cookieStore) {
     console.log("Home result : ");
     console.log($rootScope.user);
 
-    //$http.get("../handlers/Test.ashx")
-    //.success(function (data) {
-    //    console.log(data);
-    //})
-    //.error(function (data) { $("#loading").fadeOut("fast"); });
+}]);
+
+//DepotController
+MainController.controller('DepotController', ['$rootScope', '$scope', '$http',
+function ($rootScope, $scope, $http) {
+
+    $rootScope.PageName = "Depot";
+    //$rootScope.PageDescription = "Liste des depots";
+
+    $scope.Init = function () {
+        $scope.Depot = {};
+    }
+
+    $scope.SendData = function () {
+        $http.post($rootScope.ServerURL + "Depots", $scope.Depot)
+        .success(function (response) {
+            console.log(response);
+            if (response.ResponseCode == 0) {
+                $rootScope.LISTE_DEPOTS_DATA();
+            } else {//Error
+                console.log(response);
+            }
+        })
+        .error(function (response) {
+            console.log(response);
+        });
+    }
+
+    $scope.EditerDepot = function (depot) {
+        $scope.Depot = depot;
+    }
+
+    //Charger les données
+    $rootScope.LISTE_DEPOTS_DATA();
+
+}]);
+
+//DepotController
+MainController.controller('CategorieController', ['$rootScope', '$scope', '$http',
+function ($rootScope, $scope, $http) {
+
+    $rootScope.PageName = "Catégorie";
+
+    $scope.Init = function () {
+        $scope.Categorie = {};
+    }
+
+    $scope.SendData = function () {
+        $http.post($rootScope.ServerURL + "Categories", $scope.Categorie)
+        .success(function (response) {
+            console.log(response);
+            if (response.ResponseCode == 0) {
+                $rootScope.LISTE_CATEGORIES_DATA();
+            } else {//Error
+                console.log(response);
+            }
+        })
+        .error(function (response) {
+            console.log(response);
+        });
+    }
+
+    $scope.Modifier = function (data) {
+        $scope.Categorie = data;
+    }
+
+    //Charger les données
+    $rootScope.LISTE_CATEGORIES_DATA();
+
+}]);
+
+//ProduitsController
+MainController.controller('ProduitsController', ['$rootScope', '$scope', '$http',
+function ($rootScope, $scope, $http) {
+
+    $rootScope.PageName = "Produits";
+    $scope.Uri = "Produits";
+
+    $scope.Init = function () {
+        $scope.Produit = {};
+        $scope.Produit.Tva = 0;
+        $scope.Produit.PrixAchat = 0;
+        $scope.Produit.Ttc = 0;
+        $scope.Produit.UniteParBlock = 1;
+    }
+
+    $scope.CalculerTTC = function () {
+        $scope.Produit.Ttc = Number((($scope.Produit.Tva / 100) * $scope.Produit.PrixAchat)) + Number($scope.Produit.PrixAchat);
+    }
+
+    $scope.SendData = function () {
+        $http.post($rootScope.ServerURL + "Produits", $scope.Produit)
+        .success(function (response) {
+            console.log(response);
+            if (response.ResponseCode == 0) {
+                $rootScope.LISTE_PRODUITS_DATA();
+            } else {//Error
+                console.log(response);
+            }
+        })
+        .error(function (response) {
+            console.log(response);
+        });
+    }
+
+    $scope.Modifier = function (data) {
+        $scope.Produit = data;
+    }
+
+    //Charger les données
+    $rootScope.LISTE_PRODUITS_DATA();
+    $rootScope.LISTE_CATEGORIES_DATA();
+    $rootScope.LISTE_UNITES_DATA();
+    $rootScope.LISTE_BLOCKS_DATA();
 
 }]);
 
@@ -139,15 +310,9 @@ function ($rootScope, $scope, $http) {
     $rootScope.PageName = "Vente au comptoir";
     $rootScope.PageDescription = "Effectuer une vente au comptoir";
 
-}]);
 
-//ProduitsController
-MainController.controller('ProduitsController', ['$rootScope', '$scope', '$http',
-function ($rootScope, $scope, $http) {
-
-    $rootScope.PageName = "Produits";
-    $rootScope.PageDescription = "";
-
+    //Recuperer les categories
+    $rootScope.LISTE_CATEGORIES_DATA();
 }]);
 
 //ClientsController

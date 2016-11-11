@@ -2,7 +2,7 @@
 
 namespace BusinessEngine.Models
 {
-    public class Chineur
+    public class Chineur : Entity
     {
         virtual public int Id { get; set; }
         virtual public String Nom { get; set; }

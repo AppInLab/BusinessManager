@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BusinessEngine.Models
 {
-    public class Approvisionnement
+    public class Approvisionnement : Entity
     {
         virtual public int Id { get; set; }
     }

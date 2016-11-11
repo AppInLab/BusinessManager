@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>BusinessEngine</RootNamespace>
     <AssemblyName>BusinessEngine</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -30,6 +31,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Funcular.IdGenerators, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Funcular.IdGenerators.2.5\lib\Funcular.IdGenerators.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Iesi.Collections, Version=1.0.1.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>ExternalDLLs\Iesi.Collections.dll</HintPath>
@@ -56,8 +61,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Dao.cs" />
-    <Compile Include="Manager\SampleService.cs" />
+    <Compile Include="Entity.cs" />
+    <Compile Include="Manager\DataManager.cs" />
     <Compile Include="Models\Chineur.cs" />
+    <Compile Include="Models\Block.cs" />
+    <Compile Include="Models\Unite.cs" />
     <Compile Include="Models\ProduitsSortieChineur.cs" />
     <Compile Include="Models\SortieChineur.cs" />
     <Compile Include="Models\SortieClient.cs" />
@@ -84,6 +92,8 @@
     <Content Include="ExternalDLLs\MySql.Data.dll" />
     <Content Include="ExternalDLLs\Newtonsoft.Json.dll" />
     <Content Include="ExternalDLLs\NHibernate.dll" />
+    <EmbeddedResource Include="Hibernates\Block.hbm.xml" />
+    <EmbeddedResource Include="Hibernates\Unite.hbm.xml" />
     <EmbeddedResource Include="Hibernates\ProduitsSortieChineur.hbm.xml" />
     <EmbeddedResource Include="Hibernates\SortieChineur.hbm.xml" />
     <EmbeddedResource Include="Hibernates\Chineur.hbm.xml" />
@@ -104,6 +114,9 @@
     <EmbeddedResource Include="Hibernates\User.hbm.xml" />
     <EmbeddedResource Include="Hibernates\Transaction.hbm.xml" />
     <EmbeddedResource Include="Hibernates\Versement.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

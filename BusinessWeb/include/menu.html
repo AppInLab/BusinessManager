@@ -152,7 +152,7 @@
         </ul>
     </li>
 
-    <li>
+    <li ng-class="{active:isActive('/Depots') || isActive('/Categories') || isActive('/Produits')}">
         <a href="javascript:;">
             <i class="icon-barcode"></i>
             <span class="title">Stock</span>
@@ -160,10 +160,10 @@
             <span class="arrow"></span>
         </a>
         <ul class="sub-menu">
-            <li ng-class="{active:isActive('/AdminProduits')}">
-                <a href="#/AdminProduits">
+            <li ng-class="{active:isActive('/Depots')}">
+                <a href="#/Depots">
                     <i class="icon-barcode"></i>
-                    Dêpots
+                    Depots
                 </a>
             </li>
 
@@ -174,19 +174,19 @@
                 </a>
             </li>
 
-            <li ng-class="{active:isActive('/AdminMagasins')}">
-                <a href="#/AdminMagasins">
+            <li ng-class="{active:isActive('/Categories')}">
+                <a href="#/Categories">
                     <i class="icon-home"></i>
                     Categories
                 </a>
             </li>
-            <li ng-class="{active:isActive('/AdminCategories')}">
-                <a href="#/AdminCategories">
+            <li ng-class="{active:isActive('/Produits')}">
+                <a href="#/Produits">
                     <i class="icon-reorder"></i>
                     Produits
                 </a>
             </li>
-            
+
             <li ng-class="{active:isActive('/AdminFournisseurs')}">
                 <a href="#/AdminFournisseurs">
                     <i class="icon-truck"></i>

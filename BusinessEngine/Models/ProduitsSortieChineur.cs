@@ -2,13 +2,13 @@
 
 namespace BusinessEngine.Models
 {
-    public class ProduitsSortieChineur
+    public class ProduitsSortieChineur : Entity
     {
         virtual public ProduitsSortieChineurPk PKs { get; set; }
     }
 
     [Serializable]
-    public class ProduitsSortieChineurPk
+    public class ProduitsSortieChineurPk : Entity
     {
         public int ProduitId { get; set; }
         public int SortieChineurId { get; set; }
