@@ -13,7 +13,8 @@ namespace BusinessEngine.Models
         virtual public DateTime? DateModification { get; set; }
         virtual public string Libelle { get; set; }
         virtual public decimal PrixAchat { get; set; }
-        virtual public decimal PrixVenteParDefaut { get; set; }
+        virtual public decimal PrixVenteUniteParDefaut { get; set; }
+        virtual public decimal PrixVenteBlockParDefaut { get; set; }
         virtual public decimal QuantiteStock { get; set; }
         virtual public decimal StockMinimum { get; set; }
         virtual public int UniteParBlock { get; set; }

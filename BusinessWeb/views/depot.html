@@ -15,7 +15,7 @@
                 </thead>
 
                 <tbody role="alert" aria-live="polite" aria-relevant="all">
-                    <tr ng-repeat="depotItem in depots">
+                    <tr dir-paginate="depotItem in Depots | itemsPerPage: 15">
                         <td>{{depotItem.Libelle}}</td>
                         <td>
                             <button ng-click="EditerDepot(depotItem)" data-toggle="modal" data-target="#depot" type="button" class="btn mini default"><i class="icon-edit"></i></button>
@@ -25,18 +25,9 @@
                 </tbody>
             </table>
             <div class="row-fluid">
-                <!--<div class="span6">
-                    <div class="dataTables_info" id="sample_1_info">Showing 1 to 5 of 25 entries</div>
-                </div>-->
                 <div class="span12">
                     <div class="dataTables_paginate paging_bootstrap pagination">
-                        <ul>
-                            <li class="prev disabled"><a href="#">← <span class="hidden-480">Prec.</span></a></li>
-                            <li class="active"><a href="#">1</a></li>
-                            <li><a href="#">2</a></li>
-                            <li><a href="#">3</a></li>
-                            <li class="next"><a href="#"><span class="hidden-480">Suiv.</span> → </a></li>
-                        </ul>
+                        <dir-pagination-controls></dir-pagination-controls>
                     </div>
                 </div>
             </div>
@@ -55,7 +46,7 @@
                 <div class="control-group">
                     <label class="control-label">Libelle</label>
                     <div class="controls">
-                        <input type="text" ng-model="depot.Libelle" class="m-wrap span12">
+                        <input type="text" ng-model="Depot.Libelle" class="m-wrap span12">
                         <span class="help-block">Entrer le nom du depot</span>
                     </div>
                 </div>

@@ -40,7 +40,7 @@ app.config(["$routeProvider",
 
             //Achat rapide            
             $routeProvider.when("/VenteComptoir", {
-                templateUrl: "views/Vente.html",
+                templateUrl: "views/venteComptoir.html",
                 controller: "VenteController"
             });
 

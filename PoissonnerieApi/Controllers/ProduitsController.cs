@@ -30,13 +30,29 @@ namespace PoissonnerieApi.Controllers
             return responseData;
         }
 
+        // GET api/produits?categorieId=5
+        public object GetProduitsParCategorie(long categorie)
+        {
+            ResponseData responseData;
+            try
+            {
+                responseData = ResponseData.GetSuccess(DataManager.GetProduitsCategorie(categorie));
+            }
+            catch (Exception ex)
+            {
+                responseData = ResponseData.GetError(ex.Message);
+            }
+
+            return responseData;
+        }
+
         // GET api/produits/5
         public object Get(int id)
         {
             ResponseData responseData;
             try
             {
-                responseData = ResponseData.GetSuccess(DataManager.GetCategorie(id));
+                responseData = ResponseData.GetSuccess(DataManager.GetProduit(id));
             }
             catch (Exception ex)
             {

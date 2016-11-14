@@ -5,11 +5,16 @@
       <column name="Id"/>
       <generator class="native"/>
     </id>
-    <property name="Nom">
-      <column name="Nom"/>
+    <property name="NomComplet">
+      <column name="NomComplet"/>
     </property>
-    <property name="Prenoms">
-      <column name="Prenoms"/>
+    
+    <property name="Adresse">
+      <column name="Adresse"/>
+    </property>
+
+    <property name="Contacts">
+      <column name="Contacts"/>
     </property>
   </class>
 </hibernate-mapping>

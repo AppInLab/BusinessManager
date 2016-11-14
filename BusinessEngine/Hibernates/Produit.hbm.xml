@@ -18,8 +18,12 @@
       <column name="PrixAchat"/>
     </property>
 
-    <property name="PrixVenteParDefaut">
-      <column name="PrixVenteParDefaut"/>
+    <property name="PrixVenteUniteParDefaut">
+      <column name="PrixVenteUniteParDefaut"/>
+    </property>
+
+    <property name="PrixVenteBlockParDefaut">
+      <column name="PrixVenteBlockParDefaut"/>
     </property>
 
     <property name="QuantiteStock">

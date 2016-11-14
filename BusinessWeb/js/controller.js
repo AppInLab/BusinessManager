@@ -272,8 +272,14 @@ function ($rootScope, $scope, $http) {
         $scope.Produit.UniteParBlock = 1;
     }
 
-    $scope.CalculerTTC = function () {
-        $scope.Produit.Ttc = Number((($scope.Produit.Tva / 100) * $scope.Produit.PrixAchat)) + Number($scope.Produit.PrixAchat);
+    $scope.CanShowBlock = function (unite) {
+        for (var i = 0; i < $scope.Unites.length; i++) {
+            if ($scope.Unites[i].Id != unite) continue;
+            $scope.ShowBlock = $scope.Unites[i].IsBlock;
+            $scope.Produit.Block = null;
+            $scope.Produit.UniteParBlock = 1;
+            break;
+        }
     }
 
     $scope.SendData = function () {
@@ -309,7 +315,151 @@ function ($rootScope, $scope, $http) {
 
     $rootScope.PageName = "Vente au comptoir";
     $rootScope.PageDescription = "Effectuer une vente au comptoir";
+    $scope.TYPE_VENTE_UNITE_KEY = 1;
+    $scope.TYPE_VENTE_BLOCK_KEY = 2;
+    $scope.MODE_VENTE_CASH = "_cash";
+    $scope.MODE_VENTE_CLIENT = "_client";
 
+    //Index de chargement des produits en fonction de la categorie
+    $scope.SelectedItem = null;
+    $scope.Panier = [];
+    $scope.TotauxPanier = 0;
+    
+
+    $scope.Init = function (produit) {
+        $scope.IsNew = true;
+        $scope.ProduitAajouter = {};
+        $scope.ProduitAajouter.Produit = produit;
+        $scope.ProduitAajouter.PrixUnitaire = produit.PrixVenteUniteParDefaut;
+        $scope.ProduitAajouter.PrixBlock = produit.PrixVenteBlockParDefaut;
+        $scope.ProduitAajouter.QuantiteUnitaire = 0;
+        $scope.ProduitAajouter.QuantiteBlock = 0;
+        $scope.ProduitAajouter.TotalBlock = $scope.ProduitAajouter.QuantiteBlock * produit.PrixVenteBlockParDefaut;
+        $scope.ProduitAajouter.TotalUnitaire = $scope.ProduitAajouter.QuantiteUnitaire * produit.PrixVenteUniteParDefaut;
+        $scope.ProduitAajouter.Totaux = Number($scope.ProduitAajouter.TotalBlock) + Number($scope.ProduitAajouter.TotalUnitaire);
+
+        $scope.TypesDeVente = [];
+        if (produit.Unite.IsBlock) {//Vente au carton
+            $scope.TypesDeVente.push({ Id: $scope.TYPE_VENTE_BLOCK_KEY, Libelle: produit.Block.Libelle });
+            if(produit.UniteParBlock > 1)
+                $scope.TypesDeVente.push({ Id: $scope.TYPE_VENTE_UNITE_KEY, Libelle: produit.Unite.Libelle });
+            else
+                $scope.ProduitAajouter.TypeVenteId = $scope.TypesDeVente[0].Id;//Selectionner le premier élément
+        } else {//Vente en plaquette
+            $scope.TypesDeVente.push({ Id: $scope.TYPE_VENTE_UNITE_KEY, Libelle: produit.Unite.Libelle });
+            $scope.ProduitAajouter.TypeVenteId = $scope.TypesDeVente[0].Id;//Selectionner le premier élément
+        }
+    }
+
+    $scope.CaisseInit = function () {
+        $scope.Caisse = {};
+        $scope.Caisse.TotauxPanier = $scope.TotauxPanier;
+        $scope.Caisse.Remise = 0;
+        $scope.Caisse.NetApayer = $scope.TotauxPanier - $scope.Caisse.Remise;
+        $scope.Caisse.MontantPercu = 0;
+        $scope.Caisse.MontantRendu = $scope.Caisse.NetApayer - $scope.Caisse.MontantPercu;
+    }
+
+    $scope.CalculerCaisse = function () {
+        $scope.Caisse.NetApayer = $scope.TotauxPanier - $scope.Caisse.Remise;
+        $scope.Caisse.MontantRendu = $scope.Caisse.NetApayer - $scope.Caisse.MontantPercu;
+    }
+
+    $scope.Calculer = function () {
+        if (isNaN($scope.ProduitAajouter.QuantiteBlock))
+            $scope.ProduitAajouter.QuantiteBlock = 0;
+
+        if (isNaN($scope.ProduitAajouter.QuantiteUnitaire))
+            $scope.ProduitAajouter.QuantiteUnitaire = 0;
+
+        $scope.ProduitAajouter.TotalBlock = $scope.ProduitAajouter.QuantiteBlock * $scope.ProduitAajouter.PrixBlock;
+        $scope.ProduitAajouter.TotalUnitaire = $scope.ProduitAajouter.QuantiteUnitaire * $scope.ProduitAajouter.PrixUnitaire;
+
+        $scope.ProduitAajouter.Totaux = 0;
+        if ($scope.ProduitAajouter.TypeVenteId == $scope.TYPE_VENTE_UNITE_KEY)
+            $scope.ProduitAajouter.Totaux = $scope.ProduitAajouter.TotalUnitaire;
+        else if($scope.ProduitAajouter.TypeVenteId == $scope.TYPE_VENTE_BLOCK_KEY)
+            $scope.ProduitAajouter.Totaux = $scope.ProduitAajouter.TotalBlock;
+    }
+
+    $scope.AjouterAuPanier = function (produit) {
+        if($scope.IsNew)
+            $scope.Panier.push(produit);
+        else
+            $scope.Panier = angular.copy($scope.Panier);
+
+        $scope.CalclerTotalPanier();
+    }
+
+    $scope.CalclerTotalPanier = function () {
+        //Calculer le montant total du panier
+        $scope.TotauxPanier = 0;
+        for (i = 0; i < $scope.Panier.length; i++) {
+            item = $scope.Panier[i];
+            if (item.TypeVenteId == $scope.TYPE_VENTE_UNITE_KEY)
+                $scope.TotauxPanier = Number($scope.TotauxPanier) + Number(item.TotalUnitaire);
+            else if (item.TypeVenteId == $scope.TYPE_VENTE_BLOCK_KEY)
+                $scope.TotauxPanier = Number($scope.TotauxPanier) + Number(item.TotalBlock);
+        }
+    }
+
+    $scope.AncienPanier = [];
+    $scope.Modifier = function (data) {
+        $scope.ProduitAajouter = data;
+        angular.copy($scope.Panier, $scope.AncienPanier);
+        $scope.IsNew = false;
+    }
+
+    $scope.SupprimerItemPanier = function (index) {
+        $scope.Panier.splice(index, 1);
+        $scope.CalclerTotalPanier();
+    }
+
+    $scope.Annuler = function () {
+        if (!$scope.IsNew)
+            $scope.Panier = angular.copy($scope.AncienPanier);
+    }
+
+    $scope.ChargerProduits = function (categorie) {
+        $scope.SelectedItem = categorie.Id;
+        $http.get($rootScope.ServerURL + "Produits?categorie=" + categorie.Id)
+        .success(function (response) {
+            console.log(response);
+            if (response.ResponseCode == 0) {
+                $scope.ProduitsParCategorie = response.Data;
+            } else {//Error
+                console.log(response);
+            }
+        })
+        .error(function (response) { console.log(response); });
+    }
+
+    $scope.ResetComptoir = function () {
+        $scope.SelectedItem = null;
+        $scope.Panier = [];
+        $scope.TotauxPanier = 0;
+        $scope.ProduitsParCategorie = [];
+    }
+
+    $scope.SendData = function (mode) {
+        $scope.Vente.Caisse = $scope.Caisse;
+        $scope.Vente.Panier = $scope.Panier;
+        $scope.Vente.ModeVente = mode;
+
+        $http.post($rootScope.ServerURL + "Ventes", $scope.Vente)
+        .success(function (response) {
+            console.log(response);
+            if (response.ResponseCode == 0) {
+                $rootScope.LISTE_CATEGORIES_DATA();
+                $scope.ResetComptoir();//Remettre le comptoir à Zero pour une nouvelle vente
+            } else {//Error
+                console.log(response);
+            }
+        })
+        .error(function (response) {
+            console.log(response);
+        });
+    }
 
     //Recuperer les categories
     $rootScope.LISTE_CATEGORIES_DATA();
