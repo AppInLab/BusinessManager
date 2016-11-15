@@ -38,31 +38,37 @@ app.config(["$routeProvider",
                 controller: "ProduitsController"
             });
 
-            //Achat rapide            
-            $routeProvider.when("/VenteComptoir", {
-                templateUrl: "views/venteComptoir.html",
-                controller: "VenteController"
-            });
-
             //Clients            
             $routeProvider.when("/Clients", {
-                templateUrl: "views/Clients.html",
-                controller: "ClientsController"
-            });
-
-            //Chineurs            
-            $routeProvider.when("/Chineurs", {
-                templateUrl: "views/Chineurs.html",
-                controller: "ChineursController"
+                templateUrl: "views/client.html",
+                controller: "ClientController"
             });
 
             //Fournisseurs            
             $routeProvider.when("/Fournisseurs", {
-                templateUrl: "views/Fournisseurs.html",
-                controller: "FournisseursController"
+                templateUrl: "views/fournisseur.html",
+                controller: "FournisseurController"
             });
 
-            //Fournisseurs            
+            //Vente           
+            $routeProvider.when("/VenteComptoir", {
+                templateUrl: "views/ventecomptoir.html",
+                controller: "VenteController"
+            });
+
+            //CommandeFournisseur            
+            $routeProvider.when("/CommandeFournisseur", {
+                templateUrl: "views/commandefournisseur.html",
+                controller: "CommandeFournisseurController"
+            });
+
+            //NouvelleCommandeFournisseur            
+            $routeProvider.when("/NouvelleCommandeFournisseur", {
+                templateUrl: "views/nouvellecommandefournisseur.html",
+                controller: "NouvelleCommandeFournisseurController"
+            });
+
+            //BonLivraison            
             $routeProvider.when("/BonLivraison", {
                 templateUrl: "views/BonLivraison.html",
                 controller: "BonLivraisonController"

@@ -20,7 +20,7 @@ namespace PoissonnerieApi.Controllers
             ResponseData responseData;
             try
             {
-                responseData = ResponseData.GetSuccess(DataManager.GetAllCategories());
+                responseData = ResponseData.GetSuccess(DataManager.GetAll<Categorie>());
             }
             catch (Exception ex)
             {
@@ -36,7 +36,7 @@ namespace PoissonnerieApi.Controllers
             ResponseData responseData;
             try
             {
-                responseData = ResponseData.GetSuccess(DataManager.GetCategorie(id));
+                responseData = ResponseData.GetSuccess(DataManager.Get<Categorie>(id));
             }
             catch (Exception ex)
             {

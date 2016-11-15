@@ -5,6 +5,15 @@
       <column name="Id"/>
       <generator class="native"/>
     </id>
+
+    <property name="DateCreation">
+      <column name="DateCreation"/>
+    </property>
+
+    <property name="DateModification">
+      <column name="DateModification"/>
+    </property>
+    
     <property name="NomComplet">
       <column name="NomComplet"/>
     </property>
@@ -15,6 +24,14 @@
 
     <property name="Contacts">
       <column name="Contacts"/>
+    </property>
+
+    <property name="Doit">
+      <column name="Doit"/>
+    </property>
+
+    <property name="Avoir">
+      <column name="Avoir"/>
     </property>
   </class>
 </hibernate-mapping>

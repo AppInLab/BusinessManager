@@ -9,8 +9,12 @@ namespace BusinessEngine.Models
     public class Client : Entity
     {
         virtual public int Id { get; set; }
+        virtual public DateTime DateCreation { get; set; }
+        virtual public DateTime DateModification { get; set; }
         virtual public string NomComplet { get; set; }
         virtual public string Adresse { get; set; }
         virtual public string Contacts { get; set; }
+        virtual public decimal Doit { get; set; }
+        virtual public decimal Avoir { get; set; }
     }
 }

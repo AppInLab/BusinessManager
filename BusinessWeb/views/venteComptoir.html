@@ -69,7 +69,7 @@
             <h3>Total: <span class="pull-right text-bold">{{TotauxPanier}} F</span></h3>
             <p>
                 <a data-toggle="modal" data-target="#cash" class="btn blue big" ng-click="CaisseInit()"> CASH</a>
-                <a class="btn purple big" data-toggle="modal" data-target="#venteClient" ng-click="CaisseInit()"><i class="icon-user"></i> CLIENT</a>
+                <!--<a class="btn purple big" data-toggle="modal" data-target="#venteClient" ng-click="CaisseInit()"><i class="icon-user"></i> CLIENT</a>-->
                 <a class="btn big" data-toggle="modal" data-target="#confirmationAnnulation"><i class="icon-cancel"></i> ANNULER</a>
             </p>
         </div>
@@ -101,13 +101,13 @@
                         <li class="span4 active ">
                             <a href="" data-toggle="tab" class="step">
                                 <span class="number">1</span>
-                                <div class="desc"><i class="icon-ok"></i> Select. Client</div>
+                                <div class="desc"><i class="icon-ok"></i> Select. client</div>
                             </a>
                         </li>
                         <li class="span4">
                             <a href="" data-toggle="tab" class="step">
                                 <span class="number">2</span>
-                                <span class="desc"><i class="icon-ok"></i> Nouveau Client</span>
+                                <span class="desc"><i class="icon-ok"></i> Nouv. client</span>
                             </a>
                         </li>
                         <li class="span4">
@@ -140,15 +140,15 @@
                             <input class="m-wrap span12" type="text" name="name" value="" placeholder="Recherche">
                             <div id="categorieProduit" class="list-item" style="height:200px;overflow-y:auto">
                                 <ul>
-                                    <li ng-class="{active: categorie.Id == SelectedItem}" ng-repeat="categorie in Categories">
-                                        <a>{{categorie.Libelle}}</a>
+                                    <li ng-class="{active: client.Id == ClientSelected.Id}" ng-repeat="client in Clients" ng-click="SelectionnerClient(client)">
+                                        <a>{{client.NomComplet}}</a>
                                     </li>
                                 </ul>
                             </div>
                         </div>
                     </div>
                     <div>
-                        <span class="text text-bold help-inline" style="color:black">WILLY Falone Kouadio</span>
+                        <span class="text text-bold help-inline" style="color:black">{{ClientSelected.NomComplet}}</span>
                         <div class="pull-right">
                             <button type="button" data-dismiss="modal" class="btn blue">Nouveau client</button>
                             <button type="button" data-dismiss="modal" class="btn green">Continuer</button>
@@ -166,7 +166,7 @@
                             </div>
                         </div>
                         <div class="control-group">
-                            <label class="control-label">Adresse<span class="required">*</span></label>
+                            <label class="control-label">Adresse</label>
                             <div class="controls">
                                 <input type="text" class="span12 m-wrap">
                             </div>
@@ -482,9 +482,3 @@
         <button type="button" data-dismiss="modal" class="btn blue" ng-click="AjouterAuPanier(ProduitAajouter)">Valider</button>
     </div>
 </div>
-
-<script>
-    $(document).ready(function () {
-        $(".number").inputmask({ "mask": "999999999999" });
-    });
-</script>

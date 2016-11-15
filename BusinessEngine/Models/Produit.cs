@@ -10,7 +10,7 @@ namespace BusinessEngine.Models
     {
         virtual public long Id { get; set; }
         virtual public DateTime DateCreation { get; set; }
-        virtual public DateTime? DateModification { get; set; }
+        virtual public DateTime DateModification { get; set; }
         virtual public string Libelle { get; set; }
         virtual public decimal PrixAchat { get; set; }
         virtual public decimal PrixVenteUniteParDefaut { get; set; }

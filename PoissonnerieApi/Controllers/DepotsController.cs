@@ -20,7 +20,7 @@ namespace PoissonnerieApi.Controllers
             ResponseData responseData;
             try
             {
-                responseData = ResponseData.GetSuccess(DataManager.GetAllDepots());
+                responseData = ResponseData.GetSuccess(DataManager.GetAll<Depot>());
             }
             catch (Exception ex)
             {
@@ -36,7 +36,7 @@ namespace PoissonnerieApi.Controllers
             ResponseData responseData;
             try
             {
-                responseData = ResponseData.GetSuccess(DataManager.GetDepot(id));
+                responseData = ResponseData.GetSuccess(DataManager.Get<Depot>(id));
             }
             catch (Exception ex)
             {

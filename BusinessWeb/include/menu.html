@@ -4,17 +4,6 @@
         <div style="margin-bottom:10px" class="sidebar-toggler hidden-phone"></div>
         <!-- BEGIN SIDEBAR TOGGLER BUTTON -->
     </li>
-    <!--<li>
-
-        <form class="sidebar-search">
-            <div class="input-box">
-                <a href="javascript:;" class="remove"></a>
-                <input type="text" placeholder="Search..." />
-                <input type="button" class="submit" value=" " />
-            </div>
-        </form>
-
-    </li>-->
     <li ng-class="{active:isActive('/Home')}">
         <a class="start" href="#/home">
             <i class="icon-home"></i>
@@ -55,7 +44,7 @@
         </a>
     </li>
 
-    <li>
+    <li ng-class="{active:isActive('/Clients')}">
         <a href="javascript:;">
             <i class="icon-barcode"></i>
             <span class="title">Clients</span>
@@ -63,8 +52,8 @@
             <span class="arrow"></span>
         </a>
         <ul class="sub-menu">
-            <li ng-class="{active:isActive('/AdminProduits')}">
-                <a href="#/AdminProduits">
+            <li ng-class="{active:isActive('/Clients')}">
+                <a href="#/Clients">
                     <i class="icon-barcode"></i>
                     Clients
                 </a>
@@ -208,7 +197,7 @@
         </ul>
     </li>
 
-    <li ng-class="{active:isActive('/AdminMagasins') || isActive('/AdminCategories') || isActive('/AdminProduits')}">
+    <li ng-class="{active:isActive('/Fournisseurs') || isActive('/CommandeFournisseur') || isActive('/NouvelleCommandeFournisseur')}">
         <a href="javascript:;">
             <i class="icon-truck"></i>
             <span class="title">Achats</span>
@@ -216,14 +205,14 @@
             <span class="arrow"></span>
         </a>
         <ul class="sub-menu">
-            <li ng-class="{active:isActive('/AdminMagasins')}">
-                <a href="#/AdminMagasins">
+            <li ng-class="{active:isActive('/Fournisseurs')}">
+                <a href="#/Fournisseurs">
                     <i class="icon-home"></i>
                     Fournisseurs
                 </a>
             </li>
-            <li ng-class="{active:isActive('/AdminCategories')}">
-                <a href="#/AdminCategories">
+            <li ng-class="{active:isActive('/CommandeFournisseur') || isActive('/NouvelleCommandeFournisseur')}">
+                <a href="#/CommandeFournisseur">
                     <i class="icon-reorder"></i>
                     Commandes
                 </a>

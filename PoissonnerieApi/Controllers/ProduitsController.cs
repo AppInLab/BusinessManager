@@ -20,7 +20,7 @@ namespace PoissonnerieApi.Controllers
             ResponseData responseData;
             try
             {
-                responseData = ResponseData.GetSuccess(DataManager.GetAllProduits());
+                responseData = ResponseData.GetSuccess(DataManager.GetAll<Produit>());
             }
             catch (Exception ex)
             {
@@ -52,7 +52,7 @@ namespace PoissonnerieApi.Controllers
             ResponseData responseData;
             try
             {
-                responseData = ResponseData.GetSuccess(DataManager.GetProduit(id));
+                responseData = ResponseData.GetSuccess(DataManager.Get<Produit>(id));
             }
             catch (Exception ex)
             {
@@ -74,6 +74,7 @@ namespace PoissonnerieApi.Controllers
                     _data.DateModification = DateTime.UtcNow;
                 }else{
                     _data.DateCreation = DateTime.UtcNow;
+                    _data.DateModification = DateTime.UtcNow;
                 }
 
                 DataManager.Save(_data);

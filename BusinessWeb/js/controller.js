@@ -119,10 +119,35 @@ function ($rootScope, $scope, $http, $location, $cookies, $cookieStore) {
         .error(function (response) { console.log(response); });
     }
 
-    //-END LISTE
+    //CLIENTS
+    $rootScope.LISTE_CLIENTS_DATA = function () {
+        $http.get($rootScope.ServerURL + "Clients")
+        .success(function (response) {
+            console.log(response);
+            if (response.ResponseCode == 0) {
+                $scope.Clients = response.Data;
+            } else {//Error
+                console.log(response);
+            }
+        })
+        .error(function (response) { console.log(response); });
+    }
 
-    $rootScope.PageName = "";
-    $rootScope.PageDescription = "";
+    //FOURNISSEURS
+    $rootScope.LISTE_FOURNISSEURS_DATA = function () {
+        $http.get($rootScope.ServerURL + "Fournisseurs")
+        .success(function (response) {
+            console.log(response);
+            if (response.ResponseCode == 0) {
+                $scope.Fournisseurs = response.Data;
+            } else {//Error
+                console.log(response);
+            }
+        })
+        .error(function (response) { console.log(response); });
+    }
+
+    //--END LISTE
 
     //Start Connexion-------------------------------
     $rootScope.admin = {};
@@ -183,8 +208,8 @@ function ($rootScope, $scope, $http, $cookies, $cookieStore) {
     $rootScope.PageName = "Dashboard";
     $rootScope.PageDescription = "Vue d'ensemble";
 
-    console.log("Home result : ");
-    console.log($rootScope.user);
+    //console.log("Home result : ");
+    //console.log($rootScope.user);
 
 }]);
 
@@ -317,14 +342,18 @@ function ($rootScope, $scope, $http) {
     $rootScope.PageDescription = "Effectuer une vente au comptoir";
     $scope.TYPE_VENTE_UNITE_KEY = 1;
     $scope.TYPE_VENTE_BLOCK_KEY = 2;
-    $scope.MODE_VENTE_CASH = "_cash";
-    $scope.MODE_VENTE_CLIENT = "_client";
+    //$scope.MODE_VENTE_CASH = "_cash";
+    //$scope.MODE_VENTE_CLIENT = "_client";
 
     //Index de chargement des produits en fonction de la categorie
     $scope.SelectedItem = null;
     $scope.Panier = [];
     $scope.TotauxPanier = 0;
-    
+    $scope.ClientSelected = null;
+
+    $scope.SelectionnerClient = function (client) {
+        $scope.ClientSelected = client;
+    }
 
     $scope.Init = function (produit) {
         $scope.IsNew = true;
@@ -439,6 +468,7 @@ function ($rootScope, $scope, $http) {
         $scope.Panier = [];
         $scope.TotauxPanier = 0;
         $scope.ProduitsParCategorie = [];
+        $scope.Vente = {};
     }
 
     $scope.SendData = function (mode) {
@@ -463,41 +493,251 @@ function ($rootScope, $scope, $http) {
 
     //Recuperer les categories
     $rootScope.LISTE_CATEGORIES_DATA();
+    $rootScope.LISTE_CLIENTS_DATA();
 }]);
 
 //ClientsController
-MainController.controller('ClientsController', ['$rootScope', '$scope', '$http',
+MainController.controller('ClientController', ['$rootScope', '$scope', '$http',
 function ($rootScope, $scope, $http) {
 
     $rootScope.PageName = "Clients";
-    $rootScope.PageDescription = "Gestion des clients";
+    
+    $scope.Init = function () {
+        $scope.Client = {};
+    }   
 
+    $scope.SendData = function () {
+        $http.post($rootScope.ServerURL + "Clients", $scope.Client)
+        .success(function (response) {
+            console.log(response);
+            if (response.ResponseCode == 0) {
+                $rootScope.LISTE_CLIENTS_DATA();
+            } else {//Error
+                console.log(response);
+            }
+        })
+        .error(function (response) {
+            console.log(response);
+        });
+    }
+
+    $scope.AncienClients = [];
+    $scope.Modifier = function (data) {
+        $scope.Client = data;
+        angular.copy($scope.Clients, $scope.AncienClients);
+    }
+
+    $scope.Annuler = function () {
+        $scope.Clients = angular.copy($scope.AncienClients);
+    }
+
+    $rootScope.LISTE_CLIENTS_DATA();
 }]);
 
-//ChineursController
-MainController.controller('ChineursController', ['$rootScope', '$scope', '$http',
-function ($rootScope, $scope, $http) {
-
-    $rootScope.PageName = "Chineurs";
-    $rootScope.PageDescription = "Gestion des chineurs";
-
-}]);
-
-//FournisseursController
-MainController.controller('FournisseursController', ['$rootScope', '$scope', '$http',
+//FournisseurController
+MainController.controller('FournisseurController', ['$rootScope', '$scope', '$http',
 function ($rootScope, $scope, $http) {
 
     $rootScope.PageName = "Fournisseurs";
-    $rootScope.PageDescription = "Gestion des fournisseurs";
+
+    $scope.Init = function () {
+        $scope.Fournisseur = {};
+    }
+
+    $scope.SendData = function () {
+        $http.post($rootScope.ServerURL + "Fournisseurs", $scope.Fournisseur)
+        .success(function (response) {
+            console.log(response);
+            if (response.ResponseCode == 0) {
+                $rootScope.LISTE_FOURNISSEURS_DATA();
+            } else {//Error
+                console.log(response);
+            }
+        })
+        .error(function (response) {
+            console.log(response);
+        });
+    }
+
+    $scope.AncienFournisseurs = [];
+    $scope.Modifier = function (data) {
+        $scope.Fournisseur = data;
+        angular.copy($scope.Fournisseurs, $scope.AncienFournisseurs);
+    }
+
+    $scope.Annuler = function () {
+        $scope.Fournisseurs = angular.copy($scope.AncienFournisseurs);
+    }
+
+    $rootScope.LISTE_FOURNISSEURS_DATA();
 
 }]);
 
-//BonLivraisonController
-MainController.controller('BonLivraisonController', ['$rootScope', '$scope', '$http',
+//CommandeFournisseurController
+MainController.controller('CommandeFournisseurController', ['$rootScope', '$scope', '$http',
 function ($rootScope, $scope, $http) {
 
-    $rootScope.PageName = "Bon de livraison";
-    $rootScope.PageDescription = "";
+    $rootScope.PageName = "Commande fournisseur";
+
+}]);
+
+//NouvelleCommandeFournisseurController
+MainController.controller('NouvelleCommandeFournisseurController', ['$rootScope', '$scope', '$http',
+function ($rootScope, $scope, $http) {
+
+    $rootScope.PageName = "Nouvelle commande fournisseur";
+    $scope.TYPE_VENTE_UNITE_KEY = 1;
+    $scope.TYPE_VENTE_BLOCK_KEY = 2;
+
+    //Index de chargement des produits en fonction de la categorie
+    $scope.SelectedItem = null;
+    $scope.Panier = [];
+    $scope.Fournisseur = {};
+    $scope.TotauxPanierHt = 0;
+    $scope.TotauxPanierTva = 0;
+    $scope.TotauxPanierTtc = 0;
+
+    $scope.Init = function (produit) {
+        $scope.IsNew = true;
+        $scope.ProduitAajouter = {};
+        $scope.ProduitAajouter.Produit = produit;
+        $scope.ProduitAajouter.PrixAchat = produit.PrixAchat;
+        $scope.ProduitAajouter.QuantiteUnitaire = 0;
+        $scope.ProduitAajouter.QuantiteBlock = 0;
+        $scope.ProduitAajouter.Tva = 0;
+        $scope.ProduitAajouter.Ttc = 0;
+        $scope.ProduitAajouter.TotalBlock = $scope.ProduitAajouter.QuantiteBlock * produit.PrixAchat;
+        $scope.ProduitAajouter.TotalUnitaire = $scope.ProduitAajouter.QuantiteUnitaire * produit.PrixAchat;
+        $scope.ProduitAajouter.Tht = Number($scope.ProduitAajouter.TotalBlock) + Number($scope.ProduitAajouter.TotalUnitaire);
+
+        $scope.TypesDeVente = [];
+        if (produit.Unite.IsBlock) {//Vente au carton
+            $scope.TypesDeVente.push({ Id: $scope.TYPE_VENTE_BLOCK_KEY, Libelle: produit.Block.Libelle });
+            if (produit.UniteParBlock > 1)
+                $scope.TypesDeVente.push({ Id: $scope.TYPE_VENTE_UNITE_KEY, Libelle: produit.Unite.Libelle });
+            else
+                $scope.ProduitAajouter.TypeVenteId = $scope.TypesDeVente[0].Id;//Selectionner le premier élément
+        } else {//Vente en plaquette
+            $scope.TypesDeVente.push({ Id: $scope.TYPE_VENTE_UNITE_KEY, Libelle: produit.Unite.Libelle });
+            $scope.ProduitAajouter.TypeVenteId = $scope.TypesDeVente[0].Id;//Selectionner le premier élément
+        }
+    }
+
+    $scope.Calculer = function () {
+        if (isNaN($scope.ProduitAajouter.QuantiteBlock))
+            $scope.ProduitAajouter.QuantiteBlock = 0;
+
+        if (isNaN($scope.ProduitAajouter.QuantiteUnitaire))
+            $scope.ProduitAajouter.QuantiteUnitaire = 0;
+
+        $scope.ProduitAajouter.TotalBlock = $scope.ProduitAajouter.QuantiteBlock * $scope.ProduitAajouter.PrixAchat;//PrixBlock;
+        $scope.ProduitAajouter.TotalUnitaire = $scope.ProduitAajouter.QuantiteUnitaire * $scope.ProduitAajouter.PrixAchat;//PrixUnitaire;
+
+        $scope.ProduitAajouter.Tht = 0;
+        if ($scope.ProduitAajouter.TypeVenteId == $scope.TYPE_VENTE_UNITE_KEY)
+            $scope.ProduitAajouter.Tht = $scope.ProduitAajouter.TotalUnitaire;
+        else if ($scope.ProduitAajouter.TypeVenteId == $scope.TYPE_VENTE_BLOCK_KEY)
+            $scope.ProduitAajouter.Tht = $scope.ProduitAajouter.TotalBlock;
+
+        $scope.ProduitAajouter.MontantTva = (($scope.ProduitAajouter.Tva / 100) * $scope.ProduitAajouter.Tht);
+        $scope.ProduitAajouter.Ttc = Number($scope.ProduitAajouter.MontantTva) + Number($scope.ProduitAajouter.Tht);
+    }
+
+    $scope.AjouterAuPanier = function (produit) {
+        if ($scope.IsNew)
+            $scope.Panier.push(produit);
+        else
+            $scope.Panier = angular.copy($scope.Panier);
+
+        $scope.CalclerTotalPanier();
+    }
+
+    $scope.CalclerTotalPanier = function () {
+        //Calculer le montant total du panier
+        $scope.TotauxPanierHt = 0;
+        $scope.TotauxPanierTva = 0;
+        $scope.TotauxPanierTtc = 0;
+
+        for (i = 0; i < $scope.Panier.length; i++) {
+            item = $scope.Panier[i];
+            if (item.TypeVenteId == $scope.TYPE_VENTE_UNITE_KEY)
+                $scope.TotauxPanierHt = Number($scope.TotauxPanierHt) + Number(item.TotalUnitaire);
+            else if (item.TypeVenteId == $scope.TYPE_VENTE_BLOCK_KEY)
+                $scope.TotauxPanierHt = Number($scope.TotauxPanierHt) + Number(item.TotalBlock);
+
+            $scope.TotauxPanierTva = Number($scope.TotauxPanierTva) + Number(item.MontantTva);
+            $scope.TotauxPanierTtc = Number($scope.TotauxPanierTtc) + Number(item.Ttc);
+        }
+    }
+
+    $scope.AncienPanier = [];
+    $scope.Modifier = function (data) {
+        $scope.ProduitAajouter = data;
+        angular.copy($scope.Panier, $scope.AncienPanier);
+        $scope.IsNew = false;
+    }
+
+    $scope.SupprimerItemPanier = function (index) {
+        $scope.Panier.splice(index, 1);
+        $scope.CalclerTotalPanier();
+    }
+
+    $scope.Annuler = function () {
+        if (!$scope.IsNew)
+            $scope.Panier = angular.copy($scope.AncienPanier);
+    }
+
+    $scope.ChargerProduits = function (categorie) {
+        $scope.SelectedItem = categorie.Id;
+        $http.get($rootScope.ServerURL + "Produits?categorie=" + categorie.Id)
+        .success(function (response) {
+            console.log(response);
+            if (response.ResponseCode == 0) {
+                $scope.ProduitsParCategorie = response.Data;
+            } else {//Error
+                console.log(response);
+            }
+        })
+        .error(function (response) { console.log(response); });
+    }
+
+    $scope.ResetComptoir = function () {
+        $scope.SelectedItem = null;
+        $scope.Panier = [];
+        $scope.TotauxPanierHt = 0;
+        $scope.TotauxPanierTva = 0;
+        $scope.TotauxPanierTtc = 0;
+        $scope.ProduitsParCategorie = [];
+        $scope.Vente = {};
+        $scope.Fournisseur = {};
+    }
+
+    $scope.SendData = function (bonDeReception) {
+        $scope.Commande = {};
+        $scope.Commande.Panier = $scope.Panier;
+        $scope.Commande.Fournisseur = $scope.Fournisseur;
+        $scope.Commande.Commentaire = $scope.Commentaire;
+        $scope.Commande.TransfertVersBonDeReception = bonDeReception;
+
+        $http.post($rootScope.ServerURL + "CommandeFournisseur", $scope.Commande)
+        .success(function (response) {
+            console.log(response);
+            if (response.ResponseCode == 0) {
+                $rootScope.LISTE_CATEGORIES_DATA();
+                $rootScope.LISTE_FOURNISSEURS_DATA();
+                $scope.ResetComptoir();//Remettre le comptoir à Zero pour une nouvelle commande
+            } else {//Error
+                console.log(response);
+            }
+        })
+        .error(function (response) {
+            console.log(response);
+        });
+    }
+
+    //Recuperer les categories
+    $rootScope.LISTE_CATEGORIES_DATA();
+    $rootScope.LISTE_FOURNISSEURS_DATA();
 
 }]);
 
@@ -518,7 +758,6 @@ function ($rootScope, $scope, $http) {
     $rootScope.PageDescription = "";
 
 }]);
-
 
 //AdminMagasinsController
 MainController.controller('AdminMagasinsController', ['$rootScope', '$scope', '$http',
