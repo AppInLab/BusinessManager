@@ -68,6 +68,12 @@ app.config(["$routeProvider",
                 controller: "NouvelleCommandeFournisseurController"
             });
 
+            //EditerCommandeFournisseur            
+            $routeProvider.when("/EditerCommandeFournisseur/:id", {
+                templateUrl: "views/editercommandefournisseur.html",
+                controller: "EditerCommandeFournisseurController"
+            });
+
             //BonLivraison            
             $routeProvider.when("/BonLivraison", {
                 templateUrl: "views/BonLivraison.html",

@@ -6,10 +6,12 @@ using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using System.Web.Security;
+using System.Web.SessionState;
 
 namespace PoissonnerieApi
 {
-    // Remarque : pour obtenir des instructions sur l'activation du mode classique IIS6 ou IIS7, 
+    // Remarque : pour obtenir des instructions sur l'activation du mode classique IIS6 ou IIS7, 
     // visitez http://go.microsoft.com/?LinkId=9394801
 
     public class WebApiApplication : System.Web.HttpApplication
