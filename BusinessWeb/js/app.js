@@ -74,10 +74,16 @@ app.config(["$routeProvider",
                 controller: "EditerCommandeFournisseurController"
             });
 
-            //BonLivraison            
+            //BonReception            
             $routeProvider.when("/BonReceptionFournisseur", {
                 templateUrl: "views/bonreceptionfournisseur.html",
                 controller: "BonReceptionFournisseurController"
+            });
+
+            //NouveauBonReceptionFournisseur            
+            $routeProvider.when("/NouveauBonReceptionFournisseur", {
+                templateUrl: "views/nouveaubonreceptionfournisseur.html",
+                controller: "NouveauBonReceptionFournisseurController"
             });
 
             //PointJournee            

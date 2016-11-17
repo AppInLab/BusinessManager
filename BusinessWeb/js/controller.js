@@ -168,6 +168,20 @@ function ($rootScope, $scope, $http, $location, $cookies, $cookieStore, $routePa
         .error(function (response) { console.log(response); });
     }
 
+    //BON DE RECEPTION FOURNISSEUR
+    $rootScope.LISTE_BONRECEPTION_FOURNISSEUR_DATA = function () {
+        $http.get($rootScope.ServerURL + "BonReceptionFournisseur")
+        .success(function (response) {
+            console.log(response);
+            if (response.ResponseCode == 0) {
+                $scope.BonsReceptionFournisseur = response.Data;
+            } else {//Error
+                console.log(response);
+            }
+        })
+        .error(function (response) { console.log(response); });
+    }
+
     //--END LISTE
 
     //Start Connexion-------------------------------
@@ -806,9 +820,6 @@ function ($rootScope, $scope, $http, $window, $routeParams) {
             if (response.ResponseCode == 0) {
                 $rootScope.CloseModal('confirmationValidation');
                 $window.location.href = "#/CommandeFournisseur";
-                //$rootScope.LISTE_CATEGORIES_DATA();
-                //$rootScope.LISTE_FOURNISSEURS_DATA();
-                //$scope.ResetComptoir();//Remettre le comptoir à Zero pour une nouvelle commande
             } else {//Error
                 console.log(response);
             }
@@ -949,11 +960,8 @@ function ($rootScope, $scope, $http, $window, $routeParams) {
             $scope.TypesDeVente.push({ Id: $rootScope.TYPE_VENTE_BLOCK_KEY, Libelle: data.Produit.Block.Libelle });
             if (data.Produit.UniteParBlock > 1)
                 $scope.TypesDeVente.push({ Id: $rootScope.TYPE_VENTE_UNITE_KEY, Libelle: data.Produit.Unite.Libelle });
-            //else
-            //    $scope.ProduitAajouter.TypeVenteId = $scope.TypesDeVente[0].Id;//Selectionner le premier élément
         } else {//Vente en plaquette
             $scope.TypesDeVente.push({ Id: $rootScope.TYPE_VENTE_UNITE_KEY, Libelle: data.Produit.Unite.Libelle });
-            //$scope.ProduitAajouter.TypeVenteId = $scope.TypesDeVente[0].Id;//Selectionner le premier élément
         }
     }
 
@@ -1018,6 +1026,191 @@ MainController.controller('BonReceptionFournisseurController', ['$rootScope', '$
 function ($rootScope, $scope, $http) {
 
     $rootScope.PageName = "Bon de reception";
+
+    $scope.InfosBonReception = function (data) {
+        $scope.Commande = {};
+        $http.get($rootScope.ServerURL + "BonReceptionFournisseur?id=" + data.Id)
+        .success(function (response) {
+            console.log(response);
+            if (response.ResponseCode == 0) {
+                $scope.Commande = response.Data;
+            } else {//Error
+                console.log(response);
+            }
+        })
+        .error(function (response) {
+            console.log(response);
+        });
+    }
+
+    $rootScope.LISTE_BONRECEPTION_FOURNISSEUR_DATA();
+}]);
+
+//NouvelleCommandeFournisseurController
+MainController.controller('NouveauBonReceptionFournisseurController', ['$rootScope', '$scope', '$http', '$window', '$routeParams',
+function ($rootScope, $scope, $http, $window, $routeParams) {
+
+    $rootScope.PageName = "Nouveau bon de reception";
+
+    //Index de chargement des produits en fonction de la categorie
+    $scope.SelectedItem = null;
+    $scope.Panier = [];
+    $scope.Fournisseur = {};
+    $scope.TotauxPanierHt = 0;
+    $scope.TotauxPanierTva = 0;
+    $scope.TotauxPanierTtc = 0;
+
+    $scope.Init = function (produit) {
+        $scope.IsNew = true;
+        $scope.ProduitAajouter = {};
+        $scope.ProduitAajouter.Produit = produit;
+        $scope.ProduitAajouter.PrixAchat = produit.PrixAchat;
+        $scope.ProduitAajouter.QuantiteUnitaire = 0;
+        $scope.ProduitAajouter.QuantiteBlock = 0;
+        $scope.ProduitAajouter.Tva = 0;
+        $scope.ProduitAajouter.Ttc = 0;
+        $scope.ProduitAajouter.TotalBlock = $scope.ProduitAajouter.QuantiteBlock * produit.PrixAchat;
+        $scope.ProduitAajouter.TotalUnitaire = $scope.ProduitAajouter.QuantiteUnitaire * produit.PrixAchat;
+        $scope.ProduitAajouter.Tht = Number($scope.ProduitAajouter.TotalBlock) + Number($scope.ProduitAajouter.TotalUnitaire);
+
+        $scope.TypesDeVente = [];
+        if (produit.Unite.IsBlock) {//Vente au carton
+            $scope.TypesDeVente.push({ Id: $rootScope.TYPE_VENTE_BLOCK_KEY, Libelle: produit.Block.Libelle });
+            if (produit.UniteParBlock > 1)
+                $scope.TypesDeVente.push({ Id: $rootScope.TYPE_VENTE_UNITE_KEY, Libelle: produit.Unite.Libelle });
+            else
+                $scope.ProduitAajouter.TypeVenteId = $scope.TypesDeVente[0].Id;//Selectionner le premier élément
+        } else {//Vente en plaquette
+            $scope.TypesDeVente.push({ Id: $rootScope.TYPE_VENTE_UNITE_KEY, Libelle: produit.Unite.Libelle });
+            $scope.ProduitAajouter.TypeVenteId = $scope.TypesDeVente[0].Id;//Selectionner le premier élément
+        }
+    }
+
+    $scope.Calculer = function () {
+        if (isNaN($scope.ProduitAajouter.QuantiteBlock))
+            $scope.ProduitAajouter.QuantiteBlock = 0;
+
+        if (isNaN($scope.ProduitAajouter.QuantiteUnitaire))
+            $scope.ProduitAajouter.QuantiteUnitaire = 0;
+
+        $scope.ProduitAajouter.TotalBlock = $scope.ProduitAajouter.QuantiteBlock * $scope.ProduitAajouter.PrixAchat;//PrixBlock;
+        $scope.ProduitAajouter.TotalUnitaire = $scope.ProduitAajouter.QuantiteUnitaire * $scope.ProduitAajouter.PrixAchat;//PrixUnitaire;
+
+        $scope.ProduitAajouter.Tht = 0;
+        if ($scope.ProduitAajouter.TypeVenteId == $rootScope.TYPE_VENTE_UNITE_KEY)
+            $scope.ProduitAajouter.Tht = $scope.ProduitAajouter.TotalUnitaire;
+        else if ($scope.ProduitAajouter.TypeVenteId == $rootScope.TYPE_VENTE_BLOCK_KEY)
+            $scope.ProduitAajouter.Tht = $scope.ProduitAajouter.TotalBlock;
+
+        $scope.ProduitAajouter.MontantTva = (($scope.ProduitAajouter.Tva / 100) * $scope.ProduitAajouter.Tht);
+        $scope.ProduitAajouter.Ttc = Number($scope.ProduitAajouter.MontantTva) + Number($scope.ProduitAajouter.Tht);
+    }
+
+    $scope.AjouterAuPanier = function (produit) {
+        if ($scope.IsNew)
+            $scope.Panier.push(produit);
+        else
+            $scope.Panier = angular.copy($scope.Panier);
+
+        $scope.CalculerTotalPanier();
+    }
+
+    $scope.CalculerTotalPanier = function () {
+        //Calculer le montant total du panier
+        $scope.TotauxPanierHt = 0;
+        $scope.TotauxPanierTva = 0;
+        $scope.TotauxPanierTtc = 0;
+
+        for (i = 0; i < $scope.Panier.length; i++) {
+            item = $scope.Panier[i];
+            if (item.TypeVenteId == $rootScope.TYPE_VENTE_UNITE_KEY)
+                $scope.TotauxPanierHt = Number($scope.TotauxPanierHt) + Number(item.TotalUnitaire);
+            else if (item.TypeVenteId == $rootScope.TYPE_VENTE_BLOCK_KEY)
+                $scope.TotauxPanierHt = Number($scope.TotauxPanierHt) + Number(item.TotalBlock);
+
+            $scope.TotauxPanierTva = Number($scope.TotauxPanierTva) + Number(item.MontantTva);
+            $scope.TotauxPanierTtc = Number($scope.TotauxPanierTtc) + Number(item.Ttc);
+        }
+    }
+
+    $scope.AncienPanier = [];
+    $scope.Modifier = function (data) {
+        $scope.ProduitAajouter = data;
+        angular.copy($scope.Panier, $scope.AncienPanier);
+        $scope.IsNew = false;
+
+        //Mise a jour des type de vente
+        $scope.TypesDeVente = [];
+        if (data.Produit.Unite.IsBlock) {//Vente au carton
+            $scope.TypesDeVente.push({ Id: $rootScope.TYPE_VENTE_BLOCK_KEY, Libelle: data.Produit.Block.Libelle });
+            if (data.Produit.UniteParBlock > 1)
+                $scope.TypesDeVente.push({ Id: $rootScope.TYPE_VENTE_UNITE_KEY, Libelle: data.Produit.Unite.Libelle });
+        } else {//Vente en plaquette
+            $scope.TypesDeVente.push({ Id: $rootScope.TYPE_VENTE_UNITE_KEY, Libelle: data.Produit.Unite.Libelle });
+        }
+    }
+
+    $scope.SupprimerItemPanier = function (index) {
+        $scope.Panier.splice(index, 1);
+        $scope.CalculerTotalPanier();
+    }
+
+    $scope.Annuler = function () {
+        if (!$scope.IsNew)
+            $scope.Panier = angular.copy($scope.AncienPanier);
+    }
+
+    $scope.ChargerProduits = function (categorie) {
+        $scope.SelectedItem = categorie.Id;
+        $http.get($rootScope.ServerURL + "Produits?categorie=" + categorie.Id)
+        .success(function (response) {
+            console.log(response);
+            if (response.ResponseCode == 0) {
+                $scope.ProduitsParCategorie = response.Data;
+            } else {//Error
+                console.log(response);
+            }
+        })
+        .error(function (response) { console.log(response); });
+    }
+
+    $scope.ResetComptoir = function () {
+        $scope.SelectedItem = null;
+        $scope.Commentaire = null;
+        $scope.Panier = [];
+        $scope.TotauxPanierHt = 0;
+        $scope.TotauxPanierTva = 0;
+        $scope.TotauxPanierTtc = 0;
+        $scope.ProduitsParCategorie = [];
+        $scope.Vente = {};
+        $scope.Fournisseur = {};
+    }
+
+    $scope.SendData = function (bonDeReception) {
+        $scope.Commande = {};
+        $scope.Commande.Panier = $scope.Panier;
+        $scope.Commande.Fournisseur = $scope.Fournisseur;
+        $scope.Commande.Commentaire = $scope.Commentaire;
+        $scope.Commande.MarquerRecu = bonDeReception;
+
+        $http.post($rootScope.ServerURL + "BonReceptionFournisseur", $scope.Commande)
+        .success(function (response) {
+            console.log(response);
+            if (response.ResponseCode == 0) {
+                $rootScope.CloseModal('confirmationValidation');
+                $window.location.href = "#/BonReceptionFournisseur";
+            } else {//Error
+                console.log(response);
+            }
+        })
+        .error(function (response) {
+            console.log(response);
+        });
+    }
+
+    //Recuperer les categories
+    $rootScope.LISTE_CATEGORIES_DATA();
+    $rootScope.LISTE_FOURNISSEURS_DATA();
 
 }]);
 

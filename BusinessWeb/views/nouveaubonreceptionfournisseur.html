@@ -14,7 +14,7 @@
         </div>
     </div>
     <div class="span10">
-        <h4 class="form-section">Infos commande</h4>
+        <h4 class="form-section">Infos bon de reception</h4>
         <div class="row-fluid">
             <div class="span12">
                 <div class="control-group">
@@ -52,7 +52,7 @@
 
     <div class="span5 responsive" data-tablet="span6" data-desktop="span5">
         <div class="title2">
-            Détails de la note
+            Détails
         </div>
         <div id="detailVente" class="flip-scroll" style="height:270px;">
             <table class="table-bordered table-striped table-condensed flip-content">
@@ -100,8 +100,7 @@
             <h4>Total TVA : <span class="pull-right text-bold">{{TotauxPanierTva}} F</span></h4>
             <h4>Total TTC : <span class="pull-right text-bold">{{TotauxPanierTtc}} F</span></h4>
             <p>
-                <a ng-if="Panier.length > 0" data-toggle="modal" data-target="#confirmationValidation" class="btn blue big" ng-click="CaisseInit()"> VALIDER COMMANDE</a>
-                <!--<a class="btn purple big" data-toggle="modal" data-target="#venteClient" ng-click="CaisseInit()"><i class="icon-user"></i> CLIENT</a>-->
+                <a ng-if="Panier.length > 0" data-toggle="modal" data-target="#confirmationValidation" class="btn blue big" ng-click="CaisseInit()"> VALIDER LE BON DE RECEPTION</a>
                 <a class="btn big" data-toggle="modal" data-target="#confirmationAnnulation"><i class="icon-cancel"></i> ANNULER</a>
             </p>
         </div>
@@ -114,12 +113,12 @@
         <h3>Validation de la commande</h3>
     </div>
     <div class="modal-body">
-        <h4 class="bold">Voulez-vous valider cette commande ?</h4>
+        <h4 class="bold">Voulez-vous valider ce bon de reception ?</h4>
     </div>
     <div class="modal-footer">
         <button type="button" data-dismiss="modal" class="btn">Annuler</button>
-        <button type="button" data-dismiss="modal" class="btn blue" ng-click="SendData(false)">Valider la commande</button>
-        <button type="button" data-dismiss="modal" class="btn green" ng-click="SendData(true)">Valider &amp; Créer un Bon de Reception</button>
+        <button type="button" data-dismiss="modal" class="btn blue" ng-click="SendData(false)">Valider le bon</button>
+        <button type="button" data-dismiss="modal" class="btn green" ng-click="SendData(true)">Valider &amp; Marquer comme reçu</button>
     </div>
 </div>
 
@@ -129,7 +128,7 @@
         <h3>Annulation</h3>
     </div>
     <div class="modal-body">
-        <h4>Voulez-vous annuler cette commande ?</h4>
+        <h4>Voulez-vous annuler ce bon de reception ?</h4>
     </div>
     <div class="modal-footer">
         <button type="button" data-dismiss="modal" class="btn">Non</button>

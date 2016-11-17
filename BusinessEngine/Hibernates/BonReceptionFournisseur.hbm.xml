@@ -17,7 +17,12 @@
     <property name="Commentaire">
       <column name="Commentaire"/>
     </property>
-    
+
+    <property name="MarquerRecu">
+      <column name="MarquerRecu"/>
+    </property>
+
+    <many-to-one name ="Fournisseur" lazy="false" class ="Fournisseur" column="Fournisseur"/>
     <many-to-one name ="CommandesFournisseur" lazy="false" class ="CommandesFournisseur" column="CommandesFournisseur"/>
   </class>
 </hibernate-mapping>

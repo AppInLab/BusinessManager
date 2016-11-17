@@ -108,6 +108,7 @@ namespace PoissonnerieApi.Controllers
                 //Creation du bon de reception
                 var bonReception = new BonReceptionFournisseur();
                 bonReception.CommandesFournisseur = commandesFournisseur;
+                bonReception.Fournisseur = commandesFournisseur.Fournisseur;
                 bonReception.DateCreation = DateTime.UtcNow;
                 bonReception.DateModification = bonReception.DateCreation;
                 bonReception.Commentaire = bonReception.Commentaire;

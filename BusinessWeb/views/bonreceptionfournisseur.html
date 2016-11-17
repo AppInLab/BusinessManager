@@ -2,7 +2,7 @@
     <div class="portlet-body">
         <div class="table-toolbar">
             <div class="btn-group">
-                <a ng-click="Init()" href="#/NouvelleCommandeFournisseur" class="btn green">Nouvelle Commande Fournisseur <i class="icon-plus"></i></a>
+                <a ng-click="Init()" href="#/NouveauBonReceptionFournisseur" class="btn green">Nouveau Bon de Reception <i class="icon-plus"></i></a>
             </div>
         </div>
         <div class="dataTables_wrapper form-inline" role="grid">
@@ -15,27 +15,27 @@
                         <th role="columnheader">Total HT</th>
                         <th role="columnheader">Total TVA</th>
                         <th role="columnheader">Total TTC</th>
-                        <th role="columnheader">Transferer vers</th>
+                        <th role="columnheader">Valider</th>
                         <th role="columnheader" style="text-align:center;">#</th>
                     </tr>
                 </thead>
 
                 <tbody role="alert" aria-live="polite" aria-relevant="all">
-                    <tr dir-paginate="cmdFournisseur in CommandesFournisseur | itemsPerPage: 15">
+                    <tr dir-paginate="bonReception in BonsReceptionFournisseur | itemsPerPage: 15">
                         <td>{{$index + 1}}</td>
-                        <td>{{cmdFournisseur.DateCreation | date : 'dd/MM/yyyy HH:mm'}}</td>
-                        <td>{{cmdFournisseur.Fournisseur.RaisonSociale}}</td>
-                        <td>{{cmdFournisseur.TotalHt}}</td>
-                        <td>{{cmdFournisseur.TotalTva}}</td>
-                        <td>{{cmdFournisseur.TotalTtc}}</td>
+                        <td>{{bonReception.DateCreation | date : 'dd/MM/yyyy HH:mm'}}</td>
+                        <td>{{bonReception.Fournisseur.RaisonSociale}}</td>
+                        <td>{{bonReception.TotalHt}}</td>
+                        <td>{{bonReception.TotalTva}}</td>
+                        <td>{{bonReception.TotalTtc}}</td>
                         <td>
-                            <a ng-if="!cmdFournisseur.EstLieABonReception" href="" data-toggle="modal" data-target="#confirmationTransfert"><i class="halflings-icon share-alt"></i> Bon de reception</a>
-                            <span ng-if="cmdFournisseur.EstLieABonReception" style="color:green"><i class="icon-ok-circle"></i> Transférée</span>
+                            <a ng-if="!bonReception.MarquerRecu" href="" data-toggle="modal" data-target="#confirmationTransfert" style="color:red"><i class="halflings-icon share-alt"></i> Marquer comme reçu</a>
+                            <span ng-if="bonReception.MarquerRecu" style="color:green"><i class="icon-ok-circle"></i> Reçu</span>
                         </td>
                         <td>
-                            <a href="" data-toggle="modal" data-target="#detailscommandefournisseur" ng-click="InfosBonReception(cmdFournisseur)" class="btn mini blue"><i class="icon-info"></i></a>
-                            <a ng-if="!cmdFournisseur.EstLieABonReception"  href="#/EditerCommandeFournisseur/{{cmdFournisseur.Id}}" class="btn mini green"><i class="icon-edit"></i></a>
-                            <a ng-if="!cmdFournisseur.EstLieABonReception" href="" class="btn mini red"><i class="icon-trash"></i></a>
+                            <a href="" data-toggle="modal" data-target="#detailsbonreceptionfournisseur" ng-click="InfosBonReception(bonReception)" class="btn mini blue"><i class="icon-info"></i></a>
+                            <a ng-if="!bonReception.MarquerRecu" href="#/EditerBonReceptionFournisseur/{{bonReception.Id}}" class="btn mini green"><i class="icon-edit"></i></a>
+                            <a ng-if="!bonReception.MarquerRecu" href="" class="btn mini red"><i class="icon-trash"></i></a>
                         </td>
                     </tr>
                 </tbody>
@@ -105,10 +105,10 @@
     </div>
 </div>
 
-<div id="detailscommandefournisseur" class="modal hide fade" tabindex="-1" data-width="760" aria-hidden="true">
+<div id="detailsbonreceptionfournisseur" class="modal hide fade" tabindex="-1" data-width="760" aria-hidden="true">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-        <h3>Details commande</h3>
+        <h3>Details du bon de reception</h3>
     </div>
     <div class="modal-body">
         <div class="row-fluid">
