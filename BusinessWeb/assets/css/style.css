@@ -5573,6 +5573,7 @@ div.radio.disabled:hover {
 #categorieProduit ul li:hover, #categorieProduit ul li.active{
   background: #eeeeee;
   font-weight: bold;
+  cursor: pointer;
 }
 
 .text-bold{

@@ -6,6 +6,8 @@ function ($rootScope, $scope, $http, $location, $cookies, $cookieStore, $routePa
 
     $rootScope.DateToday = new Date();
     $scope.user = {};
+    $rootScope.TYPE_VENTE_UNITE_KEY = 1;
+    $rootScope.TYPE_VENTE_BLOCK_KEY = 2;
 
     $rootScope.Alert = function (type, icon, message) {
         $scope.alertType = type;
@@ -359,8 +361,8 @@ function ($rootScope, $scope, $http) {
 
     $rootScope.PageName = "Vente au comptoir";
     $rootScope.PageDescription = "Effectuer une vente au comptoir";
-    $scope.TYPE_VENTE_UNITE_KEY = 1;
-    $scope.TYPE_VENTE_BLOCK_KEY = 2;
+    //$rootScope.TYPE_VENTE_UNITE_KEY = 1;
+    //$rootScope.TYPE_VENTE_BLOCK_KEY = 2;
     //$scope.MODE_VENTE_CASH = "_cash";
     //$scope.MODE_VENTE_CLIENT = "_client";
 
@@ -388,13 +390,13 @@ function ($rootScope, $scope, $http) {
 
         $scope.TypesDeVente = [];
         if (produit.Unite.IsBlock) {//Vente au carton
-            $scope.TypesDeVente.push({ Id: $scope.TYPE_VENTE_BLOCK_KEY, Libelle: produit.Block.Libelle });
+            $scope.TypesDeVente.push({ Id: $rootScope.TYPE_VENTE_BLOCK_KEY, Libelle: produit.Block.Libelle });
             if(produit.UniteParBlock > 1)
-                $scope.TypesDeVente.push({ Id: $scope.TYPE_VENTE_UNITE_KEY, Libelle: produit.Unite.Libelle });
+                $scope.TypesDeVente.push({ Id: $rootScope.TYPE_VENTE_UNITE_KEY, Libelle: produit.Unite.Libelle });
             else
                 $scope.ProduitAajouter.TypeVenteId = $scope.TypesDeVente[0].Id;//Selectionner le premier élément
         } else {//Vente en plaquette
-            $scope.TypesDeVente.push({ Id: $scope.TYPE_VENTE_UNITE_KEY, Libelle: produit.Unite.Libelle });
+            $scope.TypesDeVente.push({ Id: $rootScope.TYPE_VENTE_UNITE_KEY, Libelle: produit.Unite.Libelle });
             $scope.ProduitAajouter.TypeVenteId = $scope.TypesDeVente[0].Id;//Selectionner le premier élément
         }
     }
@@ -424,9 +426,9 @@ function ($rootScope, $scope, $http) {
         $scope.ProduitAajouter.TotalUnitaire = $scope.ProduitAajouter.QuantiteUnitaire * $scope.ProduitAajouter.PrixUnitaire;
 
         $scope.ProduitAajouter.Totaux = 0;
-        if ($scope.ProduitAajouter.TypeVenteId == $scope.TYPE_VENTE_UNITE_KEY)
+        if ($scope.ProduitAajouter.TypeVenteId == $rootScope.TYPE_VENTE_UNITE_KEY)
             $scope.ProduitAajouter.Totaux = $scope.ProduitAajouter.TotalUnitaire;
-        else if($scope.ProduitAajouter.TypeVenteId == $scope.TYPE_VENTE_BLOCK_KEY)
+        else if($scope.ProduitAajouter.TypeVenteId == $rootScope.TYPE_VENTE_BLOCK_KEY)
             $scope.ProduitAajouter.Totaux = $scope.ProduitAajouter.TotalBlock;
     }
 
@@ -444,9 +446,9 @@ function ($rootScope, $scope, $http) {
         $scope.TotauxPanier = 0;
         for (i = 0; i < $scope.Panier.length; i++) {
             item = $scope.Panier[i];
-            if (item.TypeVenteId == $scope.TYPE_VENTE_UNITE_KEY)
+            if (item.TypeVenteId == $rootScope.TYPE_VENTE_UNITE_KEY)
                 $scope.TotauxPanier = Number($scope.TotauxPanier) + Number(item.TotalUnitaire);
-            else if (item.TypeVenteId == $scope.TYPE_VENTE_BLOCK_KEY)
+            else if (item.TypeVenteId == $rootScope.TYPE_VENTE_BLOCK_KEY)
                 $scope.TotauxPanier = Number($scope.TotauxPanier) + Number(item.TotalBlock);
         }
     }
@@ -603,7 +605,7 @@ function ($rootScope, $scope, $http) {
     }
 
     $scope.SendData = function () {
-        $http.post($rootScope.ServerURL + "CommandesFournisseur", $scope.CommandeFournisseur)
+        $http.post($rootScope.ServerURL + "CommandeFournisseur", $scope.CommandeFournisseur)
         .success(function (response) {
             console.log(response);
             if (response.ResponseCode == 0) {
@@ -617,15 +619,36 @@ function ($rootScope, $scope, $http) {
         });
     }
 
-    //$scope.AncienCommandesFournisseur = [];
-    //$scope.Modifier = function (data) {
-    //    $scope.Fournisseur = data;
-    //    angular.copy($scope.Fournisseurs, $scope.AncienFournisseurs);
-    //}
+    $scope.TransfererVersBonReception = function (data) {        
+        $http.get($rootScope.ServerURL + "CommandeFournisseur?transfertBonReception=" + data.Id)
+        .success(function (response) {
+            console.log(response);
+            if (response.ResponseCode == 0) {
+                $rootScope.LISTE_FOURNISSEURS_DATA();
+            } else {//Error
+                console.log(response);
+            }
+        })
+        .error(function (response) {
+            console.log(response);
+        });
+    }
 
-    //$scope.Annuler = function () {
-    //    $scope.Fournisseurs = angular.copy($scope.AncienFournisseurs);
-    //}    
+    $scope.InfosBonReception = function (data) {
+        $scope.Commande = {};
+        $http.get($rootScope.ServerURL + "CommandeFournisseur?id=" + data.Id)
+        .success(function (response) {
+            console.log(response);
+            if (response.ResponseCode == 0) {
+                $scope.Commande = response.Data;
+            } else {//Error
+                console.log(response);
+            }
+        })
+        .error(function (response) {
+            console.log(response);
+        });
+    }
 
     $scope.LISTE_COMMANDES_FOURNISSEUR_DATA();
 }]);
@@ -635,9 +658,7 @@ MainController.controller('NouvelleCommandeFournisseurController', ['$rootScope'
 function ($rootScope, $scope, $http, $window, $routeParams) {
 
     $rootScope.PageName = "Nouvelle commande fournisseur";
-    $scope.TYPE_VENTE_UNITE_KEY = 1;
-    $scope.TYPE_VENTE_BLOCK_KEY = 2;
-
+    
     //Index de chargement des produits en fonction de la categorie
     $scope.SelectedItem = null;
     $scope.Panier = [];
@@ -661,13 +682,13 @@ function ($rootScope, $scope, $http, $window, $routeParams) {
 
         $scope.TypesDeVente = [];
         if (produit.Unite.IsBlock) {//Vente au carton
-            $scope.TypesDeVente.push({ Id: $scope.TYPE_VENTE_BLOCK_KEY, Libelle: produit.Block.Libelle });
+            $scope.TypesDeVente.push({ Id: $rootScope.TYPE_VENTE_BLOCK_KEY, Libelle: produit.Block.Libelle });
             if (produit.UniteParBlock > 1)
-                $scope.TypesDeVente.push({ Id: $scope.TYPE_VENTE_UNITE_KEY, Libelle: produit.Unite.Libelle });
+                $scope.TypesDeVente.push({ Id: $rootScope.TYPE_VENTE_UNITE_KEY, Libelle: produit.Unite.Libelle });
             else
                 $scope.ProduitAajouter.TypeVenteId = $scope.TypesDeVente[0].Id;//Selectionner le premier élément
         } else {//Vente en plaquette
-            $scope.TypesDeVente.push({ Id: $scope.TYPE_VENTE_UNITE_KEY, Libelle: produit.Unite.Libelle });
+            $scope.TypesDeVente.push({ Id: $rootScope.TYPE_VENTE_UNITE_KEY, Libelle: produit.Unite.Libelle });
             $scope.ProduitAajouter.TypeVenteId = $scope.TypesDeVente[0].Id;//Selectionner le premier élément
         }
     }
@@ -683,9 +704,9 @@ function ($rootScope, $scope, $http, $window, $routeParams) {
         $scope.ProduitAajouter.TotalUnitaire = $scope.ProduitAajouter.QuantiteUnitaire * $scope.ProduitAajouter.PrixAchat;//PrixUnitaire;
 
         $scope.ProduitAajouter.Tht = 0;
-        if ($scope.ProduitAajouter.TypeVenteId == $scope.TYPE_VENTE_UNITE_KEY)
+        if ($scope.ProduitAajouter.TypeVenteId == $rootScope.TYPE_VENTE_UNITE_KEY)
             $scope.ProduitAajouter.Tht = $scope.ProduitAajouter.TotalUnitaire;
-        else if ($scope.ProduitAajouter.TypeVenteId == $scope.TYPE_VENTE_BLOCK_KEY)
+        else if ($scope.ProduitAajouter.TypeVenteId == $rootScope.TYPE_VENTE_BLOCK_KEY)
             $scope.ProduitAajouter.Tht = $scope.ProduitAajouter.TotalBlock;
 
         $scope.ProduitAajouter.MontantTva = (($scope.ProduitAajouter.Tva / 100) * $scope.ProduitAajouter.Tht);
@@ -709,9 +730,9 @@ function ($rootScope, $scope, $http, $window, $routeParams) {
 
         for (i = 0; i < $scope.Panier.length; i++) {
             item = $scope.Panier[i];
-            if (item.TypeVenteId == $scope.TYPE_VENTE_UNITE_KEY)
+            if (item.TypeVenteId == $rootScope.TYPE_VENTE_UNITE_KEY)
                 $scope.TotauxPanierHt = Number($scope.TotauxPanierHt) + Number(item.TotalUnitaire);
-            else if (item.TypeVenteId == $scope.TYPE_VENTE_BLOCK_KEY)
+            else if (item.TypeVenteId == $rootScope.TYPE_VENTE_BLOCK_KEY)
                 $scope.TotauxPanierHt = Number($scope.TotauxPanierHt) + Number(item.TotalBlock);
 
             $scope.TotauxPanierTva = Number($scope.TotauxPanierTva) + Number(item.MontantTva);
@@ -728,14 +749,11 @@ function ($rootScope, $scope, $http, $window, $routeParams) {
         //Mise a jour des type de vente
         $scope.TypesDeVente = [];
         if (data.Produit.Unite.IsBlock) {//Vente au carton
-            $scope.TypesDeVente.push({ Id: $scope.TYPE_VENTE_BLOCK_KEY, Libelle: data.Produit.Block.Libelle });
+            $scope.TypesDeVente.push({ Id: $rootScope.TYPE_VENTE_BLOCK_KEY, Libelle: data.Produit.Block.Libelle });
             if (data.Produit.UniteParBlock > 1)
-                $scope.TypesDeVente.push({ Id: $scope.TYPE_VENTE_UNITE_KEY, Libelle: data.Produit.Unite.Libelle });
-            //else
-            //    $scope.ProduitAajouter.TypeVenteId = $scope.TypesDeVente[0].Id;//Selectionner le premier élément
+                $scope.TypesDeVente.push({ Id: $rootScope.TYPE_VENTE_UNITE_KEY, Libelle: data.Produit.Unite.Libelle });
         } else {//Vente en plaquette
-            $scope.TypesDeVente.push({ Id: $scope.TYPE_VENTE_UNITE_KEY, Libelle: data.Produit.Unite.Libelle });
-            //$scope.ProduitAajouter.TypeVenteId = $scope.TypesDeVente[0].Id;//Selectionner le premier élément
+            $scope.TypesDeVente.push({ Id: $rootScope.TYPE_VENTE_UNITE_KEY, Libelle: data.Produit.Unite.Libelle });
         }
     }
 
@@ -811,8 +829,6 @@ MainController.controller('EditerCommandeFournisseurController', ['$rootScope', 
 function ($rootScope, $scope, $http, $window, $routeParams) {
 
     $rootScope.PageName = "Editer commande fournisseur";
-    $scope.TYPE_VENTE_UNITE_KEY = 1;
-    $scope.TYPE_VENTE_BLOCK_KEY = 2;
     $scope.commandeId = $routeParams.id;
 
     //Index de chargement des produits en fonction de la categorie
@@ -863,13 +879,13 @@ function ($rootScope, $scope, $http, $window, $routeParams) {
 
         $scope.TypesDeVente = [];
         if (produit.Unite.IsBlock) {//Vente au carton
-            $scope.TypesDeVente.push({ Id: $scope.TYPE_VENTE_BLOCK_KEY, Libelle: produit.Block.Libelle });
+            $scope.TypesDeVente.push({ Id: $rootScope.TYPE_VENTE_BLOCK_KEY, Libelle: produit.Block.Libelle });
             if (produit.UniteParBlock > 1)
-                $scope.TypesDeVente.push({ Id: $scope.TYPE_VENTE_UNITE_KEY, Libelle: produit.Unite.Libelle });
+                $scope.TypesDeVente.push({ Id: $rootScope.TYPE_VENTE_UNITE_KEY, Libelle: produit.Unite.Libelle });
             else
                 $scope.ProduitAajouter.TypeVenteId = $scope.TypesDeVente[0].Id;//Selectionner le premier élément
         } else {//Vente en plaquette
-            $scope.TypesDeVente.push({ Id: $scope.TYPE_VENTE_UNITE_KEY, Libelle: produit.Unite.Libelle });
+            $scope.TypesDeVente.push({ Id: $rootScope.TYPE_VENTE_UNITE_KEY, Libelle: produit.Unite.Libelle });
             $scope.ProduitAajouter.TypeVenteId = $scope.TypesDeVente[0].Id;//Selectionner le premier élément
         }
     }
@@ -885,9 +901,9 @@ function ($rootScope, $scope, $http, $window, $routeParams) {
         $scope.ProduitAajouter.TotalUnitaire = $scope.ProduitAajouter.QuantiteUnitaire * $scope.ProduitAajouter.PrixAchat;//PrixUnitaire;
 
         $scope.ProduitAajouter.Tht = 0;
-        if ($scope.ProduitAajouter.TypeVenteId == $scope.TYPE_VENTE_UNITE_KEY)
+        if ($scope.ProduitAajouter.TypeVenteId == $rootScope.TYPE_VENTE_UNITE_KEY)
             $scope.ProduitAajouter.Tht = $scope.ProduitAajouter.TotalUnitaire;
-        else if ($scope.ProduitAajouter.TypeVenteId == $scope.TYPE_VENTE_BLOCK_KEY)
+        else if ($scope.ProduitAajouter.TypeVenteId == $rootScope.TYPE_VENTE_BLOCK_KEY)
             $scope.ProduitAajouter.Tht = $scope.ProduitAajouter.TotalBlock;
 
         $scope.ProduitAajouter.MontantTva = (($scope.ProduitAajouter.Tva / 100) * $scope.ProduitAajouter.Tht);
@@ -911,9 +927,9 @@ function ($rootScope, $scope, $http, $window, $routeParams) {
 
         for (i = 0; i < $scope.Panier.length; i++) {
             item = $scope.Panier[i];
-            if (item.TypeVenteId == $scope.TYPE_VENTE_UNITE_KEY)
+            if (item.TypeVenteId == $rootScope.TYPE_VENTE_UNITE_KEY)
                 $scope.TotauxPanierHt = Number($scope.TotauxPanierHt) + Number(item.TotalUnitaire);
-            else if (item.TypeVenteId == $scope.TYPE_VENTE_BLOCK_KEY)
+            else if (item.TypeVenteId == $rootScope.TYPE_VENTE_BLOCK_KEY)
                 $scope.TotauxPanierHt = Number($scope.TotauxPanierHt) + Number(item.TotalBlock);
 
             $scope.TotauxPanierTva = Number($scope.TotauxPanierTva) + Number(item.MontantTva);
@@ -930,13 +946,13 @@ function ($rootScope, $scope, $http, $window, $routeParams) {
         //Mise a jour des type de vente
         $scope.TypesDeVente = [];
         if (data.Produit.Unite.IsBlock) {//Vente au carton
-            $scope.TypesDeVente.push({ Id: $scope.TYPE_VENTE_BLOCK_KEY, Libelle: data.Produit.Block.Libelle });
+            $scope.TypesDeVente.push({ Id: $rootScope.TYPE_VENTE_BLOCK_KEY, Libelle: data.Produit.Block.Libelle });
             if (data.Produit.UniteParBlock > 1)
-                $scope.TypesDeVente.push({ Id: $scope.TYPE_VENTE_UNITE_KEY, Libelle: data.Produit.Unite.Libelle });
+                $scope.TypesDeVente.push({ Id: $rootScope.TYPE_VENTE_UNITE_KEY, Libelle: data.Produit.Unite.Libelle });
             //else
             //    $scope.ProduitAajouter.TypeVenteId = $scope.TypesDeVente[0].Id;//Selectionner le premier élément
         } else {//Vente en plaquette
-            $scope.TypesDeVente.push({ Id: $scope.TYPE_VENTE_UNITE_KEY, Libelle: data.Produit.Unite.Libelle });
+            $scope.TypesDeVente.push({ Id: $rootScope.TYPE_VENTE_UNITE_KEY, Libelle: data.Produit.Unite.Libelle });
             //$scope.ProduitAajouter.TypeVenteId = $scope.TypesDeVente[0].Id;//Selectionner le premier élément
         }
     }
@@ -971,7 +987,6 @@ function ($rootScope, $scope, $http, $window, $routeParams) {
     }
 
     $scope.SendData = function (bonDeReception) {
-        //$scope.Commande = {};
         $scope.Commande.Panier = $scope.Panier;
         $scope.Commande.Fournisseur = $scope.Fournisseur;
         $scope.Commande.Commentaire = $scope.Commentaire;
@@ -999,11 +1014,10 @@ function ($rootScope, $scope, $http, $window, $routeParams) {
 }]);
 
 //PointJourController
-MainController.controller('PointJourController', ['$rootScope', '$scope', '$http',
+MainController.controller('BonReceptionFournisseurController', ['$rootScope', '$scope', '$http',
 function ($rootScope, $scope, $http) {
 
-    $rootScope.PageName = "Point du jour";
-    $rootScope.PageDescription = "";
+    $rootScope.PageName = "Bon de reception";
 
 }]);
 

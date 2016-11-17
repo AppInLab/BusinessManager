@@ -78,11 +78,62 @@ namespace PoissonnerieApi.Controllers
                     item.MontantTva = (item.Tva / 100) * item.Tht;
                     item.Ttc = item.Tht + item.MontantTva;
 
+                    commandesFournisseur.TotalHt += item.Tht;
+                    commandesFournisseur.TotalTva += item.MontantTva;
+                    commandesFournisseur.TotalTtc += item.Ttc;
+
                     panier.Add(item);
                 }
 
                 commandesFournisseur.Panier = panier;
                 responseData = ResponseData.GetSuccess(commandesFournisseur);
+            }
+            catch (Exception ex)
+            {
+                responseData = ResponseData.GetError(ex.Message);
+            }
+
+            return responseData;
+        }
+
+        // GET api/commandefournisseur?transfertBonReception=5
+        public object GetTransfertToBonReception(int transfertBonReception)
+        {
+            ResponseData responseData;
+            try
+            {
+                //Recuperation de la commande
+                var commandesFournisseur = DataManager.Get<CommandesFournisseur>(transfertBonReception);
+                
+                //Creation du bon de reception
+                var bonReception = new BonReceptionFournisseur();
+                bonReception.CommandesFournisseur = commandesFournisseur;
+                bonReception.DateCreation = DateTime.UtcNow;
+                bonReception.DateModification = bonReception.DateCreation;
+                bonReception.Commentaire = bonReception.Commentaire;
+                //Enregistrement du bon de reception
+                DataManager.Save(bonReception);
+
+                //Recuperation des details de la commandes
+                var detailsCommande = DataManager.GetDetailsCommandesFournisseur(commandesFournisseur.Id);
+                //Copie des details de la commande dans les details du bon de reception
+                foreach (var dc in detailsCommande)
+                {
+                    var detailsBonReception = new DetailsBonReceptionFournisseur();
+                    detailsBonReception.BonReceptionFournisseur = bonReception;
+                    detailsBonReception.DateCreation = DateTime.UtcNow;
+                    detailsBonReception.Produit = dc.Produit;
+                    detailsBonReception.PrixUnitaire = dc.PrixUnitaire;
+                    detailsBonReception.Quantite = dc.Quantite;
+                    detailsBonReception.Tva = dc.Tva;
+                    detailsBonReception.TypeColisage = dc.TypeColisage;
+
+                    DataManager.Save(detailsBonReception);
+                }
+
+                commandesFournisseur.EstLieABonReception = true;
+                DataManager.Save(commandesFournisseur);
+                responseData = ResponseData.GetSuccess("OK");
             }
             catch (Exception ex)
             {

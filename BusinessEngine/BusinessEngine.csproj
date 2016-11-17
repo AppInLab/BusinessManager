@@ -69,6 +69,7 @@
     <Compile Include="Models\Chineur.cs" />
     <Compile Include="Models\Block.cs" />
     <Compile Include="Models\BonReceptionFournisseur.cs" />
+    <Compile Include="Models\DetailsBonReceptionFournisseur.cs" />
     <Compile Include="Models\DetailsCommandesFournisseur.cs" />
     <Compile Include="Models\Unite.cs" />
     <Compile Include="Models\ProduitsSortieChineur.cs" />
@@ -97,6 +98,7 @@
     <Content Include="ExternalDLLs\MySql.Data.dll" />
     <Content Include="ExternalDLLs\Newtonsoft.Json.dll" />
     <Content Include="ExternalDLLs\NHibernate.dll" />
+    <EmbeddedResource Include="Hibernates\DetailsBonReceptionFournisseur.hbm.xml" />
     <EmbeddedResource Include="Hibernates\BonReceptionFournisseur.hbm.xml" />
     <EmbeddedResource Include="Hibernates\DetailsCommandesFournisseur.hbm.xml" />
     <EmbeddedResource Include="Hibernates\Block.hbm.xml" />

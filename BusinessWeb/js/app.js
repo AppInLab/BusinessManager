@@ -75,9 +75,9 @@ app.config(["$routeProvider",
             });
 
             //BonLivraison            
-            $routeProvider.when("/BonLivraison", {
-                templateUrl: "views/BonLivraison.html",
-                controller: "BonLivraisonController"
+            $routeProvider.when("/BonReceptionFournisseur", {
+                templateUrl: "views/bonreceptionfournisseur.html",
+                controller: "BonReceptionFournisseurController"
             });
 
             //PointJournee            

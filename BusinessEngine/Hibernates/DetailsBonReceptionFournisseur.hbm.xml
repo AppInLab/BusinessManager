@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="BusinessEngine.Models" assembly="BusinessEngine">
+  <class name="DetailsBonReceptionFournisseur" table="DetailsBonReceptionFournisseur" lazy="false">
+    <id name="Id">
+      <column name="Id"/>
+      <generator class="native"/>
+    </id>
+
+    <property name="DateCreation">
+      <column name="DateCreation"/>
+    </property>
+
+    <property name="Quantite">
+      <column name="Quantite"/>
+    </property>
+
+    <property name="PrixUnitaire">
+      <column name="PrixUnitaire"/>
+    </property>
+
+    <property name="Tva">
+      <column name="Tva"/>
+    </property>
+
+    <property name="TypeColisage">
+      <column name="TypeColisage"/>
+    </property>
+
+    <many-to-one name ="Produit" lazy="false" class ="Produit" column="Produit"/>
+    <many-to-one name ="BonReceptionFournisseur" lazy="false" class ="BonReceptionFournisseur" column="BonReceptionFournisseur"/>
+  </class>
+</hibernate-mapping>
