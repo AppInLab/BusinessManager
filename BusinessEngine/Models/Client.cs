@@ -11,6 +11,7 @@ namespace BusinessEngine.Models
         virtual public int Id { get; set; }
         virtual public DateTime DateCreation { get; set; }
         virtual public DateTime DateModification { get; set; }
+        virtual public string Code { get; set; }
         virtual public string NomComplet { get; set; }
         virtual public string Adresse { get; set; }
         virtual public string Contacts { get; set; }

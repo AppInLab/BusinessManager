@@ -26,9 +26,14 @@
       <column name="PrixVenteBlockParDefaut"/>
     </property>
 
-    <property name="QuantiteStock">
-      <column name="QuantiteStock"/>
+    <property name="QuantiteStockBlock">
+      <column name="QuantiteStockBlock"/>
     </property>
+
+    <property name="QuantiteStockResteEnUnite">
+      <column name="QuantiteStockResteEnUnite"/>
+    </property>
+
 
     <property name="StockMinimum">
       <column name="StockMinimum"/>

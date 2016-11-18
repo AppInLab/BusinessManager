@@ -66,6 +66,8 @@
     <Compile Include="DataModel\PanierItem.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="Manager\DataManager.cs" />
+    <Compile Include="Models\DetailsFacturesClient.cs" />
+    <Compile Include="Models\FacturesClient.cs" />
     <Compile Include="Models\Chineur.cs" />
     <Compile Include="Models\Block.cs" />
     <Compile Include="Models\BonReceptionFournisseur.cs" />
@@ -98,6 +100,8 @@
     <Content Include="ExternalDLLs\MySql.Data.dll" />
     <Content Include="ExternalDLLs\Newtonsoft.Json.dll" />
     <Content Include="ExternalDLLs\NHibernate.dll" />
+    <EmbeddedResource Include="Hibernates\DetailsFacturesClient.hbm.xml" />
+    <EmbeddedResource Include="Hibernates\FacturesClient.hbm.xml" />
     <EmbeddedResource Include="Hibernates\DetailsBonReceptionFournisseur.hbm.xml" />
     <EmbeddedResource Include="Hibernates\BonReceptionFournisseur.hbm.xml" />
     <EmbeddedResource Include="Hibernates\DetailsCommandesFournisseur.hbm.xml" />
