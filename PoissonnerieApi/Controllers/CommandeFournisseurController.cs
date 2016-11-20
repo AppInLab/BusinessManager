@@ -214,6 +214,12 @@ namespace PoissonnerieApi.Controllers
 
                 DataManager.Save(detailsCmdFournisseur);
             }
+
+            //Si c'est lier à un bon de reception
+            if (commandeFournisseur.EstLieABonReception)
+            {
+                GetTransfertToBonReception(commandeFournisseur.Id);
+            }
         }
     }
 }

@@ -96,6 +96,27 @@ namespace PoissonnerieApi.Controllers
             return responseData;
         }
 
+        // GET api/bonreceptionfournisseur?marquerCommeRecu=5
+        public object GetMarquerCommeRecu(int marquerCommeRecu)
+        {
+            ResponseData responseData;
+            try
+            {
+                //Recuperation de la commande
+                var bonReceptionFournisseur = DataManager.Get<BonReceptionFournisseur>(marquerCommeRecu);
+                bonReceptionFournisseur.MarquerRecu = true;
+                DataManager.Save(bonReceptionFournisseur);
+
+                responseData = ResponseData.GetSuccess("OK");
+            }
+            catch (Exception ex)
+            {
+                responseData = ResponseData.GetError(ex.Message);
+            }
+
+            return responseData;
+        }
+
         // POST api/bonreceptionfournisseur
         public object Post([FromBody]JToken data)
         {

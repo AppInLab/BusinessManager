@@ -121,6 +121,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\ProduitsControllerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Controllers\ValuesControllerTest.cs" />
     <Compile Include="General\IdGenerationTest.cs" />
@@ -132,6 +133,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BusinessEngine\BusinessEngine.csproj">
+      <Project>{06acf43b-01ce-4832-8ac0-2f22027d404e}</Project>
+      <Name>BusinessEngine</Name>
+    </ProjectReference>
     <ProjectReference Include="..\PoissonnerieApi\PoissonnerieApi.csproj">
       <Project>{FAF49DCC-D888-4FCC-8A76-B40A3EEBC4C7}</Project>
       <Name>PoissonnerieApi</Name>

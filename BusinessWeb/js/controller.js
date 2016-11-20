@@ -1,4 +1,16 @@
-var MainController = angular.module('MainController', []);
+var MainController = angular.module('MainController', ['ngPrint']);
+
+MainController.directive('ngRightClick', function ($parse) {
+    return function (scope, element, attrs) {
+        var fn = $parse(attrs.ngRightClick);
+        element.bind('contextmenu', function (event) {
+            scope.$apply(function () {
+                event.preventDefault();
+                fn(scope, { $event: event });
+            });
+        });
+    };
+});
 
 //Controleur du GlobalController
 MainController.controller('GlobalController', ['$rootScope', '$scope', '$http','$location','$cookies','$cookieStore','$routeParams',
@@ -8,6 +20,10 @@ function ($rootScope, $scope, $http, $location, $cookies, $cookieStore, $routePa
     $scope.user = {};
     $rootScope.TYPE_VENTE_UNITE_KEY = 1;
     $rootScope.TYPE_VENTE_BLOCK_KEY = 2;
+
+    $rootScope.HandleClick = function () {
+        //console.log("Test");
+    }
 
     $rootScope.Alert = function (type, icon, message) {
         $scope.alertType = type;
@@ -324,12 +340,17 @@ function ($rootScope, $scope, $http) {
     $rootScope.PageName = "Produits";
     $scope.Uri = "Produits";
 
+    $scope.CopyOfProduits = [];//Sauvegarde
     $scope.Init = function () {
         $scope.Produit = {};
         $scope.Produit.Tva = 0;
         $scope.Produit.PrixAchat = 0;
         $scope.Produit.Ttc = 0;
         $scope.Produit.UniteParBlock = 1;
+        $scope.ShowBlock = null;
+
+        //Faire une sauvegarde les produits existants
+        angular.copy($scope.Produits, $scope.CopyOfProduits);
     }
 
     $scope.CanShowBlock = function (unite) {
@@ -357,8 +378,19 @@ function ($rootScope, $scope, $http) {
         });
     }
 
+    
     $scope.Modifier = function (data) {
         $scope.Produit = data;
+        angular.copy($scope.Produits, $scope.CopyOfProduits);
+
+        for (var i = 0; i < $scope.Unites.length; i++) {
+            if ($scope.Unites[i].Id != $scope.Produit.Unite.Id) continue;
+            $scope.ShowBlock = $scope.Unites[i].IsBlock;
+        }
+    }
+
+    $scope.Annuler = function () {
+        $scope.Produits = angular.copy($scope.CopyOfProduits);
     }
 
     //Charger les données
@@ -370,13 +402,11 @@ function ($rootScope, $scope, $http) {
 }]);
 
 //AchatRapideController
-MainController.controller('VenteController', ['$rootScope', '$scope', '$http',
-function ($rootScope, $scope, $http) {
+MainController.controller('VenteController', ['$rootScope', '$scope', '$http','$filter',
+function ($rootScope, $scope, $http, $filter) {
 
     $rootScope.PageName = "Vente au comptoir";
-    $rootScope.PageDescription = "Effectuer une vente au comptoir";
-    //$rootScope.TYPE_VENTE_UNITE_KEY = 1;
-    //$rootScope.TYPE_VENTE_BLOCK_KEY = 2;
+    //$rootScope.PageDescription = "Effectuer une vente au comptoir";
     //$scope.MODE_VENTE_CASH = "_cash";
     //$scope.MODE_VENTE_CLIENT = "_client";
 
@@ -426,7 +456,7 @@ function ($rootScope, $scope, $http) {
 
     $scope.CalculerCaisse = function () {
         $scope.Caisse.NetApayer = $scope.TotauxPanier - $scope.Caisse.Remise;
-        $scope.Caisse.MontantRendu = $scope.Caisse.NetApayer - $scope.Caisse.MontantPercu;
+        $scope.Caisse.MontantRendu = $scope.Caisse.MontantPercu - $scope.Caisse.NetApayer;
     }
 
     $scope.Calculer = function () {
@@ -436,8 +466,8 @@ function ($rootScope, $scope, $http) {
         if (isNaN($scope.ProduitAajouter.QuantiteUnitaire))
             $scope.ProduitAajouter.QuantiteUnitaire = 0;
 
-        $scope.ProduitAajouter.TotalBlock = $scope.ProduitAajouter.QuantiteBlock * $scope.ProduitAajouter.PrixBlock;
-        $scope.ProduitAajouter.TotalUnitaire = $scope.ProduitAajouter.QuantiteUnitaire * $scope.ProduitAajouter.PrixUnitaire;
+        $scope.ProduitAajouter.TotalBlock = Math.round($scope.ProduitAajouter.QuantiteBlock * $scope.ProduitAajouter.PrixBlock);
+        $scope.ProduitAajouter.TotalUnitaire = Math.round($scope.ProduitAajouter.QuantiteUnitaire * $scope.ProduitAajouter.PrixUnitaire);
 
         $scope.ProduitAajouter.Totaux = 0;
         if ($scope.ProduitAajouter.TypeVenteId == $rootScope.TYPE_VENTE_UNITE_KEY)
@@ -486,7 +516,7 @@ function ($rootScope, $scope, $http) {
 
     $scope.ChargerProduits = function (categorie) {
         $scope.SelectedItem = categorie.Id;
-        $http.get($rootScope.ServerURL + "Produits?categorie=" + categorie.Id)
+        $http.get($rootScope.ServerURL + "Produits?categorieAvecQuantite=" + categorie.Id)
         .success(function (response) {
             console.log(response);
             if (response.ResponseCode == 0) {
@@ -503,19 +533,29 @@ function ($rootScope, $scope, $http) {
         $scope.Panier = [];
         $scope.TotauxPanier = 0;
         $scope.ProduitsParCategorie = [];
-        $scope.Vente = {};
+        //$scope.Facture = {};
     }
 
-    $scope.SendData = function (mode) {
-        $scope.Vente.Caisse = $scope.Caisse;
-        $scope.Vente.Panier = $scope.Panier;
-        $scope.Vente.ModeVente = mode;
+    $scope.InfosFacture = {};
+    $scope.SendData = function (mode, print) {
+        $scope.Facture = {};
+        $scope.Facture.Caisse = $scope.Caisse;
+        $scope.Facture.Panier = $scope.Panier;
+        $scope.Facture.MontantPercu = $scope.Caisse.MontantPercu;
+        $scope.Facture.Remise = $scope.Caisse.Remise;
+        //$scope.Facture.ModeVente = mode;
 
-        $http.post($rootScope.ServerURL + "Ventes", $scope.Vente)
+        $http.post($rootScope.ServerURL + "FacturesClient", $scope.Facture)
         .success(function (response) {
             console.log(response);
             if (response.ResponseCode == 0) {
-                $rootScope.LISTE_CATEGORIES_DATA();
+                $rootScope.CloseModal('cash');
+                $scope.InfosFacture = response.Data;
+                //Impression
+                if (print) {
+                    $scope.PrintDowPreview();
+                }
+                //Remise à zero
                 $scope.ResetComptoir();//Remettre le comptoir à Zero pour une nouvelle vente
             } else {//Error
                 console.log(response);
@@ -524,6 +564,26 @@ function ($rootScope, $scope, $http) {
         .error(function (response) {
             console.log(response);
         });
+    }
+
+    $scope.PrintDowPreview = function () {
+        var toPrint = document.getElementById('facture');
+        var winPop = window.open('', '_blank', 'fullscreen=1,left=0,top=0');
+        winPop.document.write('<html><head><title>::Preview::</title><link href="assets/css/style-print.css" rel="stylesheet" /></head><body>');
+        var outout = toPrint.outerHTML;
+
+        var dateFacture = $filter('date')($scope.InfosFacture.DateCreation, 'EEE dd MMM yyyy HH:mm');
+
+        outout = outout.replace("[:numFacture]", $scope.InfosFacture.Id)
+            .replace("[:dateFacture]", dateFacture);
+        winPop.document.write(outout);
+        winPop.document.write('</body></html>');
+        winPop.document.close();
+
+        winPop.onload = function () {
+            winPop.print();
+            winPop.close();
+        }      
     }
 
     //Recuperer les categories
@@ -633,12 +693,16 @@ function ($rootScope, $scope, $http) {
         });
     }
 
-    $scope.TransfererVersBonReception = function (data) {        
-        $http.get($rootScope.ServerURL + "CommandeFournisseur?transfertBonReception=" + data.Id)
+    $scope.SetCommandeAtransferer = function (data) {
+        $scope.CommandeAtransferer = data;
+    }
+
+    $scope.TransfererVersBonReception = function () {        
+        $http.get($rootScope.ServerURL + "CommandeFournisseur?transfertBonReception=" + $scope.CommandeAtransferer.Id)
         .success(function (response) {
             console.log(response);
             if (response.ResponseCode == 0) {
-                $rootScope.LISTE_FOURNISSEURS_DATA();
+                $rootScope.LISTE_COMMANDES_FOURNISSEUR_DATA();
             } else {//Error
                 console.log(response);
             }
@@ -1043,6 +1107,25 @@ function ($rootScope, $scope, $http) {
         });
     }
 
+    $scope.SetBonReception = function (data) {
+        $scope.BonReception = data;
+    }
+
+    $scope.MarquerCommeRecu = function () {
+        $http.get($rootScope.ServerURL + "BonReceptionFournisseur?marquerCommeRecu=" + $scope.BonReception.Id)
+        .success(function (response) {
+            console.log(response);
+            if (response.ResponseCode == 0) {
+                $rootScope.LISTE_BONRECEPTION_FOURNISSEUR_DATA();
+            } else {//Error
+                console.log(response);
+            }
+        })
+        .error(function (response) {
+            console.log(response);
+        });
+    }
+
     $rootScope.LISTE_BONRECEPTION_FOURNISSEUR_DATA();
 }]);
 
@@ -1213,6 +1296,196 @@ function ($rootScope, $scope, $http, $window, $routeParams) {
     $rootScope.LISTE_FOURNISSEURS_DATA();
 
 }]);
+
+//EditerCommandeFournisseurController
+MainController.controller('EditerBonReceptionFournisseurController', ['$rootScope', '$scope', '$http', '$window', '$routeParams',
+function ($rootScope, $scope, $http, $window, $routeParams) {
+
+    $rootScope.PageName = "Editer Bon de Reception";
+    $scope.BonReceptionId = $routeParams.id;
+
+    //Index de chargement des produits en fonction de la categorie
+    $scope.SelectedItem = null;
+    $scope.Panier = [];
+    $scope.Fournisseur = {};
+    $scope.TotauxPanierHt = 0;
+    $scope.TotauxPanierTva = 0;
+    $scope.TotauxPanierTtc = 0;
+
+    if (!isNaN($scope.BonReceptionId)) {
+        $http.get($rootScope.ServerURL + "BonReceptionFournisseur?id=" + $scope.BonReceptionId)
+        .success(function (response) {
+            console.log(response);
+            if (response.ResponseCode == 0) {
+
+                $scope.Commentaire = response.Data.Commentaire;
+                $scope.Panier = response.Data.Panier;
+                $scope.Fournisseur = response.Data.Fournisseur;
+                $scope.CommandesFournisseur = response.Data.CommandesFournisseur;
+
+                $scope.Commande = {};
+                $scope.Commande.Id = response.Data.Id;
+                $scope.Commande.DateCreation = response.Data.DateCreation;
+                $scope.Commande.Panier = $scope.Panier;
+                $scope.Commande.Fournisseur = $scope.Fournisseur;
+                $scope.Commande.Commentaire = $scope.Commentaire;
+                $scope.Commande.CommandesFournisseur = $scope.CommandesFournisseur;
+
+                $scope.CalculerTotalPanier();
+            } else {//Error
+                console.log(response);
+            }
+        })
+        .error(function (response) { console.log(response); });
+    }
+
+    $scope.Init = function (produit) {
+        $scope.IsNew = true;
+        $scope.ProduitAajouter = {};
+        $scope.ProduitAajouter.Produit = produit;
+        $scope.ProduitAajouter.PrixAchat = produit.PrixAchat;
+        $scope.ProduitAajouter.QuantiteUnitaire = 0;
+        $scope.ProduitAajouter.QuantiteBlock = 0;
+        $scope.ProduitAajouter.Tva = 0;
+        $scope.ProduitAajouter.Ttc = 0;
+        $scope.ProduitAajouter.TotalBlock = $scope.ProduitAajouter.QuantiteBlock * produit.PrixAchat;
+        $scope.ProduitAajouter.TotalUnitaire = $scope.ProduitAajouter.QuantiteUnitaire * produit.PrixAchat;
+        $scope.ProduitAajouter.Tht = Number($scope.ProduitAajouter.TotalBlock) + Number($scope.ProduitAajouter.TotalUnitaire);
+
+        $scope.TypesDeVente = [];
+        if (produit.Unite.IsBlock) {//Vente au carton
+            $scope.TypesDeVente.push({ Id: $rootScope.TYPE_VENTE_BLOCK_KEY, Libelle: produit.Block.Libelle });
+            if (produit.UniteParBlock > 1)
+                $scope.TypesDeVente.push({ Id: $rootScope.TYPE_VENTE_UNITE_KEY, Libelle: produit.Unite.Libelle });
+            else
+                $scope.ProduitAajouter.TypeVenteId = $scope.TypesDeVente[0].Id;//Selectionner le premier élément
+        } else {//Vente en plaquette
+            $scope.TypesDeVente.push({ Id: $rootScope.TYPE_VENTE_UNITE_KEY, Libelle: produit.Unite.Libelle });
+            $scope.ProduitAajouter.TypeVenteId = $scope.TypesDeVente[0].Id;//Selectionner le premier élément
+        }
+    }
+
+    $scope.Calculer = function () {
+        if (isNaN($scope.ProduitAajouter.QuantiteBlock))
+            $scope.ProduitAajouter.QuantiteBlock = 0;
+
+        if (isNaN($scope.ProduitAajouter.QuantiteUnitaire))
+            $scope.ProduitAajouter.QuantiteUnitaire = 0;
+
+        $scope.ProduitAajouter.TotalBlock = $scope.ProduitAajouter.QuantiteBlock * $scope.ProduitAajouter.PrixAchat;//PrixBlock;
+        $scope.ProduitAajouter.TotalUnitaire = $scope.ProduitAajouter.QuantiteUnitaire * $scope.ProduitAajouter.PrixAchat;//PrixUnitaire;
+
+        $scope.ProduitAajouter.Tht = 0;
+        if ($scope.ProduitAajouter.TypeVenteId == $rootScope.TYPE_VENTE_UNITE_KEY)
+            $scope.ProduitAajouter.Tht = $scope.ProduitAajouter.TotalUnitaire;
+        else if ($scope.ProduitAajouter.TypeVenteId == $rootScope.TYPE_VENTE_BLOCK_KEY)
+            $scope.ProduitAajouter.Tht = $scope.ProduitAajouter.TotalBlock;
+
+        $scope.ProduitAajouter.MontantTva = (($scope.ProduitAajouter.Tva / 100) * $scope.ProduitAajouter.Tht);
+        $scope.ProduitAajouter.Ttc = Number($scope.ProduitAajouter.MontantTva) + Number($scope.ProduitAajouter.Tht);
+    }
+
+    $scope.AjouterAuPanier = function (produit) {
+        if ($scope.IsNew)
+            $scope.Panier.push(produit);
+        else
+            $scope.Panier = angular.copy($scope.Panier);
+
+        $scope.CalculerTotalPanier();
+    }
+
+    $scope.CalculerTotalPanier = function () {
+        //Calculer le montant total du panier
+        $scope.TotauxPanierHt = 0;
+        $scope.TotauxPanierTva = 0;
+        $scope.TotauxPanierTtc = 0;
+
+        for (i = 0; i < $scope.Panier.length; i++) {
+            item = $scope.Panier[i];
+            if (item.TypeVenteId == $rootScope.TYPE_VENTE_UNITE_KEY)
+                $scope.TotauxPanierHt = Number($scope.TotauxPanierHt) + Number(item.TotalUnitaire);
+            else if (item.TypeVenteId == $rootScope.TYPE_VENTE_BLOCK_KEY)
+                $scope.TotauxPanierHt = Number($scope.TotauxPanierHt) + Number(item.TotalBlock);
+
+            $scope.TotauxPanierTva = Number($scope.TotauxPanierTva) + Number(item.MontantTva);
+            $scope.TotauxPanierTtc = Number($scope.TotauxPanierTtc) + Number(item.Ttc);
+        }
+    }
+
+    $scope.AncienPanier = [];
+    $scope.Modifier = function (data) {
+        $scope.ProduitAajouter = data;
+        angular.copy($scope.Panier, $scope.AncienPanier);
+        $scope.IsNew = false;
+
+        //Mise a jour des type de vente
+        $scope.TypesDeVente = [];
+        if (data.Produit.Unite.IsBlock) {//Vente au carton
+            $scope.TypesDeVente.push({ Id: $rootScope.TYPE_VENTE_BLOCK_KEY, Libelle: data.Produit.Block.Libelle });
+            if (data.Produit.UniteParBlock > 1)
+                $scope.TypesDeVente.push({ Id: $rootScope.TYPE_VENTE_UNITE_KEY, Libelle: data.Produit.Unite.Libelle });
+        } else {//Vente en plaquette
+            $scope.TypesDeVente.push({ Id: $rootScope.TYPE_VENTE_UNITE_KEY, Libelle: data.Produit.Unite.Libelle });
+        }
+    }
+
+    $scope.SupprimerItemPanier = function (index) {
+        $scope.Panier.splice(index, 1);
+        $scope.CalculerTotalPanier();
+    }
+
+    $scope.Annuler = function () {
+        if (!$scope.IsNew)
+            $scope.Panier = angular.copy($scope.AncienPanier);
+    }
+
+    $scope.ChargerProduits = function (categorie) {
+        $scope.SelectedItem = categorie.Id;
+        $http.get($rootScope.ServerURL + "Produits?categorie=" + categorie.Id)
+        .success(function (response) {
+            console.log(response);
+            if (response.ResponseCode == 0) {
+                $scope.ProduitsParCategorie = response.Data;
+            } else {//Error
+                console.log(response);
+            }
+        })
+        .error(function (response) { console.log(response); });
+    }
+
+    $scope.ResetComptoir = function () {
+        $rootScope.CloseModal('confirmationAnnulation');
+        $window.location.href = "#/BonReceptionFournisseur";
+    }
+
+    $scope.SendData = function (bonDeReception) {
+        $scope.Commande.Panier = $scope.Panier;
+        $scope.Commande.Fournisseur = $scope.Fournisseur;
+        $scope.Commande.Commentaire = $scope.Commentaire;
+        $scope.Commande.CommandesFournisseur = $scope.CommandesFournisseur;
+        $scope.Commande.MarquerRecu = bonDeReception;
+
+        $http.post($rootScope.ServerURL + "BonReceptionFournisseur", $scope.Commande)
+        .success(function (response) {
+            console.log(response);
+            if (response.ResponseCode == 0) {
+                $rootScope.CloseModal('confirmationValidation');
+                $window.location.href = "#/BonReceptionFournisseur";
+            } else {//Error
+                console.log(response);
+            }
+        })
+        .error(function (response) {
+            console.log(response);
+        });
+    }
+
+    //Recuperer les categories
+    $rootScope.LISTE_CATEGORIES_DATA();
+    $rootScope.LISTE_FOURNISSEURS_DATA();
+
+}]);
+
 
 //DepensesController
 MainController.controller('DepensesController', ['$rootScope', '$scope', '$http',

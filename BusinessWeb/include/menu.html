@@ -156,13 +156,6 @@
                 </a>
             </li>
 
-            <li ng-class="{active:isActive('/AdminProduits')}">
-                <a href="#/AdminProduits">
-                    <i class="icon-barcode"></i>
-                    Mouvemments
-                </a>
-            </li>
-
             <li ng-class="{active:isActive('/Categories')}">
                 <a href="#/Categories">
                     <i class="icon-home"></i>
@@ -173,6 +166,13 @@
                 <a href="#/Produits">
                     <i class="icon-reorder"></i>
                     Produits
+                </a>
+            </li>
+
+            <li ng-class="{active:isActive('/AdminProduits')}">
+                <a href="#/AdminProduits">
+                    <i class="icon-barcode"></i>
+                    Mouvemments
                 </a>
             </li>
 
@@ -217,7 +217,7 @@
                     Commandes
                 </a>
             </li>
-            <li ng-class="{active:isActive('/BonReceptionFournisseur') || isActive('/NouveauBonReceptionFournisseur')}">
+            <li ng-class="{active:isActive('/BonReceptionFournisseur') || isActive('/NouveauBonReceptionFournisseur') || isActive('/EditerBonReceptionFournisseur')}">
                 <a href="#/BonReceptionFournisseur">
                     <i class="icon-barcode"></i>
                     Bon de reception

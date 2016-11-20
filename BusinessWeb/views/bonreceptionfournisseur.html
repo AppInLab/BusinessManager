@@ -10,6 +10,7 @@
                 <thead>
                     <tr role="row">
                         <th role="columnheader"><!--Code--></th>
+                        <th role="columnheader">CMD</th>
                         <th role="columnheader">Date</th>
                         <th role="columnheader">Fournisseurs</th>
                         <th role="columnheader">Total HT</th>
@@ -23,13 +24,17 @@
                 <tbody role="alert" aria-live="polite" aria-relevant="all">
                     <tr dir-paginate="bonReception in BonsReceptionFournisseur | itemsPerPage: 15">
                         <td>{{$index + 1}}</td>
+                        <td class="aligncenter">
+                            <a href="" title="Lié a une commande" style="color:green" ng-if="bonReception.CommandesFournisseur.Id > 0"><i class=" icon-link"></i></a>
+                            <a href="" title="Pas de commande rattachée" style="color:red" ng-if="!bonReception.CommandesFournisseur"><i class=" icon-minus"></i></a>
+                        </td>
                         <td>{{bonReception.DateCreation | date : 'dd/MM/yyyy HH:mm'}}</td>
                         <td>{{bonReception.Fournisseur.RaisonSociale}}</td>
                         <td>{{bonReception.TotalHt}}</td>
                         <td>{{bonReception.TotalTva}}</td>
                         <td>{{bonReception.TotalTtc}}</td>
                         <td>
-                            <a ng-if="!bonReception.MarquerRecu" href="" data-toggle="modal" data-target="#confirmationTransfert" style="color:red"><i class="halflings-icon share-alt"></i> Marquer comme reçu</a>
+                            <a ng-if="!bonReception.MarquerRecu" href="" ng-click="SetBonReception(bonReception)" data-toggle="modal" data-target="#confirmationValiderCommeRecu" style="color:red"><i class="halflings-icon share-alt"></i> Marquer comme reçu</a>
                             <span ng-if="bonReception.MarquerRecu" style="color:green"><i class="icon-ok-circle"></i> Reçu</span>
                         </td>
                         <td>
@@ -52,17 +57,18 @@
     </div>
 </div>
 
-<div id="confirmationTransfert" class="modal hide fade" tabindex="-1" data-width="760" aria-hidden="true">
+<div id="confirmationValiderCommeRecu" class="modal hide fade" tabindex="-1" data-width="760" aria-hidden="true">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-        <h3>Transfert vers Bon de reception</h3>
+        <h3>Marquer comme reçu</h3>
     </div>
     <div class="modal-body">
-        <h4 class="bold">Voulez-vous transferer cette commande vers un bon de reception ?</h4>
+        <h4 class="bold">Confirmez-vous que vous avez reçu le bon de reception ?</h4>
+        <p>Cette opération provequera la mise en stock des produits contenu dans le bon</p>
     </div>
     <div class="modal-footer">
         <button type="button" data-dismiss="modal" class="btn">Annuler</button>
-        <button type="button" data-dismiss="modal" class="btn blue" ng-click="TransfererVersBonReception(cmdFournisseur)">Transferer</button>
+        <button type="button" data-dismiss="modal" class="btn blue" ng-click="MarquerCommeRecu(bonReception)">Marquer comme reçu</button>
     </div>
 </div>
 

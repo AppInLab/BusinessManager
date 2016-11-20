@@ -30,6 +30,10 @@
       <column name="MarquerSolde"/>
     </property>
 
+    <property name="Remise">
+      <column name="Remise"/>
+    </property>
+
     <many-to-one name ="Client" lazy="false" class ="Client" column="Client"/>
     <!--<many-to-one name ="CommandesFournisseur" lazy="false" class ="CommandesFournisseur" column="CommandesFournisseur"/>-->
   </class>

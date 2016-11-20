@@ -5646,3 +5646,14 @@ div.radio.disabled:hover {
     -moz-box-shadow: none !important;
     box-shadow: none !important;
 }
+
+.text-orange{
+    color:orange;
+    font-weight: bold;
+}
+
+.text-green{
+    color:green;
+    font-weight: bold;
+}
+

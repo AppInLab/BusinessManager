@@ -25,6 +25,8 @@
     <link href="assets/css/themes/blue.css" rel="newer stylesheet" type="text/css" id="style_color" />
     <link href="assets/plugins/uniform/css/uniform.default.css" rel="newer stylesheet" type="text/css"/>
     <link href="assets/plugins/glyphicons_halflings/css/halflings.css" rel="old stylesheet" />
+    <link href="libjs/ngPrint/ngPrint.min.css" rel="stylesheet" />
+    <link href="assets/css/style-print.css" rel="stylesheet" />
 
      <!-- END GLOBAL MANDATORY STYLES -->
     <!-- BEGIN PAGE LEVEL STYLES -->
@@ -42,7 +44,7 @@
 
     <!-- Angular JS library -->
     <script src="libjs/angular.js"></script>
-
+    <script src="libjs/angular-locale_fr-fr.js"></script>
     <!-- Angular JS Router -->
     <script src="libjs/angular-route.js"></script>
 
@@ -82,14 +84,14 @@
 </head>
 <!-- END HEAD -->
 <!-- BEGIN BODY -->
-<body class="page-header-fixed page-sidebar-fixed login" ng-controller="GlobalController">
+<body class="page-header-fixed page-sidebar-fixed login" ng-controller="GlobalController" ng-right-click="HandleClick()">
     <div ng-if="!connexionSuccess">
         <!--LOGIN-->
         <div ng-include="'include/login.html'"></div>
     </div>
 
     <!-- BEGIN HEADER -->
-    <div ng-if="connexionSuccess"  class="header navbar navbar-inverse navbar-fixed-top">
+    <div ng-if="connexionSuccess" class="header navbar navbar-inverse navbar-fixed-top">
         <!-- BEGIN TOP NAVIGATION BAR -->
         <div class="navbar-inner">
             <div class="container-fluid">
@@ -261,7 +263,6 @@
     <!-- END FOOTER -->
     <!-- BEGIN JAVASCRIPTS(Load javascripts at bottom, this will reduce page load time) -->
     <!-- BEGIN CORE PLUGINS -->
-
     <!--<script src="assets/plugins/jquery-1.10.1.min.js" type="text/javascript"></script>-->
 
     <script src="assets/plugins/jquery-migrate-1.2.1.min.js" type="text/javascript"></script>
@@ -301,6 +302,7 @@
     <script src="assets/scripts/index.js" type="text/javascript"></script>
     <!-- <script src="assets/scripts/login-soft.js" type="text/javascript"></script> -->
     <script src="assets/scripts/tasks.js" type="text/javascript"></script>
+    <script src="libjs/ngPrint/ngPrint.min.js" type="text/javascript"></script>
     <!-- END PAGE LEVEL SCRIPTS -->
 
     <script>

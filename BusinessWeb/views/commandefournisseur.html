@@ -29,7 +29,7 @@
                         <td>{{cmdFournisseur.TotalTva}}</td>
                         <td>{{cmdFournisseur.TotalTtc}}</td>
                         <td>
-                            <a ng-if="!cmdFournisseur.EstLieABonReception" href="" data-toggle="modal" data-target="#confirmationTransfert"><i class="halflings-icon share-alt"></i> Bon de reception</a>
+                            <a ng-if="!cmdFournisseur.EstLieABonReception" href="" data-toggle="modal" data-target="#confirmationTransfert" ng-click="SetCommandeAtransferer(cmdFournisseur)"><i class="halflings-icon share-alt"></i> Bon de reception</a>
                             <span ng-if="cmdFournisseur.EstLieABonReception" style="color:green"><i class="icon-ok-circle"></i> Transférée</span>
                         </td>
                         <td>
@@ -62,7 +62,7 @@
     </div>
     <div class="modal-footer">
         <button type="button" data-dismiss="modal" class="btn">Annuler</button>
-        <button type="button" data-dismiss="modal" class="btn blue" ng-click="TransfererVersBonReception(cmdFournisseur)">Transferer</button>
+        <button type="button" data-dismiss="modal" class="btn blue" ng-click="TransfererVersBonReception()">Transferer</button>
     </div>
 </div>
 
