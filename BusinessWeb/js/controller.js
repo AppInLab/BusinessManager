@@ -13,13 +13,15 @@ MainController.directive('ngRightClick', function ($parse) {
 });
 
 //Controleur du GlobalController
-MainController.controller('GlobalController', ['$rootScope', '$scope', '$http','$location','$cookies','$cookieStore','$routeParams',
-function ($rootScope, $scope, $http, $location, $cookies, $cookieStore, $routeParams) {
+MainController.controller('GlobalController', ['$rootScope', '$scope', '$http','$location','$cookies','$cookieStore','$routeParams','$locale',
+function ($rootScope, $scope, $http, $location, $cookies, $cookieStore, $routeParams,$locale) {
 
     $rootScope.DateToday = new Date();
     $scope.user = {};
     $rootScope.TYPE_VENTE_UNITE_KEY = 1;
     $rootScope.TYPE_VENTE_BLOCK_KEY = 2;
+
+    $locale.NUMBER_FORMATS.GROUP_SEP = ' ';
 
     $rootScope.HandleClick = function () {
         //console.log("Test");
@@ -61,6 +63,7 @@ function ($rootScope, $scope, $http, $location, $cookies, $cookieStore, $routePa
     }
 
     //$rootScope.ServerURL = "http://10.18.8.58:91/api/";
+    //$rootScope.ConnexionURL = "http://localhost:26686/api/Connexion";
     $rootScope.ServerURL = "http://localhost:26686/api/";
 
     $scope.isActive = function (route) {
@@ -198,52 +201,129 @@ function ($rootScope, $scope, $http, $location, $cookies, $cookieStore, $routePa
         .error(function (response) { console.log(response); });
     }
 
+    //COMPTES
+    $rootScope.LISTE_COMPTES_DATA = function () {
+        $http.get($rootScope.ServerURL + "Comptes")
+        .success(function (response) {
+            console.log(response);
+            if (response.ResponseCode == 0) {
+                $scope.Comptes = response.Data;
+            } else {//Error
+                console.log(response);
+            }
+        })
+        .error(function (response) { console.log(response); });
+    }
+
+    //PRIVILEGES
+    $rootScope.LISTE_PRIVILEGES_DATA = function () {
+        $http.get($rootScope.ServerURL + "Privileges")
+        .success(function (response) {
+            console.log(response);
+            if (response.ResponseCode == 0) {
+                $scope.Privileges = response.Data;
+            } else {//Error
+                console.log(response);
+            }
+        })
+        .error(function (response) { console.log(response); });
+    }
+
+    //CAISSE
+    $rootScope.LISTE_CAISSES_DATA = function () {
+        $http.get($rootScope.ServerURL + "Caisses")
+        .success(function (response) {
+            console.log(response);
+            if (response.ResponseCode == 0) {
+                $scope.Caisses = response.Data;
+            } else {//Error
+                console.log(response);
+            }
+        })
+        .error(function (response) { console.log(response); });
+    }
+
     //--END LISTE
 
     //Start Connexion-------------------------------
-    $rootScope.admin = {};
-    $rootScope.connexionSuccess = false;
-    $rootScope.profil = {};
+    $rootScope.ConnexionSuccess = false;
+    $rootScope.Profil = {};
 
     $rootScope.CheckConnexionState = function () {
-        if ($cookies.connexionSuccess) {
-            $rootScope.connexionSuccess = $cookies.connexionSuccess;
-            //$rootScope.profil = JSON.parse($cookies.adminProfil);
+        if ($cookies.ConnexionSuccess && !$rootScope.ConnexionSuccess) {
+            $rootScope.ConnexionSuccess = $cookies.ConnexionSuccess;
+            $rootScope.Profil = JSON.parse($cookies.Profil);
+            $rootScope.CheckHauth();
         }
     }
 
-    $rootScope.Connexion = function (admin) {
-        $http.get($rootScope.url + "ConnectHandler.ashx?login=" + admin.Login + "&password=" + admin.Password)
+    $rootScope.CheckHauth = function () {
+        $http.get($rootScope.ServerURL + "Comptes?checkhauth="+$rootScope.Profil.Id)
+        .success(function (response) {
+            console.log(response);
+            if (response.ResponseCode == 0) {
+                $rootScope.ConnexionSuccess = $cookies.ConnexionSuccess;
+                $cookies.Profil = JSON.stringify(response.Data);
+                $rootScope.Profil = JSON.parse($cookies.Profil);
+            } else if (response.ResponseCode == -2) {
+                $rootScope.Deconnexion();
+            }
+            else {//Error
+                console.log(response);
+            }
+        })
+        .error(function (response) { console.log(response); });
+    }
+
+    $rootScope.Connexion = function () {
+        $http.post($rootScope.ServerURL + "Connexion", $rootScope.Profil)
             .success(function (response) {
                 console.log(response);
-                if (response.ReturnCode == 1) {
-                    $("#errorAlert").removeClass("hidden").html(response.Message);
-                }
-                if (response.ReturnCode == 0) {
-                    $cookies.connexionSuccess = true;
-                    $cookies.adminProfil = JSON.stringify(response.Data);
+                if (response.ResponseCode == 0) {
+                    $cookies.ConnexionSuccess = true;
+                    $cookies.Profil = JSON.stringify(response.Data);
                     window.location = "index.html";
+                } else {
+                    $rootScope.ErrorMessage = response.Message;
+                    $("#errorAlert").removeClass("hide");
                 }
             })
-            .error(function (data) {
-                $("#errorAlert").removeClass("hidden").html(data.Message);
-                $scope.loginError = true;
+            .error(function (response) {
+                $("#errorAlert").removeClass("hide");
+                $rootScope.ErrorMessage = response.Message;
             });
     }
 
     $rootScope.Deconnexion = function () {
-        $cookieStore.remove('connexionSuccess');
-        $cookieStore.remove('adminProfil');
+        $cookieStore.remove('ConnexionSuccess');
+        $cookieStore.remove('Profil');
         window.location = "index.html";
     }
 
+    $scope.AuthorizeUser = ['/Home', '/VenteComptoir'];
+    $scope.AuthorizeStockUser = ['/Home', '/VenteComptoir', '/Categories', '/Produits',
+                      '/Fournisseurs', '/CommandeFournisseur', '/BonReceptionFournisseur'];
+    $scope.Authorize = [];
+    $rootScope.$on('$routeChangeStart', function (next, current) {
+        if ($rootScope.Profil.IsUser)
+            $scope.Authorize = $scope.AuthorizeUser;
+        else if ($rootScope.Profil.IsStockUser)
+            $scope.Authorize = $scope.AuthorizeStockUser;
+
+        if (!$rootScope.Profil.IsSu) {
+            if ($scope.Authorize.indexOf(current.$$route.originalPath) === -1) {
+                window.location = "#/Home";
+            }
+        }
+        //console.log(next);
+    });
 
     //ESSAI
-    $rootScope.connecter = function () {
-        $cookies.connexionSuccess = true;
-        //$cookies.adminProfil = JSON.stringify(response.Data);
-        window.location = "index.html";
-    }
+    //$rootScope.connecter = function () {
+    //    $cookies.connexionSuccess = true;
+    //    //$cookies.adminProfil = JSON.stringify(response.Data);
+    //    window.location = "index.html";
+    //}
 
     $rootScope.CheckConnexionState();
     //End Connexion ------------------------------
@@ -406,7 +486,6 @@ MainController.controller('VenteController', ['$rootScope', '$scope', '$http','$
 function ($rootScope, $scope, $http, $filter) {
 
     $rootScope.PageName = "Vente au comptoir";
-    //$rootScope.PageDescription = "Effectuer une vente au comptoir";
     //$scope.MODE_VENTE_CASH = "_cash";
     //$scope.MODE_VENTE_CLIENT = "_client";
 
@@ -451,12 +530,18 @@ function ($rootScope, $scope, $http, $filter) {
         $scope.Caisse.Remise = 0;
         $scope.Caisse.NetApayer = $scope.TotauxPanier - $scope.Caisse.Remise;
         $scope.Caisse.MontantPercu = 0;
-        $scope.Caisse.MontantRendu = $scope.Caisse.NetApayer - $scope.Caisse.MontantPercu;
+        $scope.Caisse.MontantRendu = 0;
+        $scope.ClientSelected = null;
     }
 
     $scope.CalculerCaisse = function () {
         $scope.Caisse.NetApayer = $scope.TotauxPanier - $scope.Caisse.Remise;
         $scope.Caisse.MontantRendu = $scope.Caisse.MontantPercu - $scope.Caisse.NetApayer;
+    }
+
+    $scope.CopierNetApayer = function () {
+        $scope.Caisse.MontantPercu = angular.copy($scope.Caisse.NetApayer);
+        $scope.CalculerCaisse();
     }
 
     $scope.Calculer = function () {
@@ -512,6 +597,8 @@ function ($rootScope, $scope, $http, $filter) {
     $scope.Annuler = function () {
         if (!$scope.IsNew)
             $scope.Panier = angular.copy($scope.AncienPanier);
+        $scope.ClientSelected = null;
+        $scope.InitNewClient();
     }
 
     $scope.ChargerProduits = function (categorie) {
@@ -533,27 +620,32 @@ function ($rootScope, $scope, $http, $filter) {
         $scope.Panier = [];
         $scope.TotauxPanier = 0;
         $scope.ProduitsParCategorie = [];
+        $scope.ClientSelected = null;
         //$scope.Facture = {};
     }
 
     $scope.InfosFacture = {};
     $scope.SendData = function (mode, print) {
         $scope.Facture = {};
+        $scope.Facture.Client = $scope.ClientSelected;
+        $scope.Facture.User = $rootScope.Profil;
         $scope.Facture.Caisse = $scope.Caisse;
         $scope.Facture.Panier = $scope.Panier;
         $scope.Facture.MontantPercu = $scope.Caisse.MontantPercu;
         $scope.Facture.Remise = $scope.Caisse.Remise;
-        //$scope.Facture.ModeVente = mode;
-
+        
         $http.post($rootScope.ServerURL + "FacturesClient", $scope.Facture)
         .success(function (response) {
             console.log(response);
             if (response.ResponseCode == 0) {
-                $rootScope.CloseModal('cash');
+                //$rootScope.CloseModal('cash');
                 $scope.InfosFacture = response.Data;
                 //Impression
                 if (print) {
-                    $scope.PrintDowPreview();
+                    if(mode === 'cash')
+                        $scope.PrintDoPreview("factureCash");
+                    else
+                        $scope.PrintDoPreview("factureClient");
                 }
                 //Remise à zero
                 $scope.ResetComptoir();//Remettre le comptoir à Zero pour une nouvelle vente
@@ -566,8 +658,27 @@ function ($rootScope, $scope, $http, $filter) {
         });
     }
 
-    $scope.PrintDowPreview = function () {
-        var toPrint = document.getElementById('facture');
+    $scope.InitNewClient = function () {
+        $scope.Client = {};
+    }
+
+    $scope.SendNewClientData = function () {
+        $http.post($rootScope.ServerURL + "Clients", $scope.Client)
+        .success(function (response) {
+            console.log(response);
+            if (response.ResponseCode == 0) {
+                $rootScope.LISTE_CLIENTS_DATA();
+            } else {//Error
+                console.log(response);
+            }
+        })
+        .error(function (response) {
+            console.log(response);
+        });
+    }
+
+    $scope.PrintDoPreview = function (factureId) {
+        var toPrint = document.getElementById(factureId);
         var winPop = window.open('', '_blank', 'fullscreen=1,left=0,top=0');
         winPop.document.write('<html><head><title>::Preview::</title><link href="assets/css/style-print.css" rel="stylesheet" /></head><body>');
         var outout = toPrint.outerHTML;
@@ -580,10 +691,12 @@ function ($rootScope, $scope, $http, $filter) {
         winPop.document.write('</body></html>');
         winPop.document.close();
 
-        winPop.onload = function () {
+        print = function () {
             winPop.print();
             winPop.close();
-        }      
+        }
+
+        setTimeout(print, 5);
     }
 
     //Recuperer les categories
@@ -1085,7 +1198,7 @@ function ($rootScope, $scope, $http, $window, $routeParams) {
 
 }]);
 
-//PointJourController
+//BonReceptionFournisseurController
 MainController.controller('BonReceptionFournisseurController', ['$rootScope', '$scope', '$http',
 function ($rootScope, $scope, $http) {
 
@@ -1486,24 +1599,69 @@ function ($rootScope, $scope, $http, $window, $routeParams) {
 
 }]);
 
-
 //DepensesController
-MainController.controller('DepensesController', ['$rootScope', '$scope', '$http',
+MainController.controller('ComptesController', ['$rootScope', '$scope', '$http',
 function ($rootScope, $scope, $http) {
 
-    $rootScope.PageName = "Dépenses";
-    $rootScope.PageDescription = "";
+    $rootScope.PageName = "Comptes utilisateurs";
+    $scope.ActifTable = [{ Id: true, Libelle: 'Oui' }, { Id: false, Libelle: 'Non' }];
+
+    $scope.CopyOfComptes = [];//Sauvegarde
+    $scope.Init = function () {
+        $scope.Compte = {};
+        //$scope.Compte.IsActif = "true";
+        //Faire une sauvegarde les produits existants
+        angular.copy($scope.Comptes, $scope.CopyOfComptes);
+    }
+
+    $scope.SendData = function () {
+        $http.post($rootScope.ServerURL + "Comptes", $scope.Compte)
+        .success(function (response) {
+            console.log(response);
+            if (response.ResponseCode == 0) {
+                $rootScope.LISTE_COMPTES_DATA();
+            } else {//Error
+                console.log(response);
+            }
+        })
+        .error(function (response) {
+            console.log(response);
+        });
+    }
+
+    $scope.ChangeCompteStatus = function (user, activer) {
+        $http.get($rootScope.ServerURL + "Comptes?user=" + user + "&activer=" + activer)
+        .success(function (response) {
+            console.log(response);
+            if (response.ResponseCode == 0) {
+                $rootScope.LISTE_COMPTES_DATA();
+            } else {//Error
+                console.log(response);
+            }
+        })
+        .error(function (response) {
+            console.log(response);
+        });
+    }
+
+    $scope.Modifier = function (data) {
+        $scope.Compte = data;
+        angular.copy($scope.Comptes, $scope.CopyOfComptes);
+    }
+
+    //Charger les données
+    $rootScope.LISTE_COMPTES_DATA();
+    $rootScope.LISTE_PRIVILEGES_DATA();
 
 }]);
 
 //AdminMagasinsController
-MainController.controller('AdminMagasinsController', ['$rootScope', '$scope', '$http',
+MainController.controller('CaisseController', ['$rootScope', '$scope', '$http',
 function ($rootScope, $scope, $http) {
 
-    $rootScope.PageName = "Magasins";
-    $rootScope.PageDescription = "Administration des magasins";
+    $rootScope.PageName = "Caisse";
 
-
+    $rootScope.LISTE_CAISSES_DATA();
 }]);
 
 //AdminCategoriesController

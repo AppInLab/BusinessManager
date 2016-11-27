@@ -68,16 +68,29 @@
         </div>
         <div id="footerVente">
             <h3>Total: <span class="pull-right text-bold">{{TotauxPanier}} F</span></h3>
-            <p>
-                <a ng-if="Panier.length > 0" data-toggle="modal" data-target="#cash" class="btn blue big" ng-click="CaisseInit()"> CASH</a>
-                <!--<a class="btn purple big" data-toggle="modal" data-target="#venteClient" ng-click="CaisseInit()"><i class="icon-user"></i> CLIENT</a>-->
-                <a class="btn big" data-toggle="modal" data-target="#confirmationAnnulation"><i class="icon-cancel"></i> ANNULER</a>
-            </p>
+            <div class="row-fluid">
+                <div class="span6">
+                    <button ng-disabled="Panier.length < 1" data-toggle="modal" data-target="#cash" class="btn btn-block blue big" ng-click="CaisseInit()"><i class="icon-shopping-cart"></i> CASH</button>
+                </div>
+                <div class="span6">
+                    <button ng-disabled="Panier.length < 1" class="btn btn-block purple big" data-toggle="modal" data-target="#FactureClient" ng-click="CaisseInit()"><i class="icon-user"></i> FACTURE CLIENT</button>
+                </div>
+                
+            </div>
+            <div class="clearfix" style="margin-bottom:10px;"></div>
+            <div class="row-fluid">
+                <div class="span6">
+                    <button ng-disabled="Panier.length < 1" class="btn btn-block green big" data-toggle="modal" data-target="#venteClient" ng-click="CaisseInit()"><i class="icon-truck"></i> <abbr title="Commande">CMD</abbr> CHINEUR</button>
+                </div>
+                <div class="span6">
+                    <button ng-disabled="Panier.length < 1" class="btn btn-block big" data-toggle="modal" data-target="#confirmationAnnulation"><i class="icon-cancel"></i> ANNULER</button>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
-<div id="confirmationAnnulation" class="modal hide fade" tabindex="-1" data-width="760" aria-hidden="true">
+<div id="confirmationAnnulation" class="modal hide fade" data-backdrop="static" tabindex="-1"  aria-hidden="true">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
         <h3>Annulation</h3>
@@ -91,29 +104,23 @@
     </div>
 </div>
 
-<div id="venteClient" class="modal hide fade in" tabindex="-1" aria-hidden="true">
+<div id="FactureClient" class="modal hide fade" tabindex="-1" data-backdrop="static" data-width="960" data-keyboard="false">
     <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-        <h3>Vente client</h3>
+        <button type="button" class="close" data-dismiss="modal" ng-click="Annuler()" aria-hidden="true"></button>
+        <h3>Facture Client</h3>
         <div class="form-wizard">
             <div class="navbar steps" style="margin:0;padding:0;">
                 <div class="navbar-inner" style="padding:0;">
                     <ul class="row-fluid nav nav-pills">
-                        <li class="span4 active ">
-                            <a href="" data-toggle="tab" class="step">
+                        <li class="span6 active ">
+                            <a href="" data-target="#tab1" data-toggle="tab" class="step active">
                                 <span class="number">1</span>
-                                <div class="desc"><i class="icon-ok"></i> Select. client</div>
+                                <div class="desc"><i class="icon-ok"></i> Selectionner un client</div>
                             </a>
                         </li>
-                        <li class="span4">
-                            <a href="" data-toggle="tab" class="step">
+                        <li class="span6 active">
+                            <a href="" data-toggle="tab" data-target="#tab2" class="step active">
                                 <span class="number">2</span>
-                                <span class="desc"><i class="icon-ok"></i> Nouv. client</span>
-                            </a>
-                        </li>
-                        <li class="span4">
-                            <a href="" data-toggle="tab" class="step active">
-                                <span class="number">3</span>
                                 <span class="desc"><i class="icon-ok"></i> Caisse</span>
                             </a>
                         </li>
@@ -123,219 +130,26 @@
         </div>
     </div>
     <div class="modal-body">
-        <div class="form-wizard">
-            <div class="tab-content">
-                <div class="alert alert-error hide" style="display: none;">
-                    <button class="close" data-dismiss="alert"></button>
-                    You have some form errors. Please check below.
-                </div>
-                <div class="alert alert-success hide" style="display: none;">
-                    <button class="close" data-dismiss="alert"></button>
-                    Your form validation is successful!
-                </div>
-                
-                <div class="tab-pane active" id="tab1">
-                    <!--<h4>Selectionner un client</h4>-->
-                    <div class="row-fluid">
-                        <div class="span12" data-tablet="span6" data-desktop="span12">
-                            <input class="m-wrap span12" type="text" name="name" value="" placeholder="Recherche">
-                            <div id="categorieProduit" class="list-item" style="height:200px;overflow-y:auto">
-                                <ul>
-                                    <li ng-class="{active: client.Id == ClientSelected.Id}" ng-repeat="client in Clients" ng-click="SelectionnerClient(client)">
-                                        <a>{{client.NomComplet}}</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div>
-                        <span class="text text-bold help-inline" style="color:black">{{ClientSelected.NomComplet}}</span>
-                        <div class="pull-right">
-                            <button type="button" data-dismiss="modal" class="btn blue">Nouveau client</button>
-                            <button type="button" data-dismiss="modal" class="btn green">Continuer</button>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="tab-pane" id="tab2">
-                    <!--<h4>Entrer les informations du nouveau client</h4>-->
-                    <div>
-                        <div class="control-group">
-                            <label class="control-label">Nom complet<span class="required">*</span></label>
-                            <div class="controls">
-                                <input type="text" class="span12 m-wrap">
-                            </div>
-                        </div>
-                        <div class="control-group">
-                            <label class="control-label">Adresse</label>
-                            <div class="controls">
-                                <input type="text" class="span12 m-wrap">
-                            </div>
-                        </div>
-                        <div class="control-group">
-                            <label class="control-label">Contacts<span class="required">*</span></label>
-                            <div class="controls">
-                                <input type="text" class="span12 m-wrap">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="pull-right">
-                        <button type="button" data-dismiss="modal" class="btn green">Continuer</button>
-                    </div>
-                </div>
-                <div class="tab-pane" id="tab3">
-                    <div class="row-fluid">
-                        <div class="span12">
-                            <form class="form form-horizontal form-row-seperated">
-                                <div class="control-group">
-                                    <label class="control-label">MONTANT TTC </label>
-                                    <div class="controls">
-                                        <div class="input-append">
-                                            <input class="m-wrap" style="font-weight:bold" type="text" ng-model="TotauxPanier" disabled /><span class="add-on"> F</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="control-group">
-                                    <label class="control-label">Remise</label>
-                                    <div class="controls">
-                                        <div class="input-append">
-                                            <input class="m-wrap" ng-change="CalculerCaisse()" ng-model="Caisse.Remise" type="number" min="0" required>
-                                            <span class="add-on"> F</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="control-group">
-                                    <label class="control-label">NET A PAYER</label>
-                                    <div class="controls">
-                                        <div class="input-append">
-                                            <input class="m-wrap" style="font-weight:bold" ng-model="Caisse.NetApayer" type="text" disabled />
-                                            <span class="add-on"> F</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="control-group">
-                                    <label class="control-label">Motant perçu</label>
-                                    <div class="controls">
-                                        <div class="input-append">
-                                            <input class="m-wrap" type="number" ng-change="CalculerCaisse()" ng-model="Caisse.MontantPercu" min="0" required />
-                                            <span class="add-on"> F</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="control-group">
-                                    <label class="control-label">Montant rendu</label>
-                                    <div class="controls">
-                                        <div class="input-append">
-                                            <input class="m-wrap" style="font-weight:bold" ng-model="Caisse.MontantRendu" type="text" disabled />
-                                            <span class="add-on"> F</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal-footer">
-        <button type="button" data-dismiss="modal" class="btn default">Annuler</button>
-        <button type="button" data-dismiss="modal" class="btn blue">Valider</button>
-    </div>
-</div>
-
-<div id="client" class="modal hide fade" tabindex="-1" data-width="760" aria-hidden="true">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-        <h3>Client</h3>
-    </div>
-    <div class="modal-body">
         <div class="row-fluid">
-            <div class="span12">
-                <div class="tabbable tabbable-custom">
-                    <ul class="nav nav-tabs">
-                        <li class="active"><a data-target="#tab_1_1" data-toggle="tab">Selectionner un client</a></li>
-                        <li class=""><a data-target="#tab_1_2" data-toggle="tab">Nouveau client</a></li>
+            <div class="span6" data-tablet="span6" data-desktop="span6">
+                <input class="m-wrap span12" type="text" name="name" value="" placeholder="Recherche">
+                <div id="categorieProduit" class="list-item" style="height:240px;overflow-y:auto">
+                    <ul>
+                        <li ng-class="{active: client.Id == ClientSelected.Id}" ng-repeat="client in Clients" ng-click="SelectionnerClient(client)">
+                            <a>{{client.NomComplet}}</a>
+                        </li>
                     </ul>
-                    <div class="tab-content">
-                        <div class="tab-pane active" id="tab_1_1">
-                            <input type="text" name="name" value="" class="form-control" placeholder="Recherche" />
-
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>Noms</th>
-                                        <th>Contact</th>
-                                        <th>#</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>KLMKLMMM</td>
-                                        <td>KLMKLMMM</td>
-                                        <td>
-                                            <a href="#" class="btn mini primary"> Choisir</a>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="tab-pane" id="tab_1_2">
-                            <form class="form">
-                                <div class="control-group">
-                                    <label class="control-label">Nom complet</label>
-                                    <div class="controls">
-                                        <input type="text" class="span12 m-wrap ">
-                                    </div>
-                                </div>
-                                <div class="control-group">
-                                    <label class="control-label">Adresse</label>
-                                    <div class="controls">
-                                        <textarea name="name" rows="2" class="span12 m-wrap"></textarea>
-                                    </div>
-                                </div>
-                                <div class="control-group">
-                                    <label class="control-label">Contact</label>
-                                    <div class="controls">
-                                        <input type="text" class="span12 m-wrap">
-                                    </div>
-                                </div>
-                                <div class="control-group">
-                                    <label class="control-label">Téléphone</label>
-                                    <div class="controls">
-                                        <input type="text" class="span12 m-wrap">
-                                    </div>
-                                </div>
-                            </form>
-
-                        </div>
-                    </div>
                 </div>
+                <button type="button" ng-click="InitNewClient()" class="btn blue" data-toggle="modal" data-target="#NouveauClient">Nouveau client</button>
+
             </div>
-        </div>
-    </div>
-    <div class="modal-footer">
-        <button type="button" data-dismiss="modal" class="btn">Annuler</button>
-        <button type="button" class="btn blue">Valider</button>
-    </div>
-</div>
-
-<div id="cash" class="modal hide fade" tabindex="-1" data-width="760" aria-hidden="true">
-	<div class="modal-header">
-		<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-		<h3>Cash</h3>
-	</div>
-	<div class="modal-body">
-	  <div class="row-fluid">
-			<div class="span12">
+            <div class="span6" data-tablet="span6" data-desktop="span6">
                 <form class="form form-horizontal form-row-seperated">
-
                     <div class="control-group">
                         <label class="control-label">MONTANT TTC </label>
                         <div class="controls">
                             <div class="input-append">
-                                <input class="m-wrap" style="font-weight:bold" type="text" ng-model="TotauxPanier" disabled/><span class="add-on"> F</span>
+                                <input class="m-wrap" style="font-weight:bold" type="text" ng-model="TotauxPanier" disabled /><span class="add-on"> F</span>
                             </div>
                         </div>
                     </div>
@@ -361,7 +175,7 @@
                         <label class="control-label">Motant perçu</label>
                         <div class="controls">
                             <div class="input-append">
-                                <input class="m-wrap" type="number" ng-change="CalculerCaisse()" ng-model="Caisse.MontantPercu" min="0" required />
+                                <input class="m-wrap" type="number" step="100" ng-change="CalculerCaisse()" ng-model="Caisse.MontantPercu" min="0" required />
                                 <span class="add-on"> F</span>
                             </div>
                         </div>
@@ -375,19 +189,129 @@
                             </div>
                         </div>
                     </div>
+                    <div class="control-group">
+                        <label class="control-label">Client</label>
+                        <div class="controls">
+                            <div class="input-append">
+                                <span class="text bold help-inline" style="color:black">{{ClientSelected.NomComplet}}</span>
+                            </div>
+                        </div>
+                    </div>
                 </form>
-			</div>
-		</div>
-  </div>
-	<div class="modal-footer">
-		<button type="button" data-dismiss="modal" class="btn">Annuler</button>
-        <button type="button" ng-click="SendData('cash', false)" class="btn blue">Valider</button>
-        <button type="button" ng-click="SendData('cash', true)" class="btn green">Valider &amp; Ticket</button>
-        <!--<button type="button" ng-click="PrintDowPreview()" class="btn green">Valider &amp; Ticket</button>-->
-	</div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" ng-click="Annuler()" data-dismiss="modal" class="btn default">Annuler</button>
+        <button type="button" ng-if="ClientSelected.NomComplet.length > 0" ng-click="SendData('FactureClient', true)" data-dismiss="modal" class="btn blue">Valider</button>
+    </div>
 </div>
 
-<div id="AjouterProduitAuPanier" class="modal hide fade" tabindex="-1" data-width="760" aria-hidden="true">
+<div id="NouveauClient" class="modal hide fade" data-backdrop="static" tabindex="-1" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" ng-click="Annuler()" class="close" data-dismiss="modal" aria-hidden="true"></button>
+        <h3>Nouveau client</h3>
+        {{Client}}
+    </div>
+    <div class="modal-body">
+        <form novalidate name="formClient">
+            <div class="row-fluid">
+                <div class="control-group">
+                    <label class="control-label">Nom complet<span class="required">*</span></label>
+                    <div class="controls">
+                        <input type="text" placeholder="Ex : Kouakou" name="nomComplet" class="span12 m-wrap" ng-model="Client.NomComplet" required ng-minlength="3">
+                    </div>
+                </div>
+                
+                <div class="control-group">
+                    <label class="control-label">Contacts<span class="required">*</span></label>
+                    <div class="controls">
+                        <input type="text" placeholder="Ex : 56079996" name="contacts" class="span12 m-wrap" ng-model="Client.Contacts" required ng-minlength="8">
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label">Adresse</label>
+                    <div class="controls">
+                        <input type="text" class="span12 m-wrap" ng-model="Client.Adresse">
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" data-dismiss="modal" class="btn" ng-click="Annuler()">Annuler</button>
+        <button ng-if="formClient.nomComplet.$valid && formClient.contacts.$valid" type="button" class="btn blue" data-dismiss="modal" ng-click="SendNewClientData()">Valider</button>
+    </div>
+</div>
+
+<div id="cash" class="modal hide fade" data-backdrop="static" tabindex="-1" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+        <h3>Cash</h3>
+    </div>
+    <div class="modal-body">
+        <div class="row-fluid">
+            <div class="span12">
+                <form class="form form-horizontal form-row-seperated">
+
+                    <div class="control-group">
+                        <label class="control-label">MONTANT TTC </label>
+                        <div class="controls">
+                            <div class="input-append">
+                                <input class="m-wrap" style="font-weight:bold" type="text" ng-model="TotauxPanier" disabled /><span class="add-on"> F</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Remise</label>
+                        <div class="controls">
+                            <div class="input-append">
+                                <input class="m-wrap" ng-change="CalculerCaisse()" ng-model="Caisse.Remise" type="number" min="0" required>
+                                <span class="add-on"> F</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">NET A PAYER</label>
+                        <div class="controls">
+                            <div class="input-append">
+                                <input class="m-wrap" style="font-weight:bold" ng-model="Caisse.NetApayer" type="text" disabled />
+                                <span class="add-on"> F</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Motant perçu</label>
+                        <div class="controls">
+                            <div class="input-append">
+                                <input class="m-wrap" type="number" ng-change="CalculerCaisse()" ng-model="Caisse.MontantPercu" step="100" min="0" required />
+                                <span class="add-on"> F</span>
+                            </div>
+                            <button type="button" class="m-wrap btn" ng-click="CopierNetApayer()">Copier le Net A Payer</button>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Montant à rendre</label>
+                        <div class="controls">
+                            <div class="input-append">
+                                <input class="m-wrap" style="font-weight:bold" ng-model="Caisse.MontantRendu" type="text" disabled />
+                                <span class="add-on"> F</span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" data-dismiss="modal" class="btn">Annuler</button>
+        <button type="button" data-dismiss="modal" ng-click="SendData('cash', false)" class="btn blue">Valider</button>
+        <button type="button" data-dismiss="modal" ng-click="SendData('cash', true)" class="btn green">Valider &amp; Ticket</button>
+    </div>
+</div>
+
+<div id="AjouterProduitAuPanier" class="modal hide fade" data-backdrop="static" tabindex="-1" aria-hidden="true">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
         <h3>Ajouter au panier</h3>
@@ -397,7 +321,7 @@
             <div class="span12">
                 <form novalidate class="horizontal-form" name="panierForm">
                     <h4 class="form-section text-bold">{{ProduitAajouter.Produit.Libelle}}</h4>
-                    
+
                     <div class="row-fluid">
                         <div class="span12">
                             <div class="control-group">
@@ -486,72 +410,5 @@
     </div>
 </div>
 
-<div id="facture" class="hide">
-    <header>
-        <!-- <h1>Invoice</h1> -->
-        <span><img alt="" src="../assets/myimg/poisson.png"></span>
-        <address>
-            <p style="font-weight:bold">POISSONNERIE LA GLOIRE</p>
-            <p>Abengourou<br>Yakro vers Magasin chouchou</p>
-            <p>(225) 56079996</p>
-        </address>
-    </header>
-    <article>
-        <table class="meta">
-            <tr>
-                <td><span>Facture N°</span></td>
-                <td><span>[:numFacture]</span></td>
-            </tr>
-            <tr>
-                <td><span>Date</span></td>
-                <td><span>[:dateFacture]</span></td>
-            </tr>
-        </table>
-        <table class="inventory">
-            <thead>
-                <tr>
-                    <th><span>Article</span></th>
-                    <th><span>Quantité</span></th>
-                    <th><span>P.U</span></th>
-                    <th><span>Total</span></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr ng-repeat="panierItem in Panier">
-                    <td><span>{{panierItem.Produit.Libelle}} </span></td>
-                    <td style="text-align:center">
-                        <span ng-if="panierItem.TypeVenteId == TYPE_VENTE_UNITE_KEY">{{panierItem.QuantiteUnitaire}} {{panierItem.Produit.Unite.Libelle | limitTo : 4}}{{panierItem.Produit.Unite.Libelle.length > 4 ? '.' : ''}}</span>
-                        <span ng-if="panierItem.TypeVenteId == TYPE_VENTE_BLOCK_KEY">{{panierItem.QuantiteBlock}} {{panierItem.Produit.Block.Libelle | limitTo : 4}}{{panierItem.Produit.Block.Libelle.length > 4 ? '.' : ''}}</span>
-                    </td>
-                    <td>
-                        <span ng-if="panierItem.TypeVenteId == TYPE_VENTE_UNITE_KEY">{{panierItem.PrixUnitaire}}</span>
-                        <span ng-if="panierItem.TypeVenteId == TYPE_VENTE_BLOCK_KEY">{{panierItem.PrixBlock}}</span> 
-                    </td>
-                    <td style="text-align:right"><span>{{panierItem.Totaux}}</span></td>
-                </tr>
-            </tbody>
-        </table>
-        <table class="balance">
-            <tr>
-                <td style="text-align:left"><span>Montant total</span></td>
-                <td style="font-weight:bold"><span>{{TotauxPanier}}</span> F</td>
-            </tr>
-            <tr>
-                <td style="text-align:left"><span>Montant perçu</span></td>
-                <td style="font-weight:bold"><span>{{Caisse.MontantPercu}}</span> F</td>
-            </tr>
-            <tr>
-                <td style="text-align:left"><span>Montant rendu</span></td>
-                <td style="font-weight:bold"><span>{{Caisse.MontantRendu}}</span> F</td>
-            </tr>
-        </table>
-    </article>
-    <aside>
-        <!-- <h1><span>Additional Notes</span></h1> -->
-        <div>
-            <p>Merci de votre visite</p>
-            <p>A bientôt</p>
-        </div>
-    </aside>
-</div>
-
+<div ng-include="'include/factureCash.html'"></div>
+<div ng-include="'include/factureClient.html'"></div>

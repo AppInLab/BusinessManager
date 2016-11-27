@@ -12,15 +12,15 @@
         </a>
     </li>
 
-    <li ng-class="{active:isActive('/VenteComptoir')}">
+    <li ng-if="Profil.IsSu" ng-class="{active:isActive('/VenteComptoir')}">
         <a href="#/VenteComptoir">
             <i class="icon-shopping-cart"></i>
-            <span class="title">Vente au comptoir</span>
+            <span class="title">Vente</span>
             <span class="selected"></span>
         </a>
     </li>
 
-    <li ng-class="{active:isActive('/Depenses')}">
+    <li ng-if="Profil.IsSu" ng-class="{active:isActive('/Depenses')}">
         <a href="#/Depenses">
             <i class="icon-money"></i>
             <span class="title">Sorties de caisse</span>
@@ -28,7 +28,7 @@
         </a>
     </li>
 
-    <li ng-class="{active:isActive('/PointJour')}">
+    <li ng-if="Profil.IsSu" ng-class="{active:isActive('/PointJour')}">
         <a href="#/PointJour">
             <i class="icon-stackexchange"></i>
             <span class="title">Historiques de vente</span>
@@ -36,15 +36,23 @@
         </a>
     </li>
 
-    <li ng-class="{active:isActive('/PointJour')}">
+    <li ng-if="Profil.IsSu" ng-class="{active:isActive('/PointJour')}">
         <a href="#/PointJour">
             <i class="icon-stackexchange"></i>
-            <span class="title">Point de la journée</span>
+            <span class="title">Clôture de caisse</span>
             <span class="selected"></span>
         </a>
     </li>
 
-    <li ng-class="{active:isActive('/Clients')}">
+    <li ng-if="Profil.IsSu" ng-class="{active:isActive('/Caisse')}">
+        <a href="#/PointJour">
+            <i class="icon-stackexchange"></i>
+            <span class="title">Caisse</span>
+            <span class="selected"></span>
+        </a>
+    </li>
+
+    <li ng-if="Profil.IsSu" ng-class="{active:isActive('/Clients')}">
         <a href="javascript:;">
             <i class="icon-barcode"></i>
             <span class="title">Clients</span>
@@ -59,7 +67,7 @@
                 </a>
             </li>
 
-            <li ng-class="{active:isActive('/AdminProduits')}">
+            <!--<li ng-class="{active:isActive('/AdminProduits')}">
                 <a href="#/AdminProduits">
                     <i class="icon-barcode"></i>
                     Commandes
@@ -71,7 +79,7 @@
                     <i class="icon-home"></i>
                     Bons de livraison
                 </a>
-            </li>
+            </li>-->
 
             <li ng-class="{active:isActive('/AdminCategories')}">
                 <a href="#/AdminCategories">
@@ -96,7 +104,7 @@
         </ul>
     </li>
 
-    <li>
+    <li ng-if="Profil.IsSu">
         <a href="javascript:;">
             <i class="icon-barcode"></i>
             <span class="title">Revendeurs (Chineurs)</span>
@@ -141,7 +149,7 @@
         </ul>
     </li>
 
-    <li ng-class="{active:isActive('/Depots') || isActive('/Categories') || isActive('/Produits')}">
+    <li ng-if="Profil.IsSu || Profil.IsStockUser" ng-class="{active:isActive('/Depots') || isActive('/Categories') || isActive('/Produits')}">
         <a href="javascript:;">
             <i class="icon-barcode"></i>
             <span class="title">Stock</span>
@@ -149,12 +157,12 @@
             <span class="arrow"></span>
         </a>
         <ul class="sub-menu">
-            <li ng-class="{active:isActive('/Depots')}">
+            <!--<li ng-class="{active:isActive('/Depots')}">
                 <a href="#/Depots">
                     <i class="icon-barcode"></i>
                     Depots
                 </a>
-            </li>
+            </li>-->
 
             <li ng-class="{active:isActive('/Categories')}">
                 <a href="#/Categories">
@@ -176,7 +184,7 @@
                 </a>
             </li>
 
-            <li ng-class="{active:isActive('/AdminFournisseurs')}">
+            <!--<li ng-class="{active:isActive('/AdminFournisseurs')}">
                 <a href="#/AdminFournisseurs">
                     <i class="icon-truck"></i>
                     Inventaires
@@ -193,11 +201,11 @@
                     <i class="icon-user"></i>
                     Bons de d'entrée
                 </a>
-            </li>
+            </li>-->
         </ul>
     </li>
 
-    <li ng-class="{active:isActive('/Fournisseurs') || isActive('/CommandeFournisseur') || isActive('/NouvelleCommandeFournisseur') || isActive('/EditerCommandeFournisseur') || isActive('/BonReceptionFournisseur') || isActive('/NouveauBonReceptionFournisseur')}">
+    <li ng-if="Profil.IsSu || Profil.IsStockUser" ng-class="{active:isActive('/Fournisseurs') || isActive('/CommandeFournisseur') || isActive('/NouvelleCommandeFournisseur') || isActive('/EditerCommandeFournisseur') || isActive('/BonReceptionFournisseur') || isActive('/NouveauBonReceptionFournisseur')}">
         <a href="javascript:;">
             <i class="icon-truck"></i>
             <span class="title">Achats</span>
@@ -223,7 +231,7 @@
                     Bon de reception
                 </a>
             </li>
-            <li ng-class="{active:isActive('/AdminFournisseurs')}">
+            <!--<li ng-class="{active:isActive('/AdminFournisseurs')}">
                 <a href="#/AdminFournisseurs">
                     <i class="icon-truck"></i>
                     Factures
@@ -247,22 +255,22 @@
                     <i class="icon-user"></i>
                     Remboursemments
                 </a>
-            </li>
+            </li>-->
         </ul>
     </li>
 
-    <li class="last">
+    <li ng-if="Profil.IsSu" class="last" ng-class="{active:isActive('/Comptes')}">
         <a href="javascript:;">
             <i class="icon-male"></i>
-            <span class="title">Administrateur</span>
+            <span class="title">Paramètres</span>
             <span class="selected"></span>
             <span class="arrow"></span>
         </a>
         <ul class="sub-menu">
-            <li ng-class="{active:isActive('/AdminMagasins')}">
-                <a href="#/AdminMagasins">
+            <li ng-class="{active:isActive('/Comptes')}">
+                <a href="#/Comptes">
                     <i class="icon-home"></i>
-                    Paramètres
+                    Comptes utilisateurs
                 </a>
             </li>
         </ul>

@@ -35,6 +35,7 @@
     </property>
 
     <many-to-one name ="Client" lazy="false" class ="Client" column="Client"/>
-    <!--<many-to-one name ="CommandesFournisseur" lazy="false" class ="CommandesFournisseur" column="CommandesFournisseur"/>-->
+    <many-to-one name ="User" lazy="false" class ="User" column="User"/>
+    <many-to-one name ="SessionCaisse" lazy="false" class ="SessionCaisse" column="SessionCaisse"/>
   </class>
 </hibernate-mapping>

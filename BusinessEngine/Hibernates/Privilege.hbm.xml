@@ -5,11 +5,11 @@
       <column name="Id"/>
       <generator class="native"/>
     </id>
-    <!--<property name="Pseudo">
-      <column name="Pseudo"/>
+    <property name="Code">
+      <column name="Code"/>
     </property>
-    <property name="Password">
-      <column name="Password"/>
-    </property>-->
+    <property name="Description">
+      <column name="Description"/>
+    </property>
   </class>
 </hibernate-mapping>

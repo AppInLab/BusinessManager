@@ -5,11 +5,31 @@
       <column name="Id"/>
       <generator class="native"/>
     </id>
-    <property name="Pseudo">
-      <column name="Pseudo"/>
+    
+    <property name="DateCreation">
+      <column name="DateCreation"/>
     </property>
+
+    <property name="DateModification">
+      <column name="DateModification"/>
+    </property>
+    
+    <property name="Login">
+      <column name="Login"/>
+    </property>
+    
     <property name="Password">
       <column name="Password"/>
     </property>
+
+    <property name="FondDeCaisse">
+      <column name="FondDeCaisse"/>
+    </property>
+    
+    <property name="IsActif">
+      <column name="IsActif"/>
+    </property>
+  
+    <many-to-one name ="Privilege" lazy="false" class ="Privilege" column="Privilege"/>
   </class>
 </hibernate-mapping>

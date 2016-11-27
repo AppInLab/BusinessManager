@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="BusinessEngine.Models" assembly="BusinessEngine">
+  <class name="Caisse" table="Caisse" lazy="false">
+    <id name="Id">
+      <column name="Id"/>
+      <generator class="native"/>
+    </id>
+
+    <property name="Code">
+      <column name="Code"/>
+    </property>
+    
+    <property name="DateOuverture">
+      <column name="DateOuverture"/>
+    </property>
+
+    <property name="DateCloture">
+      <column name="DateCloture"/>
+    </property>
+
+    <property name="IsClosed">
+      <column name="IsClosed"/>
+    </property>
+
+    <many-to-one name ="ClotureePar" lazy="false" class ="User" column="ClotureePar"/>
+  </class>
+</hibernate-mapping>

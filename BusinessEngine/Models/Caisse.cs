@@ -6,10 +6,13 @@ using System.Threading.Tasks;
 
 namespace BusinessEngine.Models
 {
-    public class Privilege : Entity
+    public class Caisse : Entity
     {
         virtual public int Id { get; set; }
         virtual public string Code { get; set; }
-        virtual public string Description { get; set; }
+        virtual public DateTime DateOuverture { get; set; }
+        virtual public DateTime? DateCloture { get; set; }
+        virtual public bool IsClosed { get; set; }
+        virtual public User ClotureePar { get; set; }
     }
 }

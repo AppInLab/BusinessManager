@@ -134,10 +134,10 @@ namespace PoissonnerieApi.Controllers
             }
 
             ///-------- SORTIE ---------
-            //3. On recupère les produits vendu : Bon de livraison livré & factures
-            var facturesClientCash = DataManager.GetListProduitsParFacturesCash(p.Id);
+            //3. On recupère les produits vendu : factures (A revoir: Bon de livraison livré)
+            var facturesClient = DataManager.GetList<DetailsFacturesClient>("Produit.Id", p.Id);
             decimal produitsSorti = 0;
-            foreach (var factureCash in facturesClientCash)
+            foreach (var factureCash in facturesClient)
             {
                 //4. On calcul le nombre en unité : Quantité x UniteParBlock
                 if (factureCash.TypeColisage == Constants.TYPE_BLOCK_KEY)

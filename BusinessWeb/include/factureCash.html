@@ -1,0 +1,74 @@
+﻿<div id="factureCash" class="hide facture">
+    <header>
+        <!-- <h1>Invoice</h1> -->
+        <span><img alt="" src="../assets/myimg/poisson.png"></span>
+        <address>
+            <p style="font-weight:bold">POISSONNERIE LA GLOIRE DE L'INDENIE</p>
+            <p>Abengourou - Marché de cafétou</p>
+            <p>(225) 59 33 17 99</p>
+            <p>(225) 09 61 81 41</p>
+            <p>(225) 01 19 27 17</p>
+        </address>
+    </header>
+    <article>
+        <table class="meta">
+            <tr>
+                <td><span>Facture N°</span></td>
+                <td><span>[:numFacture]</span></td>
+            </tr>
+            <tr>
+                <td><span>Date</span></td>
+                <td><span>[:dateFacture]</span></td>
+            </tr>
+            <tr>
+                <td><span>Caissière</span></td>
+                <td><span>{{Profil.Login}}</span></td>
+            </tr>
+        </table>
+        <table class="inventory">
+            <thead>
+                <tr>
+                    <th><span>Article</span></th>
+                    <th><span>Quantité</span></th>
+                    <th><span>P.U</span></th>
+                    <th><span>Total</span></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="panierItem in Panier">
+                    <td><span>{{panierItem.Produit.Libelle}} </span></td>
+                    <td style="text-align:center">
+                        <span ng-if="panierItem.TypeVenteId == TYPE_VENTE_UNITE_KEY">{{panierItem.QuantiteUnitaire}} {{panierItem.Produit.Unite.Libelle | limitTo : 4}}{{panierItem.Produit.Unite.Libelle.length > 4 ? '.' : ''}}</span>
+                        <span ng-if="panierItem.TypeVenteId == TYPE_VENTE_BLOCK_KEY">{{panierItem.QuantiteBlock}} {{panierItem.Produit.Block.Libelle | limitTo : 4}}{{panierItem.Produit.Block.Libelle.length > 4 ? '.' : ''}}</span>
+                    </td>
+                    <td>
+                        <span ng-if="panierItem.TypeVenteId == TYPE_VENTE_UNITE_KEY">{{panierItem.PrixUnitaire}}</span>
+                        <span ng-if="panierItem.TypeVenteId == TYPE_VENTE_BLOCK_KEY">{{panierItem.PrixBlock}}</span>
+                    </td>
+                    <td style="text-align:right"><span>{{panierItem.Totaux}}</span></td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="balance">
+            <tr>
+                <td style="text-align:left"><span>Montant total</span></td>
+                <td style="font-weight:bold"><span>{{TotauxPanier}}</span> F</td>
+            </tr>
+            <tr>
+                <td style="text-align:left"><span>Montant perçu</span></td>
+                <td style="font-weight:bold"><span>{{Caisse.MontantPercu}}</span> F</td>
+            </tr>
+            <tr>
+                <td style="text-align:left"><span>Montant rendu</span></td>
+                <td style="font-weight:bold"><span>{{Caisse.MontantRendu}}</span> F</td>
+            </tr>
+        </table>
+    </article>
+    <aside>
+        <!-- <h1><span>Additional Notes</span></h1> -->
+        <div>
+            <p>Merci de votre visite</p>
+            <p>A bientôt</p>
+        </div>
+    </aside>
+</div>

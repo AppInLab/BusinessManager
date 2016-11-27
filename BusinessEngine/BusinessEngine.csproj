@@ -66,6 +66,7 @@
     <Compile Include="DataModel\PanierItem.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="Manager\DataManager.cs" />
+    <Compile Include="Models\SessionCaisse.cs" />
     <Compile Include="Models\DetailsFacturesClient.cs" />
     <Compile Include="Models\FacturesClient.cs" />
     <Compile Include="Models\Chineur.cs" />
@@ -77,7 +78,7 @@
     <Compile Include="Models\ProduitsSortieChineur.cs" />
     <Compile Include="Models\SortieChineur.cs" />
     <Compile Include="Models\CommandesFournisseur.cs" />
-    <Compile Include="Models\Approvisionnement.cs" />
+    <Compile Include="Models\Caisse.cs" />
     <Compile Include="Models\BonLivraison.cs" />
     <Compile Include="Models\Categorie.cs" />
     <Compile Include="Models\Client.cs" />
@@ -100,9 +101,12 @@
     <Content Include="ExternalDLLs\MySql.Data.dll" />
     <Content Include="ExternalDLLs\Newtonsoft.Json.dll" />
     <Content Include="ExternalDLLs\NHibernate.dll" />
+    <EmbeddedResource Include="Hibernates\SessionCaisse.hbm.xml" />
     <EmbeddedResource Include="Hibernates\DetailsFacturesClient.hbm.xml" />
     <EmbeddedResource Include="Hibernates\FacturesClient.hbm.xml" />
-    <EmbeddedResource Include="Hibernates\DetailsBonReceptionFournisseur.hbm.xml" />
+    <EmbeddedResource Include="Hibernates\DetailsBonReceptionFournisseur.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Hibernates\BonReceptionFournisseur.hbm.xml" />
     <EmbeddedResource Include="Hibernates\DetailsCommandesFournisseur.hbm.xml" />
     <EmbeddedResource Include="Hibernates\Block.hbm.xml" />
@@ -111,7 +115,7 @@
     <EmbeddedResource Include="Hibernates\SortieChineur.hbm.xml" />
     <EmbeddedResource Include="Hibernates\Chineur.hbm.xml" />
     <EmbeddedResource Include="Hibernates\CommandesFournisseur.hbm.xml" />
-    <EmbeddedResource Include="Hibernates\Approvisionnement.hbm.xml" />
+    <EmbeddedResource Include="Hibernates\Caisse.hbm.xml" />
     <EmbeddedResource Include="Hibernates\BonLivraison.hbm.xml" />
     <EmbeddedResource Include="Hibernates\Categorie.hbm.xml" />
     <EmbeddedResource Include="Hibernates\Client.hbm.xml" />

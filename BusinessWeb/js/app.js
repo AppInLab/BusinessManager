@@ -92,24 +92,24 @@ app.config(["$routeProvider",
                 controller: "EditerBonReceptionFournisseurController"
             });
 
-            //PointJournee            
-            $routeProvider.when("/PointJour", {
-                templateUrl: "views/PointJour.html",
-                controller: "PointJourController"
+            //Caisse            
+            $routeProvider.when("/Caisse", {
+                templateUrl: "views/caisse.html",
+                controller: "CaissesController"
             });
 
-            //Depenses            
-            $routeProvider.when("/Depenses", {
-                templateUrl: "views/Depenses.html",
-                controller: "DepensesController"
-            });
+            ////Depenses            
+            //$routeProvider.when("/Depenses", {
+            //    templateUrl: "views/Depenses.html",
+            //    controller: "DepensesController"
+            //});
             
             /* Menus Administrateurs */
 
-            //Gestion des magasins           
-            $routeProvider.when("/AdminMagasins", {
-                templateUrl: "views/Admin/AdminMagasins.html",
-                controller: "AdminMagasinsController"
+            //Gestion des comptes           
+            $routeProvider.when("/Comptes", {
+                templateUrl: "views/compte.html",
+                controller: "ComptesController"
             });
 
             //Gestion des catégories de produits            

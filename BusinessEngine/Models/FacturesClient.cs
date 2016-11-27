@@ -15,6 +15,8 @@ namespace BusinessEngine.Models
         virtual public bool MarquerSolde { get; set; }
         virtual public decimal MontantPercu { get; set; }
         virtual public decimal Remise { get; set; }
+        virtual public User User { get; set; }
+        virtual public SessionCaisse SessionCaisse { get; set; }
 
         //--Pas utilisé dans la DB
         virtual public decimal TotalHt { get; set; }
