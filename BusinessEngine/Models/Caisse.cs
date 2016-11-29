@@ -14,5 +14,8 @@ namespace BusinessEngine.Models
         virtual public DateTime? DateCloture { get; set; }
         virtual public bool IsClosed { get; set; }
         virtual public User ClotureePar { get; set; }
+
+        //
+        virtual public decimal MontantTotal { get; set; }
     }
 }

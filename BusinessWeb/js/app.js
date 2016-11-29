@@ -93,9 +93,15 @@ app.config(["$routeProvider",
             });
 
             //Caisse            
-            $routeProvider.when("/Caisse", {
+            $routeProvider.when("/Caisses", {
                 templateUrl: "views/caisse.html",
-                controller: "CaissesController"
+                controller: "CaisseController"
+            });
+
+            //SortiesDeCaisse            
+            $routeProvider.when("/SortiesDeCaisses", {
+                templateUrl: "views/sortiesdecaisse.html",
+                controller: "SortiesDeCaisseController"
             });
 
             ////Depenses            

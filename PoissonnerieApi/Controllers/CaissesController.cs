@@ -19,7 +19,7 @@ namespace PoissonnerieApi.Controllers
             ResponseData responseData;
             try
             {
-                responseData = ResponseData.GetSuccess(DataManager.GetAll<Caisse>());
+                responseData = ResponseData.GetSuccess(DataManager.GetAll<Caisse>("DateOuverture", "DESC"));
             }
             catch (Exception ex)
             {

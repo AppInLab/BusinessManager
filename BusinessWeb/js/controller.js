@@ -243,6 +243,20 @@ function ($rootScope, $scope, $http, $location, $cookies, $cookieStore, $routePa
         .error(function (response) { console.log(response); });
     }
 
+    //C DE CAISSE
+    $rootScope.LISTE_CAISSES_DATA = function () {
+        $http.get($rootScope.ServerURL + "SortieDeCaisses")
+        .success(function (response) {
+            console.log(response);
+            if (response.ResponseCode == 0) {
+                $scope.SortiesDeCaisses = response.Data;
+            } else {//Error
+                console.log(response);
+            }
+        })
+        .error(function (response) { console.log(response); });
+    }
+
     //--END LISTE
 
     //Start Connexion-------------------------------
@@ -1655,7 +1669,7 @@ function ($rootScope, $scope, $http) {
 
 }]);
 
-//AdminMagasinsController
+//CaisseController
 MainController.controller('CaisseController', ['$rootScope', '$scope', '$http',
 function ($rootScope, $scope, $http) {
 
@@ -1664,16 +1678,14 @@ function ($rootScope, $scope, $http) {
     $rootScope.LISTE_CAISSES_DATA();
 }]);
 
-//AdminCategoriesController
-MainController.controller('AdminCategoriesController', ['$rootScope', '$scope', '$http',
+//SortiesDeCaisseController
+MainController.controller('SortiesDeCaisseController', ['$rootScope', '$scope', '$http',
 function ($rootScope, $scope, $http) {
 
-    $rootScope.PageName = "Catégories";
-    $rootScope.PageDescription = "Administration des catégories";
+    $rootScope.PageName = "Sorties de caisse";
 
-
+    $rootScope.LISTE_SORTIESDECAISSES_DATA();
 }]);
-
 //AdminProduitsController
 MainController.controller('AdminProduitsController', ['$rootScope', '$scope', '$http',
 function ($rootScope, $scope, $http) {
