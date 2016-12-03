@@ -76,7 +76,7 @@
     <Compile Include="Models\DetailsCommandesFournisseur.cs" />
     <Compile Include="Models\Unite.cs" />
     <Compile Include="Models\ProduitsSortieChineur.cs" />
-    <Compile Include="Models\SortieChineur.cs" />
+    <Compile Include="Models\SortieDeCaisse.cs" />
     <Compile Include="Models\CommandesFournisseur.cs" />
     <Compile Include="Models\Caisse.cs" />
     <Compile Include="Models\BonLivraison.cs" />
@@ -93,7 +93,7 @@
     <Compile Include="Models\TypeTransaction.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\Transaction.cs" />
-    <Compile Include="Models\Versement.cs" />
+    <Compile Include="Models\Paiement.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -107,12 +107,14 @@
     <EmbeddedResource Include="Hibernates\DetailsBonReceptionFournisseur.hbm.xml">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Hibernates\BonReceptionFournisseur.hbm.xml" />
+    <EmbeddedResource Include="Hibernates\BonReceptionFournisseur.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Hibernates\DetailsCommandesFournisseur.hbm.xml" />
     <EmbeddedResource Include="Hibernates\Block.hbm.xml" />
     <EmbeddedResource Include="Hibernates\Unite.hbm.xml" />
     <EmbeddedResource Include="Hibernates\ProduitsSortieChineur.hbm.xml" />
-    <EmbeddedResource Include="Hibernates\SortieChineur.hbm.xml" />
+    <EmbeddedResource Include="Hibernates\SortieDeCaisse.hbm.xml" />
     <EmbeddedResource Include="Hibernates\Chineur.hbm.xml" />
     <EmbeddedResource Include="Hibernates\CommandesFournisseur.hbm.xml" />
     <EmbeddedResource Include="Hibernates\Caisse.hbm.xml" />
@@ -120,7 +122,9 @@
     <EmbeddedResource Include="Hibernates\Categorie.hbm.xml" />
     <EmbeddedResource Include="Hibernates\Client.hbm.xml" />
     <EmbeddedResource Include="Hibernates\Fournisseur.hbm.xml" />
-    <EmbeddedResource Include="Hibernates\Privilege.hbm.xml" />
+    <EmbeddedResource Include="Hibernates\Privilege.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Hibernates\PrivilegesUser.hbm.xml" />
     <EmbeddedResource Include="Hibernates\Produit.hbm.xml" />
     <EmbeddedResource Include="Hibernates\ProduitsSortieClient.hbm.xml" />
@@ -132,7 +136,9 @@
     <EmbeddedResource Include="Hibernates\TypeTransaction.hbm.xml" />
     <EmbeddedResource Include="Hibernates\User.hbm.xml" />
     <EmbeddedResource Include="Hibernates\Transaction.hbm.xml" />
-    <EmbeddedResource Include="Hibernates\Versement.hbm.xml" />
+    <EmbeddedResource Include="Hibernates\Paiement.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

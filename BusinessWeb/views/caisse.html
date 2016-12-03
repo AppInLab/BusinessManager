@@ -8,7 +8,7 @@
                         <th role="columnheader">Date ouverture</th>
                         <th role="columnheader">Date clôture</th>
                         <th role="columnheader">Sortie de caisse</th>
-                        <th role="columnheader" class="bold">Entrée de caisse</th>
+                        <th role="columnheader" class="bold">Entrée en caisse</th>
                         <th role="columnheader" class="bold">Somme en caisse</th>
                         <th role="columnheader">Etat</th>
                         <th role="columnheader">Cloturée par</th>
@@ -21,7 +21,7 @@
                         <td>{{caisseItem.Id}}</td>
                         <td>{{caisseItem.DateOuverture | date : 'dd/MM/yyyy HH:mm'}}</td>
                         <td>{{caisseItem.DateCloture | date : 'dd/MM/yyyy HH:mm'}}</td>
-                        <td>{{caisseItem.MontantTotal}}</td>
+                        <td>{{caisseItem.SortieDeCaisseTotal}}</td>
                         <td class="bold">{{caisseItem.MontantTotal}}</td>
                         <td class="bold">{{caisseItem.MontantTotal}}</td>
                         <td>
@@ -31,7 +31,7 @@
                         <td>{{caisseItem.ClotureePar.Login}}</td>
                         <td>
                             <div class="btn-group">
-                                <button data-toggle="modal" data-target="#client" type="button" class="btn mini blue"><i class="icon-eye-open"></i> Voir les sessions</button>
+                                <a href="#/SessionCaisses/{{caisseItem.Id}}" type="button" class="btn mini blue"><i class="icon-eye-open"></i> Voir les sessions</a>
                                 <button ng-if="caisseItem.IsClosed" type="button" class="btn mini red"><i class="icon-lock"></i> Cloturée</button>
                                 <button ng-if="!caisseItem.IsClosed" type="button" class="btn mini green"><i class="icon-unlock"></i> Ouverte</button>
                             </div>

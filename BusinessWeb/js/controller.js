@@ -243,13 +243,27 @@ function ($rootScope, $scope, $http, $location, $cookies, $cookieStore, $routePa
         .error(function (response) { console.log(response); });
     }
 
-    //C DE CAISSE
-    $rootScope.LISTE_CAISSES_DATA = function () {
-        $http.get($rootScope.ServerURL + "SortieDeCaisses")
+    //SORTIES DE CAISSE
+    $rootScope.LISTE_SORTIESDECAISSES_DATA = function () {
+        $http.get($rootScope.ServerURL + "SortieDeCaisses?user="+$scope.Profil.Id)
         .success(function (response) {
             console.log(response);
             if (response.ResponseCode == 0) {
                 $scope.SortiesDeCaisses = response.Data;
+            } else {//Error
+                console.log(response);
+            }
+        })
+        .error(function (response) { console.log(response); });
+    }
+
+    //SESSION DE CAISSE
+    $rootScope.LISTE_SESSIONCAISSES_DATA = function (idCaisse) {
+        $http.get($rootScope.ServerURL + "SessionCaisses?caisse=" + idCaisse)
+        .success(function (response) {
+            console.log(response);
+            if (response.ResponseCode == 0) {
+                $scope.SessionCaisses = response.Data;
             } else {//Error
                 console.log(response);
             }
@@ -710,7 +724,7 @@ function ($rootScope, $scope, $http, $filter) {
             winPop.close();
         }
 
-        setTimeout(print, 5);
+        setTimeout(print, 50);
     }
 
     //Recuperer les categories
@@ -1684,16 +1698,79 @@ function ($rootScope, $scope, $http) {
 
     $rootScope.PageName = "Sorties de caisse";
 
+    $scope.Init = function () {
+        $scope.SortiesDeCaisse = {};
+    }
+
+    $scope.SendData = function () {
+        $scope.SortiesDeCaisse.User = $scope.Profil;
+        $http.post($rootScope.ServerURL + "SortieDeCaisses", $scope.SortiesDeCaisse)
+        .success(function (response) {
+            console.log(response);
+            if (response.ResponseCode == 0) {
+                $rootScope.LISTE_SORTIESDECAISSES_DATA();
+            } else {//Error
+                console.log(response);
+            }
+        })
+        .error(function (response) {
+            console.log(response);
+        });
+    }
+
+    $scope.Annuler = function () {
+        $scope.SortiesDeCaisses = angular.copy($scope._copyOfSortiesDeCaisses);
+    }
+
+    $scope._copyOfSortiesDeCaisses = [];
+    $scope.Modifier = function (data) {
+        $scope.SortiesDeCaisse = data;
+        angular.copy($scope.SortiesDeCaisses, $scope._copyOfSortiesDeCaisses);
+    }
+
     $rootScope.LISTE_SORTIESDECAISSES_DATA();
 }]);
 //AdminProduitsController
-MainController.controller('AdminProduitsController', ['$rootScope', '$scope', '$http',
-function ($rootScope, $scope, $http) {
+MainController.controller('SessionCaisseController', ['$rootScope', '$scope', '$http', '$routeParams',
+function ($rootScope, $scope, $http, $routeParams) {
 
-    $rootScope.PageName = "Produits";
-    $rootScope.PageDescription = "Administration des produits";
+    $rootScope.PageName = "Sessions de caisse";
+    $scope.idCaisse = $routeParams.caisse;
 
+    if (isNaN($scope.idCaisse)) window.location = "#/Home";
+    
+    $scope.Cloturer = function () {
+        $http.get($rootScope.ServerURL + "Caisses?cloturer=" + $scope.idCaisse + "&user="+$rootScope.Profil.Id)
+        .success(function (response) {
+            console.log(response);
+            if (response.ResponseCode == 0) {
+                $rootScope.LISTE_SESSIONCAISSES_DATA($scope.idCaisse);
+            } else {//Error
+                console.log(response);
+            }
+        })
+        .error(function (response) {
+            console.log(response);
+        });
+    }
 
+    $scope.FermerSession = function (sessionCaisse) {
+        //$scope.SortiesDeCaisse.User = $scope.Profil;
+        $http.get($rootScope.ServerURL + "SessionCaisses?cloturer=" + sessionCaisse)
+        .success(function (response) {
+            console.log(response);
+            if (response.ResponseCode == 0) {
+                $rootScope.LISTE_SESSIONCAISSES_DATA($scope.idCaisse);
+            } else {//Error
+                console.log(response);
+            }
+        })
+        .error(function (response) {
+            console.log(response);
+        });
+    }
+    
+    $rootScope.LISTE_SESSIONCAISSES_DATA($scope.idCaisse);
 }]);
 
 //AdminFournisseursController

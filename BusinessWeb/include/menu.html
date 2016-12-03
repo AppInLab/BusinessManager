@@ -20,8 +20,8 @@
         </a>
     </li>
 
-    <li ng-if="Profil.IsSu" ng-class="{active:isActive('/Depenses')}">
-        <a href="#/Depenses">
+    <li ng-if="Profil.IsSu" ng-class="{active:isActive('/SortiesDeCaisses')}">
+        <a href="#/SortiesDeCaisses">
             <i class="icon-money"></i>
             <span class="title">Sorties de caisse</span>
             <span class="selected"></span>
@@ -44,7 +44,7 @@
         </a>
     </li>
 
-    <li ng-if="Profil.IsSu" ng-class="{active:isActive('/Caisses')}">
+    <li ng-if="Profil.IsSu" ng-class="{active:isActive('/Caisses') || isActive('/SessionCaisses')}">
         <a href="#/Caisses">
             <i class="icon-money"></i>
             <span class="title">Caisse</span>

@@ -211,7 +211,10 @@
     <Compile Include="Controllers\ClientsController.cs" />
     <Compile Include="Controllers\CommandeFournisseurController.cs" />
     <Compile Include="Controllers\FournisseursController.cs" />
+    <Compile Include="Controllers\PaiementsController.cs" />
     <Compile Include="Controllers\PrivilegesController.cs" />
+    <Compile Include="Controllers\SessionCaissesController.cs" />
+    <Compile Include="Controllers\SortieDeCaissesController.cs" />
     <Compile Include="Controllers\UnitesController.cs" />
     <Compile Include="Controllers\BlocksController.cs" />
     <Compile Include="Controllers\ProduitsController.cs" />

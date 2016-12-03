@@ -18,7 +18,7 @@
             <div ng-click="Init(cProduit)" class="button-tem" data-toggle="modal" data-target="#AjouterProduitAuPanier" ng-repeat="cProduit in ProduitsParCategorie">
                 <i class="text-bold">{{cProduit.Libelle}}</i>
                 <div></div>
-                <span class="badge" ng-class="{'badge-success' : cProduit.QuantiteStockBlock > cProduit.StockMinimum, 'badge-important' : cProduit.QuantiteStockBlock <= cProduit.StockMinimum}" ng-if="cProduit.UniteParBlock > 1">{{cProduit.QuantiteStockBlock}} <span ng-if="cProduit.QuantiteStockResteEnUnite > 0">[{{cProduit.QuantiteStockResteEnUnite}}]</span></span>
+                <span class="badge" ng-class="{'badge-success' : cProduit.QuantiteStockBlock > cProduit.StockMinimum, 'badge-important' : cProduit.QuantiteStockBlock <= cProduit.StockMinimum}" ng-if="cProduit.UniteParBlock > 1">{{cProduit.QuantiteStockBlock}} <span ng-if="cProduit.QuantiteStockResteEnUnite != 0">[{{cProduit.QuantiteStockResteEnUnite}}]</span></span>
                 <span class="badge" ng-class="{'badge-success' : cProduit.QuantiteStockBlock > cProduit.StockMinimum, 'badge-important' : cProduit.QuantiteStockBlock <= cProduit.StockMinimum}" ng-if="cProduit.UniteParBlock <= 1">{{cProduit.QuantiteStockBlock}}</span>
             </div>
         </div>
@@ -253,7 +253,7 @@
     <div class="modal-body">
         <div class="row-fluid">
             <div class="span12">
-                <form class="form form-horizontal form-row-seperated">
+                <form novalidate name="formCash" class="form form-horizontal form-row-seperated">
 
                     <div class="control-group">
                         <label class="control-label">MONTANT TTC </label>
@@ -276,7 +276,7 @@
                         <label class="control-label">NET A PAYER</label>
                         <div class="controls">
                             <div class="input-append">
-                                <input class="m-wrap" style="font-weight:bold" ng-model="Caisse.NetApayer" type="text" disabled />
+                                <input class="m-wrap" style="font-weight:bold" name="netApayer" ng-model="Caisse.NetApayer" type="text" disabled />
                                 <span class="add-on"> F</span>
                             </div>
                         </div>
@@ -285,7 +285,7 @@
                         <label class="control-label">Motant perçu</label>
                         <div class="controls">
                             <div class="input-append">
-                                <input class="m-wrap" type="number" ng-change="CalculerCaisse()" ng-model="Caisse.MontantPercu" step="100" min="0" required />
+                                <input class="m-wrap" type="number" name="montantPercu" ng-change="CalculerCaisse()" ng-model="Caisse.MontantPercu" step="100" min="0" required />
                                 <span class="add-on"> F</span>
                             </div>
                             <button type="button" class="m-wrap btn" ng-click="CopierNetApayer()">Copier le Net A Payer</button>
@@ -306,8 +306,8 @@
     </div>
     <div class="modal-footer">
         <button type="button" data-dismiss="modal" class="btn">Annuler</button>
-        <button type="button" data-dismiss="modal" ng-click="SendData('cash', false)" class="btn blue">Valider</button>
-        <button type="button" data-dismiss="modal" ng-click="SendData('cash', true)" class="btn green">Valider &amp; Ticket</button>
+        <button ng-if="Caisse.MontantPercu >= Caisse.NetApayer" type="button" data-dismiss="modal" ng-click="SendData('cash', false)" class="btn blue">Valider</button>
+        <button ng-if="Caisse.MontantPercu >= Caisse.NetApayer" type="button" data-dismiss="modal" ng-click="SendData('cash', true)" class="btn green">Valider &amp; Ticket</button>
     </div>
 </div>
 

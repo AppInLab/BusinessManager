@@ -17,5 +17,8 @@ namespace BusinessEngine.Models
 
         //
         virtual public decimal MontantTotal { get; set; }
+        virtual public decimal SortieDeCaisseTotal { get; set; }
+        virtual public decimal EntreeDeCaisseTotal { get; set; }
+
     }
 }

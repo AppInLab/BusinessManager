@@ -104,11 +104,11 @@ app.config(["$routeProvider",
                 controller: "SortiesDeCaisseController"
             });
 
-            ////Depenses            
-            //$routeProvider.when("/Depenses", {
-            //    templateUrl: "views/Depenses.html",
-            //    controller: "DepensesController"
-            //});
+            //Depenses            
+            $routeProvider.when("/SessionCaisses/:caisse", {
+                templateUrl: "views/sessioncaisse.html",
+                controller: "SessionCaisseController"
+            });
             
             /* Menus Administrateurs */
 

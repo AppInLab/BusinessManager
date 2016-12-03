@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="BusinessEngine.Models" assembly="BusinessEngine">
+  <class name="SortieDeCaisse" table="SortieDeCaisse" lazy="false">
+    <id name="Id">
+      <column name="Id"/>
+      <generator class="native"/>
+    </id>
+    
+    <property name="DateCreation">
+      <column name="DateCreation"/>
+    </property>
+    
+    <property name="DateModification">
+      <column name="DateModification"/>
+    </property>
+    
+    <property name="Montant">
+      <column name="Montant"/>
+    </property>
+    
+    <property name="Motif">
+      <column name="Motif"/>
+    </property>
+    
+    <many-to-one name ="SessionCaisse" lazy="false" class ="SessionCaisse" column="SessionCaisse"/>
+  
+  </class>
+</hibernate-mapping>
