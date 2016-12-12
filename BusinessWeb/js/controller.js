@@ -62,9 +62,11 @@ function ($rootScope, $scope, $http, $location, $cookies, $cookieStore, $routePa
         });
     }
 
-    //$rootScope.ServerURL = "http://10.18.8.58:91/api/";
-    //$rootScope.ConnexionURL = "http://localhost:26686/api/Connexion";
+    //$rootScope.ServerURL = "http://192.168.10.2/Poissonnerie/ws/api/";
     $rootScope.ServerURL = "http://localhost:26686/api/";
+    $rootScope.LienAbsPoisson = "http://192.168.10.2/Poissonnerie/assets/myimg/poisson.png";
+    $rootScope.LienRelatifPoisson = "../assets/myimg/poisson.png";
+    $rootScope.LienPoisson = $rootScope.LienRelatifPoisson;
 
     $scope.isActive = function (route) {
         var path = $location.path();
@@ -245,7 +247,7 @@ function ($rootScope, $scope, $http, $location, $cookies, $cookieStore, $routePa
 
     //SORTIES DE CAISSE
     $rootScope.LISTE_SORTIESDECAISSES_DATA = function () {
-        $http.get($rootScope.ServerURL + "SortieDeCaisses?user="+$scope.Profil.Id)
+        $http.get($rootScope.ServerURL + "SortieDeCaisses?user="+$rootScope.Profil.Id)
         .success(function (response) {
             console.log(response);
             if (response.ResponseCode == 0) {
@@ -264,6 +266,20 @@ function ($rootScope, $scope, $http, $location, $cookies, $cookieStore, $routePa
             console.log(response);
             if (response.ResponseCode == 0) {
                 $scope.SessionCaisses = response.Data;
+            } else {//Error
+                console.log(response);
+            }
+        })
+        .error(function (response) { console.log(response); });
+    }
+
+    //LISTE SESSION DE CAISSE USER OUVERTE
+    $rootScope.SESSIONCAISSE_USER_DATA = function () {
+        $http.get($rootScope.ServerURL + "SessionCaisses?user=" + $rootScope.Profil.Id)
+        .success(function (response) {
+            console.log(response);
+            if (response.ResponseCode == 0) {
+                $scope.SessionCaisseUser = response.Data;
             } else {//Error
                 console.log(response);
             }
@@ -328,15 +344,20 @@ function ($rootScope, $scope, $http, $location, $cookies, $cookieStore, $routePa
         window.location = "index.html";
     }
 
-    $scope.AuthorizeUser = ['/Home', '/VenteComptoir'];
-    $scope.AuthorizeStockUser = ['/Home', '/VenteComptoir', '/Categories', '/Produits',
-                      '/Fournisseurs', '/CommandeFournisseur', '/BonReceptionFournisseur'];
+    $scope.AuthorizeUser = ['/Home', '/VenteComptoir', '/SessionCaisses', '/SortiesDeCaisses', '/Clients', '/FicheClients/:client'];
+    $scope.AuthorizeStockUser = ['/Home', '/Caisses', '/InfosSessionCaisses/:caisse', '/InventaireDeStocks/:caisse', '/Clients', '/FicheClients/:client'];
+
+    $scope.AuthorizeAdmin = ['/Home', '/VenteComptoir', '/Categories', '/Produits',
+                      '/Fournisseurs', '/CommandeFournisseur', '/BonReceptionFournisseur', '/Clients', '/FicheClients/:client',
+                      '/Comptes', '/Caisses', '/InfosSessionCaisses/:caisse', '/InventaireDeStocks/:caisse'];
     $scope.Authorize = [];
     $rootScope.$on('$routeChangeStart', function (next, current) {
         if ($rootScope.Profil.IsUser)
             $scope.Authorize = $scope.AuthorizeUser;
         else if ($rootScope.Profil.IsStockUser)
             $scope.Authorize = $scope.AuthorizeStockUser;
+        else if ($rootScope.Profil.IsAdmin)
+            $scope.Authorize = $scope.AuthorizeAdmin;
 
         if (!$rootScope.Profil.IsSu) {
             if ($scope.Authorize.indexOf(current.$$route.originalPath) === -1) {
@@ -345,13 +366,6 @@ function ($rootScope, $scope, $http, $location, $cookies, $cookieStore, $routePa
         }
         //console.log(next);
     });
-
-    //ESSAI
-    //$rootScope.connecter = function () {
-    //    $cookies.connexionSuccess = true;
-    //    //$cookies.adminProfil = JSON.stringify(response.Data);
-    //    window.location = "index.html";
-    //}
 
     $rootScope.CheckConnexionState();
     //End Connexion ------------------------------
@@ -740,6 +754,7 @@ function ($rootScope, $scope, $http) {
     
     $scope.Init = function () {
         $scope.Client = {};
+        angular.copy($scope.Clients, $scope.AncienClients);
     }   
 
     $scope.SendData = function () {
@@ -760,6 +775,7 @@ function ($rootScope, $scope, $http) {
     $scope.AncienClients = [];
     $scope.Modifier = function (data) {
         $scope.Client = data;
+        $scope.Modif = true;
         angular.copy($scope.Clients, $scope.AncienClients);
     }
 
@@ -767,7 +783,83 @@ function ($rootScope, $scope, $http) {
         $scope.Clients = angular.copy($scope.AncienClients);
     }
 
+    $scope.ResetSearch = function () {
+        $scope.searchText = "";
+    }
+
     $rootScope.LISTE_CLIENTS_DATA();
+}]);
+
+//ClientsController
+MainController.controller('FicheClientController', ['$rootScope', '$scope', '$http', '$routeParams',
+function ($rootScope, $scope, $http, $routeParams) {
+
+    $rootScope.PageName = "Fiche client";
+    $scope.idClient = $routeParams.client;
+
+    if (isNaN($scope.idClient)) window.location = "#/Home";
+
+    $scope.InitPaiement = function () {
+        $scope.Paiement = {};
+        $scope.Paiement.Client = $scope.FicheClient.Client;
+        $scope.Paiement.User = $rootScope.Profil;
+    }
+
+    $scope.FICHE_CLIENT_DATA = function () {
+        $http.get($rootScope.ServerURL + "Clients?client=" + $scope.idClient)
+        .success(function (response) {
+            console.log(response);
+            if (response.ResponseCode == 0) {
+                $scope.FicheClient = response.Data;
+            } else {//Error
+                console.log(response);
+            }
+        })
+        .error(function (response) {
+            console.log(response);
+        });
+    }
+
+    $scope.DETAILS_FACTURE_CLIENT_DATA = function (facture) {
+        $scope.DetailsFacture = {};
+        $scope.FactureSelect = facture;
+
+        $http.get($rootScope.ServerURL + "FacturesClient?details=" + facture.Id)
+        .success(function (response) {
+            console.log(response);
+            if (response.ResponseCode == 0) {
+                $scope.DetailsFacture = response.Data;
+            } else {//Error
+                console.log(response);
+            }
+        })
+        .error(function (response) {
+            console.log(response);
+        });
+    }
+
+    $scope.SendData = function () {
+        $http.post($rootScope.ServerURL + "Paiements", $scope.Paiement)
+        .success(function (response) {
+            console.log(response);
+            if (response.ResponseCode == 0) {
+                $scope.FICHE_CLIENT_DATA();
+
+                //Imprimer le reçu du versement
+            } else {//Error
+                console.log(response);
+            }
+        })
+        .error(function (response) {
+            console.log(response);
+        });
+    }
+
+    $scope.Calculer = function () {
+        $scope.Paiement.Monnaie = Number($scope.Paiement.MontantPercu) - Number($scope.Paiement.Versement);
+    }
+
+    $scope.FICHE_CLIENT_DATA();
 }]);
 
 //FournisseurController
@@ -1689,6 +1781,21 @@ function ($rootScope, $scope, $http) {
 
     $rootScope.PageName = "Caisse";
 
+    $scope.CloturerCaisse = function (caisse) {
+        $http.get($rootScope.ServerURL + "Caisses?cloturer=" + caisse + "&user=" + $scope.Profil.Id)
+        .success(function (response) {
+            console.log(response);
+            if (response.ResponseCode == 0) {
+                $rootScope.LISTE_CAISSES_DATA();
+            } else {//Error
+                console.log(response);
+            }
+        })
+        .error(function (response) {
+            console.log(response);
+        });
+    }
+
     $rootScope.LISTE_CAISSES_DATA();
 }]);
 
@@ -1730,11 +1837,12 @@ function ($rootScope, $scope, $http) {
 
     $rootScope.LISTE_SORTIESDECAISSES_DATA();
 }]);
-//AdminProduitsController
-MainController.controller('SessionCaisseController', ['$rootScope', '$scope', '$http', '$routeParams',
+
+//InfosSessionCaisseController
+MainController.controller('InfosSessionCaisseController', ['$rootScope', '$scope', '$http', '$routeParams',
 function ($rootScope, $scope, $http, $routeParams) {
 
-    $rootScope.PageName = "Sessions de caisse";
+    $rootScope.PageName = "Infos sessions de caisse";
     $scope.idCaisse = $routeParams.caisse;
 
     if (isNaN($scope.idCaisse)) window.location = "#/Home";
@@ -1773,13 +1881,60 @@ function ($rootScope, $scope, $http, $routeParams) {
     $rootScope.LISTE_SESSIONCAISSES_DATA($scope.idCaisse);
 }]);
 
-//AdminFournisseursController
-MainController.controller('AdminFournisseursController', ['$rootScope', '$scope', '$http',
-function ($rootScope, $scope, $http) {
+//SessionCaisseController
+MainController.controller('SessionCaisseController', ['$rootScope', '$scope', '$http', '$routeParams',
+function ($rootScope, $scope, $http, $routeParams) {
 
-    $rootScope.PageName = "Fournisseurs";
-    $rootScope.PageDescription = "Administration des fournisseurs";
+    $rootScope.PageName = "Sessions de caisse";
 
+    $scope.CalculerDifference = function () {
+        $scope.SessionCaisseUser.DifferenceTotalEspece = Number($scope.SessionCaisseUser.TotalEspeceTheorique) - Number($scope.SessionCaisseUser.TotalEspeceSaisi);
+    }
+
+    $scope.FermerSession = function () {
+        $scope.SessionCaisseUser.User = $scope.Profil.Id;
+        $http.get($rootScope.ServerURL + "SessionCaisses?user=" + $scope.SessionCaisseUser.User + "&especeSaisi=" + $scope.SessionCaisseUser.TotalEspeceSaisi + "&observation=" + $scope.SessionCaisseUser.Observation)
+        .success(function (response) {
+            console.log(response);
+            if (response.ResponseCode == 0) {
+                $rootScope.SESSIONCAISSE_USER_DATA();
+            } else {//Error
+                console.log(response);
+            }
+        })
+        .error(function (response) {
+            console.log(response);
+        });
+    }
+
+    $rootScope.SESSIONCAISSE_USER_DATA();
+}]);
+
+//InventaireDeStockController
+MainController.controller('InventaireDeStockController', ['$rootScope', '$scope', '$http', '$routeParams',
+function ($rootScope, $scope, $http, $routeParams) {
+
+    $rootScope.PageName = "Inventaire du stock";
+    $scope.idCaisse = $routeParams.caisse;
+
+    if (isNaN($scope.idCaisse)) window.location = "#/Home";
+
+    //LISTE SESSION DE CAISSE USER OUVERTE
+    $rootScope.INVENTAIRE_DATA = function () {
+        $http.get($rootScope.ServerURL + "Produits?inventaire=" + $scope.idCaisse)
+        .success(function (response) {
+            console.log(response);
+            if (response.ResponseCode == 0) {
+                $scope.Inventaires = response.Data;
+                $scope.Caisse = response.Sender;
+            } else {//Error
+                console.log(response);
+            }
+        })
+        .error(function (response) { console.log(response); });
+    }
+
+    $rootScope.INVENTAIRE_DATA();
 }]);
 
 //AdminChineursController

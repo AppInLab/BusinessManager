@@ -22,6 +22,10 @@
       <column name="MontantPercu"/>
     </property>
 
+    <property name="IsSoldeInitial">
+      <column name="IsSoldeInitial"/>
+    </property>
+
     <many-to-one name ="SessionCaisse" lazy="false" class ="SessionCaisse" column="SessionCaisse"/>
     <many-to-one name ="Client" lazy="false" class ="Client" column="Client"/>
     <many-to-one name ="FacturesClient" lazy="false" class ="FacturesClient" column="FacturesClient"/>

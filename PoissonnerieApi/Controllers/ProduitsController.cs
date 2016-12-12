@@ -113,15 +113,93 @@ namespace PoissonnerieApi.Controllers
             return responseData;
         }
 
-        private void CalculerQuantiteProduit(Produit p)
+        // GET api/produits/5
+        public object GetInventaire(long inventaire)
         {
-            ///-------- ENTREE ---------
-            //1. On recupère tous les produits des bon de reception du reçu
-            var detailsBonReceptionParProduit = DataManager.GetListProduitsParBonRecu(p.Id);
-            //2. On calcul le nombre en unité : Quantité x UniteParBlock
+            ResponseData responseData;
+            try
+            {
+                var _caisse = DataManager.Get<Caisse>(inventaire);
 
+                //Recuperer la liste des produits
+                var produits = DataManager.GetAll<Produit>("Libelle");
+                //Recuperer chaque produits et faire l'inventaire
+                var listInventaire = new List<Inventaire>();
+                foreach (var produit in produits)
+                {
+                    var inv = new Inventaire();
+                    inv.Produit = produit;
+
+                    #region STOCK INITIAL
+                    //Recuperer la liste des produits en stock avant date debut ouverture de caisse
+                    //Recuperer la liste des produits vendu avant date debut ouverture de caisse
+                    //Faire la différence pour avoir la liste du stock initial
+
+                    ///-------- ENTREE INITIAL ---------
+                    //1. On recupère tous les produits des bon de reception du reçu
+                    var detailsBonReceptionParProduit = DataManager.GetListProduitsParBonRecu(produit.Id, _caisse.DateOuverture);
+                    //2. On calcul le nombre en unité : Quantité x UniteParBlock
+                    var produitsEntres = CalculerQuantiteEntreeEnStockProduits(produit, detailsBonReceptionParProduit);
+
+                    ///-------- SORTIE INITIAL ---------
+                    //3. On recupère les produits vendu : factures (A revoir: Bon de livraison livré)
+                    var facturesClientInitialSorti = DataManager.GetListProduitsParFactures(produit.Id, _caisse.DateOuverture);
+                    decimal produitsSorti = CalculerQuantiteSortieDuStockProduits(produit, facturesClientInitialSorti);
+
+                    //5. On fait la difference
+                    decimal produitsInitial = produitsEntres - produitsSorti;
+
+                    if (produit.Unite.IsBlock)
+                        inv.StockInitialBlock = (long)(produitsInitial / produit.UniteParBlock);
+                    else
+                        inv.StockInitialBlock = produitsInitial / produit.UniteParBlock;
+
+                    inv.StockInitialResteUnite = produitsInitial % produit.UniteParBlock;
+                    #endregion
+
+                    #region STOCK VENDU
+                    var facturesClientVendu = DataManager.GetListProduitsVenduParFactures(produit.Id, _caisse.DateOuverture);
+                    var produitsVendus = CalculerQuantiteSortieDuStockProduits(produit, facturesClientVendu);
+
+                    if (produitsVendus > 0)
+                    {
+                        inv.IsVendu = true;
+
+                        if (produit.Unite.IsBlock)
+                            inv.StockVenduBlock = (long)(produitsVendus / produit.UniteParBlock);
+                        else
+                            inv.StockVenduBlock = produitsVendus / produit.UniteParBlock;
+                        inv.StockVenduResteUnite = produitsVendus % produit.UniteParBlock;
+                    }
+                    #endregion
+
+
+                    #region STOCK FINAL
+                    var produitsFinaux = produitsInitial - produitsVendus;
+                    if (produit.Unite.IsBlock)
+                        inv.StockFinalBlock = (long)(produitsFinaux / produit.UniteParBlock);
+                    else
+                        inv.StockFinalBlock = produitsFinaux / produit.UniteParBlock;
+                    inv.StockFinalResteUnite = produitsFinaux % produit.UniteParBlock;
+                    #endregion
+
+                    listInventaire.Add(inv);
+                }
+
+                responseData = ResponseData.GetSuccess(listInventaire, _caisse);
+            }
+            catch (Exception ex)
+            {
+                responseData = ResponseData.GetError(ex.Message);
+            }
+
+            return responseData;
+        }
+
+        private decimal CalculerQuantiteEntreeEnStockProduits(Produit p, List<DetailsBonReceptionFournisseur> detailsBonReception)
+        {
             decimal produitsEntre = 0;
-            foreach (var detailsBr in detailsBonReceptionParProduit)
+            foreach (var detailsBr in detailsBonReception)
             {
                 if (detailsBr.TypeColisage == Constants.TYPE_BLOCK_KEY)
                 {
@@ -133,11 +211,13 @@ namespace PoissonnerieApi.Controllers
                 }
             }
 
-            ///-------- SORTIE ---------
-            //3. On recupère les produits vendu : factures (A revoir: Bon de livraison livré)
-            var facturesClient = DataManager.GetList<DetailsFacturesClient>("Produit.Id", p.Id);
+            return produitsEntre;
+        }
+
+        private decimal CalculerQuantiteSortieDuStockProduits(Produit p, List<DetailsFacturesClient> detailsFacturesClient)
+        {
             decimal produitsSorti = 0;
-            foreach (var factureCash in facturesClient)
+            foreach (var factureCash in detailsFacturesClient)
             {
                 //4. On calcul le nombre en unité : Quantité x UniteParBlock
                 if (factureCash.TypeColisage == Constants.TYPE_BLOCK_KEY)
@@ -149,6 +229,22 @@ namespace PoissonnerieApi.Controllers
                     produitsSorti += factureCash.Quantite;
                 }
             }
+
+            return produitsSorti;
+        }
+
+        private void CalculerQuantiteProduit(Produit p)
+        {
+            ///-------- ENTREE ---------
+            //1. On recupère tous les produits des bon de reception du reçu
+            var detailsBonReceptionParProduit = DataManager.GetListProduitsParBonRecu(p.Id);
+            //2. On calcul le nombre en unité : Quantité x UniteParBlock
+            decimal produitsEntre = CalculerQuantiteEntreeEnStockProduits(p, detailsBonReceptionParProduit);
+
+            ///-------- SORTIE ---------
+            //3. On recupère les produits vendu : factures (A revoir: Bon de livraison livré)
+            var facturesClient = DataManager.GetList<DetailsFacturesClient>("Produit.Id", p.Id);
+            decimal produitsSorti = CalculerQuantiteSortieDuStockProduits(p, facturesClient);
 
             //5. On fait la difference
             decimal produitsRestant = produitsEntre - produitsSorti;

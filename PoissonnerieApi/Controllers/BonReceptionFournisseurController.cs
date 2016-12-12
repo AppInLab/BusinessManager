@@ -105,6 +105,7 @@ namespace PoissonnerieApi.Controllers
                 //Recuperation de la commande
                 var bonReceptionFournisseur = DataManager.Get<BonReceptionFournisseur>(marquerCommeRecu);
                 bonReceptionFournisseur.MarquerRecu = true;
+                bonReceptionFournisseur.DateValidation = DateTime.UtcNow;
                 DataManager.Save(bonReceptionFournisseur);
 
                 responseData = ResponseData.GetSuccess("OK");

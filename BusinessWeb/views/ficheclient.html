@@ -1,0 +1,224 @@
+﻿<div class="row-fluid">
+    <div class="portlet-body form">
+        <div class="row-fluid">
+            <a class="pull-right btn blue" href="#/Clients"><i class="icon-circle-arrow-left"></i> Retour</a>
+        </div>
+        <div class="row-fluid">
+            <div class="span3">
+                <!-- BEGIN FORM-->
+                <div class="horizontal-form">
+                    <div class="row-fluid">
+                        
+                        <div class="unstyled profile-nav span12">
+                            <div class="profile-info">
+                                <h2 class="bold">{{FicheClient.Client.NomComplet}}</h2>
+                                <h4><i class="icon-map-marker"></i> {{FicheClient.Client.Adresse}}</h4>
+                                <h4> {{FicheClient.Client.Contacts}}</h4>
+                                <hr />
+                                <h4>Somme dû</h4>
+                                <h3 class="bold">{{FicheClient.SommeDue}} F</h3>
+
+                                <button ng-if="(!Profil.IsStockUser)" data-toggle="modal" ng-click="InitPaiement()" data-target="#EffectuerVersement" class="btn green"><i class="icon-money"></i> Effectuer un versement</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- END FORM-->
+            </div>
+            <div class="span9">
+                <div class="tabbable tabbable-custom">
+                    <ul class="nav nav-tabs">
+                        <!--<li><a data-target="#journal" data-toggle="tab">Journal</a></li>-->
+                        <li class="active"><a data-target="#versements" data-toggle="tab">Versements</a></li>
+                        <li><a data-target="#achats" data-toggle="tab">Achats</a></li>
+                        <!--<li><a data-target="#tab_1_3" data-toggle="tab">Produits les plus achetés</a></li>-->
+                    </ul>
+                    <div class="tab-content">
+                        <!--<div class="tab-pane active" id="journal">
+
+                        </div>-->
+                        <div class="tab-pane active" id="versements">
+                            <div class="dataTables_wrapper form-inline" role="grid">
+                                <table class="table table-striped table-bordered table-hover">
+                                    <thead>
+                                        <tr role="row">
+                                            <th role="columnheader">N°</th>
+                                            <th role="columnheader">Date</th>
+                                            <th role="columnheader" class="bold">Versement effectué</th>
+                                            <th role="columnheader">Montant perçu</th>
+                                            <th role="columnheader">Montant rendu (Monnaie)</th>
+                                            <th role="columnheader">Utilisateur</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody role="alert" aria-live="polite" aria-relevant="all">
+                                        <tr dir-paginate="paiement in FicheClient.Paiements | itemsPerPage: 20">
+                                            <td>{{$index + 1}}</td>
+                                            <td>{{paiement.DateCreation | date : 'dd/MM/yyyy HH:mm'}}</td>
+                                            <td class="bold">{{paiement.Versement}}</td>
+                                            <td>{{paiement.MontantPercu}}</td>
+                                            <td>{{paiement.Monnaie}}</td>
+                                            <td>{{paiement.SessionCaisse.User.Login}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                                <div class="row-fluid">
+                                    <div class="span12">
+                                        <div class="dataTables_paginate paging_bootstrap pagination">
+                                            <dir-pagination-controls></dir-pagination-controls>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="achats">
+                            <div class="dataTables_wrapper form-inline" role="grid">
+                                <table class="table table-striped table-bordered table-hover">
+                                    <thead>
+                                        <tr role="row">
+                                            <th role="columnheader"></th>
+                                            <th role="columnheader">Date</th>
+                                            <th role="columnheader">Total TTC</th>
+                                            <th role="columnheader">Créer par</th>
+                                            <th role="columnheader"></th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody role="alert" aria-live="polite" aria-relevant="all">
+                                        <tr dir-paginate="facture in FicheClient.Factures | itemsPerPage: 20">
+                                            <td>{{$index + 1}}</td>
+                                            <td>{{facture.DateCreation | date : 'dd/MM/yyyy HH:mm'}}</td>
+                                            <td>{{facture.TotalTtc}}</td>
+                                            <td>{{facture.SessionCaisse.User.Login}}</td>
+                                            <td><a data-toggle="modal" data-target="#detailsFacture" ng-click="DETAILS_FACTURE_CLIENT_DATA(facture)" class="btn mini blue"><i class="icon-info"></i> Détails</a></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                                <div class="row-fluid">
+                                    <div class="span12">
+                                        <div class="dataTables_paginate paging_bootstrap pagination">
+                                            <dir-pagination-controls></dir-pagination-controls>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--<div class="tab-pane" id="tab_1_3">
+
+                        </div>-->
+                    </div>
+                </div>
+            </div>
+        </div>        
+    </div>
+</div>
+
+<div id="EffectuerVersement" class="modal hide fade" tabindex="-1" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+        <h3>Effectuer un versement</h3>
+    </div>
+    <div class="modal-body">
+        <div class="row-fluid">
+            <div class="span12">
+                <div class="control-group">
+                    <label class="control-label">Somme dûe</label>
+                    <div class="controls">
+                        <input type="text" ng-model="FicheClient.SommeDue" class="m-wrap span12 bold" disabled>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row-fluid">
+            <div class="span12">
+                <div class="control-group">
+                    <label class="control-label">Versement</label>
+                    <div class="controls">
+                        <input type="text" ng-change="Calculer()" ng-model="Paiement.Versement" class="m-wrap span12 bold" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row-fluid">
+            <div class="span12">
+                <div class="control-group">
+                    <label class="control-label">Montant perçu</label>
+                    <div class="controls">
+                        <input type="text" ng-change="Calculer()" ng-model="Paiement.MontantPercu" class="m-wrap span12 bold">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row-fluid">
+            <div class="span12">
+                <div class="control-group">
+                    <label class="control-label">Monnaie</label>
+                    <div class="controls">
+                        <input type="text" ng-model="Paiement.Monnaie" class="m-wrap span12 bold" disabled>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" data-dismiss="modal" class="btn">Annuler</button>
+        <button type="button" ng-click="SendData()" class="btn blue" data-dismiss="modal">Valider</button>
+    </div>
+</div>
+
+
+<div id="detailsFacture" class="modal hide fade" tabindex="-1" data-width="760" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+        <h3>Details facture</h3>
+    </div>
+    <div class="modal-body">
+        <div class="row-fluid">
+            <div class="span12 responsive" data-tablet="span6" data-desktop="span12">
+                <!--<div class="title2">Détails de la note</div>-->
+                <div id="detailVente" class="flip-scroll" style="height:250px;">
+                    <table class="table-bordered table-striped table-condensed flip-content">
+                        <thead>
+                            <tr>
+                                <th class="alignleft">DESI.</th>
+                                <th class="aligncenter">QTE</th>
+                                <th class="aligncenter">PU</th>
+                                <th class="aligncenter">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr dir-paginate="factureElem in DetailsFacture | itemsPerPage: 8">
+                                <td>{{factureElem.Produit.Libelle}}</td>
+                                <td class="aligncenter">
+                                    <span ng-if="factureElem.TypeColisage == TYPE_VENTE_UNITE_KEY">{{factureElem.Quantite}} {{factureElem.Produit.Unite.Libelle | limitTo : 4}}{{factureElem.Produit.Unite.Libelle.length > 4 ? '.' : ''}}</span>
+                                    <span ng-if="factureElem.TypeColisage == TYPE_VENTE_BLOCK_KEY">{{factureElem.Quantite}} {{factureElem.Produit.Block.Libelle | limitTo : 4}}{{factureElem.Produit.Block.Libelle.length > 4 ? '.' : ''}}</span>
+                                </td>
+                                <td class="aligncenter">
+                                    <span>{{factureElem.PrixUnitaire}}</span>
+                                </td>
+                                <td class="alignright">{{factureElem.MontantTtc}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="row-fluid">
+                        <div class="span12">
+                            <div class="dataTables_paginate paging_bootstrap pagination">
+                                <dir-pagination-controls></dir-pagination-controls>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div id="footerVente" style="text-align:left">
+            <h3>Total : <span class="pull-right text-bold">{{FactureSelect.TotalTtc}} F</span></h3>
+        </div>
+        <button type="button" data-dismiss="modal" class="btn">Fermer</button>
+    </div>
+</div>

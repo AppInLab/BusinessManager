@@ -36,6 +36,22 @@ namespace PoissonnerieApi.Controllers
             try
             {
                 var sessionsCaisse = DataManager.GetList<SessionCaisse>("Caisse", caisse);
+
+                foreach (var session in sessionsCaisse)
+                {
+                    //Recuperer la somme des sorties de caisse
+                    session.SortiesDeCaisse = DataManager.GetSumSortieDeCaisseSession(session.Id);
+                    //Recupurer la somme des paiements effectués
+                    session.TotalPaiement = DataManager.GetSumPaiementCaisseSession(session.Id);
+
+                    //Calculer l'espece théorique
+                    session.TotalEspeceTheorique = session.FondDeCaisse +
+                        session.TotalPaiement - session.SortiesDeCaisse;
+
+                    if(session.IsClosed)
+                        session.DifferenceTheoriqueEtFermeture = session.TotalEspeceFermeture - session.TotalEspeceTheorique;
+                }
+
                 responseData = ResponseData.GetSuccess(sessionsCaisse);
             }
             catch (Exception ex)
@@ -47,23 +63,60 @@ namespace PoissonnerieApi.Controllers
         }
 
         // GET api/sessioncaisses?cloturer=idSessionCaisse
-        public object GetCloturer(long cloturer)
+        public object GetFermerSession([FromUri]long user, [FromUri]long especeSaisi, [FromUri]string observation)
         {
             ResponseData responseData;
             try
             {
-                var sessionsCaisse = DataManager.Get<SessionCaisse>(cloturer);
+                if (especeSaisi < 0) {
+                    return ResponseData.GetError("Montant invalide !!!");
+                }
+
+                var sessionsCaisse = DataManager.GetSessionCaisseUserOuvertes(user);
+                if (sessionsCaisse == null)
+                    return ResponseData.GetError("Session introuvable !");
+
+                sessionsCaisse.IsClosed = true;
+                sessionsCaisse.DateCloture = DateTime.UtcNow;
+
+                sessionsCaisse.TotalEspeceFermeture = especeSaisi;
+                sessionsCaisse.Observation = observation;
+
+                DataManager.Save(sessionsCaisse);
+                responseData = ResponseData.GetSuccess(sessionsCaisse);
+
+            }
+            catch (Exception ex)
+            {
+                responseData = ResponseData.GetError(ex.Message);
+            }
+
+            return responseData;
+        }
+
+        // GET api/sessioncaisses?user=idUser
+        public object GetSessionOuverte(long user)
+        {
+            ResponseData responseData;
+            try
+            {
+                var sessionsCaisse = DataManager.GetSessionCaisseUserOuvertes(user);
                 if (sessionsCaisse == null)
                 {
-                    responseData = ResponseData.GetError("Session introuvable !");
+                    sessionsCaisse = DataManager.GetLastSessionCaisseUser(user);
+                    //return responseData = ResponseData.GetError("Session introuvable !");
                 }
-                else
-                {
-                    sessionsCaisse.IsClosed = true;
-                    sessionsCaisse.DateCloture = DateTime.UtcNow;
-                    DataManager.Save(sessionsCaisse);
-                    responseData = ResponseData.GetSuccess(sessionsCaisse);
-                }
+                    
+                //Recuperer la somme des sorties de caisse
+                sessionsCaisse.SortiesDeCaisse = DataManager.GetSumSortieDeCaisseSession(sessionsCaisse.Id);
+                //Recupurer la somme des paiements effectués
+                sessionsCaisse.TotalPaiement = DataManager.GetSumPaiementCaisseSession(sessionsCaisse.Id);
+
+                //Calculer l'espece théorique
+                sessionsCaisse.TotalEspeceTheorique = sessionsCaisse.FondDeCaisse +
+                    sessionsCaisse.TotalPaiement - sessionsCaisse.SortiesDeCaisse;
+                
+                responseData = ResponseData.GetSuccess(sessionsCaisse);
             }
             catch (Exception ex)
             {

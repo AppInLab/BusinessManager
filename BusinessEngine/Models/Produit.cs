@@ -22,7 +22,7 @@ namespace BusinessEngine.Models
         //On convertir les blocks en unité
         //On fait la somme global et on la divie par le nombre de block
         //Le reste de la division est enregistré dans QuantiteStockReste (reste en unité)
-        //Cela sous-entend qu'il reste mois de un block
+        //Cela sous-entend qu'il reste moins d'un block
         virtual public decimal QuantiteStockBlock { get; set; }
         //Reste de la division du stock non transformable en block
         //Il est en unité

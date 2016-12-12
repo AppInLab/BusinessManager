@@ -9,7 +9,7 @@
                         <th role="columnheader">Date clôture</th>
                         <th role="columnheader">Sortie de caisse</th>
                         <th role="columnheader" class="bold">Entrée en caisse</th>
-                        <th role="columnheader" class="bold">Somme en caisse</th>
+                        <th role="columnheader" class="bold">Total en caisse</th>
                         <th role="columnheader">Etat</th>
                         <th role="columnheader">Cloturée par</th>
                         <th role="columnheader">#</th>
@@ -22,19 +22,17 @@
                         <td>{{caisseItem.DateOuverture | date : 'dd/MM/yyyy HH:mm'}}</td>
                         <td>{{caisseItem.DateCloture | date : 'dd/MM/yyyy HH:mm'}}</td>
                         <td>{{caisseItem.SortieDeCaisseTotal}}</td>
-                        <td class="bold">{{caisseItem.MontantTotal}}</td>
-                        <td class="bold">{{caisseItem.MontantTotal}}</td>
+                        <td class="bold">{{caisseItem.EntreeDeCaisseTotal}}</td>
+                        <td class="bold">{{caisseItem.MontantTotalEnCaisse}}</td>
                         <td>
                             <span ng-if="!caisseItem.IsClosed" style="color:green;" class="bold">Ouverte</span>
                             <span ng-if="caisseItem.IsClosed" style="color:red;" class="bold">Cloturée</span>
                         </td>
                         <td>{{caisseItem.ClotureePar.Login}}</td>
                         <td>
-                            <div class="btn-group">
-                                <a href="#/SessionCaisses/{{caisseItem.Id}}" type="button" class="btn mini blue"><i class="icon-eye-open"></i> Voir les sessions</a>
-                                <button ng-if="caisseItem.IsClosed" type="button" class="btn mini red"><i class="icon-lock"></i> Cloturée</button>
-                                <button ng-if="!caisseItem.IsClosed" type="button" class="btn mini green"><i class="icon-unlock"></i> Ouverte</button>
-                            </div>
+                            <a href="#/InfosSessionCaisses/{{caisseItem.Id}}" class="btn mini blue"><i class="icon-eye-open"></i> Voir les sessions</a>
+                            <a href="#/InventaireDeStocks/{{caisseItem.Id}}" class="btn mini green"><i class="icon-book"></i> Inventaire de stock</a>
+                            <a ng-if="!caisseItem.IsClosed" ng-click="CloturerCaisse(caisseItem.Id)" class="btn mini"><i class="icon-lock"></i> Clôturer</a>
                         </td>
                     </tr>
                 </tbody>
@@ -50,4 +48,5 @@
         </div>
     </div>
 </div>
+
 

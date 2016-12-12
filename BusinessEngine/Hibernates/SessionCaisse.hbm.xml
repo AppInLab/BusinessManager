@@ -22,8 +22,16 @@
       <column name="FondDeCaisse"/>
     </property>
 
+    <property name="TotalEspeceFermeture">
+      <column name="TotalEspeceFermeture"/>
+    </property>
+
     <property name="IsClosed">
       <column name="IsClosed"/>
+    </property>
+
+    <property name="Observation">
+      <column name="Observation"/>
     </property>
 
     <many-to-one name ="Caisse" lazy="false" class ="Caisse" column="Caisse"/>

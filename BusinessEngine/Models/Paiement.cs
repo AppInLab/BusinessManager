@@ -17,9 +17,12 @@ namespace BusinessEngine.Models
         virtual public SessionCaisse SessionCaisse { get; set; }
         virtual public Client Client { get; set; }
         virtual public FacturesClient FacturesClient { get; set; }
+        virtual public bool IsSoldeInitial { get; set; }
 
         //Pas en base
         virtual public decimal NetAPayer { get; set; }
+        virtual public decimal Monnaie { get; set; }
+        virtual public User User { get; set; }
 
     }
 }

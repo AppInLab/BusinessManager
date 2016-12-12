@@ -44,6 +44,13 @@ app.config(["$routeProvider",
                 controller: "ClientController"
             });
 
+            //Fiche Clients            
+            $routeProvider.when("/FicheClients/:client", {
+                templateUrl: "views/ficheclient.html",
+                controller: "FicheClientController"
+            });
+
+
             //Fournisseurs            
             $routeProvider.when("/Fournisseurs", {
                 templateUrl: "views/fournisseur.html",
@@ -104,30 +111,28 @@ app.config(["$routeProvider",
                 controller: "SortiesDeCaisseController"
             });
 
-            //Depenses            
-            $routeProvider.when("/SessionCaisses/:caisse", {
+            //SessionCaisses            
+            $routeProvider.when("/InfosSessionCaisses/:caisse", {
+                templateUrl: "views/infossessioncaisse.html",
+                controller: "InfosSessionCaisseController"
+            });
+            
+            //ClotureDeCaisses           
+            $routeProvider.when("/SessionCaisses", {
                 templateUrl: "views/sessioncaisse.html",
                 controller: "SessionCaisseController"
             });
-            
-            /* Menus Administrateurs */
 
-            //Gestion des comptes           
+            //InventaireDeStock caisse    
+            $routeProvider.when("/InventaireDeStocks/:caisse", {
+                templateUrl: "views/inventaire.html",
+                controller: "InventaireDeStockController"
+            });
+
+            //Gestion des comptes          
             $routeProvider.when("/Comptes", {
                 templateUrl: "views/compte.html",
                 controller: "ComptesController"
-            });
-
-            //Gestion des catégories de produits            
-            $routeProvider.when("/AdminCategories", {
-                templateUrl: "views/Admin/AdminCategories.html",
-                controller: "AdminCategoriesController"
-            });
-
-            //Gestion des Produits          
-            $routeProvider.when("/AdminProduits", {
-                templateUrl: "views/Admin/AdminProduits.html",
-                controller: "AdminProduitsController"
             });
 
             //Gestion des fornisseurs      
@@ -136,7 +141,7 @@ app.config(["$routeProvider",
                 controller: "AdminFournisseursController"
             });
 
-            //Gestion des Chineurs      
+            //Gestion des Chineurs
             $routeProvider.when("/AdminChineurs", {
                 templateUrl: "views/Admin/AdminChineurs.html",
                 controller: "AdminChineursController"

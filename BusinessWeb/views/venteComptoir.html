@@ -1,6 +1,6 @@
 <div class="row-fluid">
     <div class="span2 responsive" data-tablet="span6" data-desktop="span2">
-        <input class="m-wrap span12" type="text" name="name" value="" placeholder="Recherche">
+        <input class="m-wrap span12" type="text" name="name" ng-model="searchProduit" placeholder="Recherche">
         <div id="categorieProduit" class="list-item">
             <ul>
                 <li ng-class="{active: categorie.Id == SelectedItem}" ng-repeat="categorie in Categories" ng-click="ChargerProduits(categorie)">
@@ -15,7 +15,7 @@
             Produits
         </div>
         <div id="listProduits" class="row-fluid">
-            <div ng-click="Init(cProduit)" class="button-tem" data-toggle="modal" data-target="#AjouterProduitAuPanier" ng-repeat="cProduit in ProduitsParCategorie">
+            <div ng-click="Init(cProduit)" class="button-tem" data-toggle="modal" data-target="#AjouterProduitAuPanier" ng-repeat="cProduit in ProduitsParCategorie | filter:searchProduit">
                 <i class="text-bold">{{cProduit.Libelle}}</i>
                 <div></div>
                 <span class="badge" ng-class="{'badge-success' : cProduit.QuantiteStockBlock > cProduit.StockMinimum, 'badge-important' : cProduit.QuantiteStockBlock <= cProduit.StockMinimum}" ng-if="cProduit.UniteParBlock > 1">{{cProduit.QuantiteStockBlock}} <span ng-if="cProduit.QuantiteStockResteEnUnite != 0">[{{cProduit.QuantiteStockResteEnUnite}}]</span></span>
@@ -132,10 +132,10 @@
     <div class="modal-body">
         <div class="row-fluid">
             <div class="span6" data-tablet="span6" data-desktop="span6">
-                <input class="m-wrap span12" type="text" name="name" value="" placeholder="Recherche">
+                <input class="m-wrap span12" type="text" ng-model="searchText" name="name" value="" placeholder="Recherche">
                 <div id="categorieProduit" class="list-item" style="height:240px;overflow-y:auto">
                     <ul>
-                        <li ng-class="{active: client.Id == ClientSelected.Id}" ng-repeat="client in Clients" ng-click="SelectionnerClient(client)">
+                        <li ng-class="{active: client.Id == ClientSelected.Id}" ng-repeat="client in Clients | filter:searchText" ng-click="SelectionnerClient(client)">
                             <a>{{client.NomComplet}}</a>
                         </li>
                     </ul>

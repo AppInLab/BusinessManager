@@ -1,0 +1,123 @@
+﻿<div class="row-fluid">
+    <div class="portlet-body">
+        <div class="table-toolbar">
+            <h3 class="bold">
+                Inventaire du {{Caisse.DateOuverture | date : 'dd/MM/yyyy'}}
+                <a class="pull-right btn blue" href="#/Caisses"><i class="icon-circle-arrow-left"></i> Retour</a>
+            </h3>
+            <hr />
+        </div>
+        <div class="dataTables_wrapper form-inline" role="grid">
+            <table class="table table-striped table-bordered table-hover">
+                <thead>
+                    <tr role="row">
+                        <th role="columnheader">Categorie</th>
+                        <th role="columnheader">Produit</th>
+                        <th role="columnheader">Stock initial</th>
+                        <th role="columnheader">Stock vendu</th>
+                        <th role="columnheader">Stock final</th>
+                    </tr>
+                </thead>
+
+                <tbody role="alert" aria-live="polite" aria-relevant="all">
+                    <tr dir-paginate="inventaire in Inventaires | itemsPerPage: 60">
+                        <td>{{inventaire.Produit.Categorie.Libelle}}</td>
+                        <td>{{inventaire.Produit.Libelle}}</td>
+                        <td>
+                            <div ng-class="{'text-blue':inventaire.IsVendu}" ng-if="inventaire.Produit.Unite.IsBlock">
+                                <span>
+                                    {{inventaire.StockInitialBlock}} {{inventaire.Produit.Block.Libelle | limitTo : 4}}{{inventaire.Produit.Block.Libelle.length > 4 ? '.' : ''}}
+                                </span>
+
+                                <span ng-if="inventaire.StockInitialResteUnite != 0">
+                                    {{inventaire.StockInitialResteUnite}} {{inventaire.Produit.Unite.Libelle | limitTo : 4}}{{inventaire.Produit.Unite.Libelle.length > 4 ? '.' : ''}}
+                                </span>
+                            </div>
+
+                            <div ng-class="{'text-blue':inventaire.IsVendu}" ng-if="!inventaire.Produit.Unite.IsBlock">
+                                <span>
+                                    {{inventaire.StockInitialBlock}} {{inventaire.Produit.Unite.Libelle | limitTo : 4}}{{inventaire.Produit.Unite.Libelle.length > 4 ? '.' : ''}}
+                                </span>
+                            </div>
+                        </td>
+                        <td>
+                            <div ng-class="{'text-blue':inventaire.IsVendu}" ng-if="inventaire.Produit.Unite.IsBlock">
+                                <span>
+                                    {{inventaire.StockVenduBlock}} {{inventaire.Produit.Block.Libelle | limitTo : 4}}{{inventaire.Produit.Block.Libelle.length > 4 ? '.' : ''}}
+                                </span>
+
+                                <span ng-if="inventaire.StockVenduResteUnite != 0">
+                                    {{inventaire.StockVenduResteUnite}} {{inventaire.Produit.Unite.Libelle | limitTo : 4}}{{inventaire.Produit.Unite.Libelle.length > 4 ? '.' : ''}}
+                                </span>
+                            </div>
+
+                            <div ng-class="{'text-blue':inventaire.IsVendu}" ng-if="!inventaire.Produit.Unite.IsBlock">
+                                <span>
+                                    {{inventaire.StockVenduBlock}} {{inventaire.Produit.Unite.Libelle | limitTo : 4}}{{inventaire.Produit.Unite.Libelle.length > 4 ? '.' : ''}}
+                                </span>
+                            </div>
+                        </td>
+                        <td>
+                            <div ng-class="{'text-blue':inventaire.IsVendu}" ng-if="inventaire.Produit.Unite.IsBlock">
+                                <span>
+                                    {{inventaire.StockFinalBlock}} {{inventaire.Produit.Block.Libelle | limitTo : 4}}{{inventaire.Produit.Block.Libelle.length > 4 ? '.' : ''}}
+                                </span>
+
+                                <span ng-if="inventaire.StockFinalResteUnite != 0">
+                                    {{inventaire.StockFinalResteUnite}} {{inventaire.Produit.Unite.Libelle | limitTo : 4}}{{inventaire.Produit.Unite.Libelle.length > 4 ? '.' : ''}}
+                                </span>
+                            </div>
+
+                            <div ng-class="{'text-blue':inventaire.IsVendu}" ng-if="!inventaire.Produit.Unite.IsBlock">
+                                <span>
+                                    {{inventaire.StockFinalBlock}} {{inventaire.Produit.Unite.Libelle | limitTo : 4}}{{inventaire.Produit.Unite.Libelle.length > 4 ? '.' : ''}}
+                                </span>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="row-fluid">
+                <div class="span12">
+                    <div class="dataTables_paginate paging_bootstrap pagination">
+                        <dir-pagination-controls></dir-pagination-controls>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="client" class="modal hide fade" tabindex="-1" data-width="760" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" ng-click="Annuler()" class="close" data-dismiss="modal" aria-hidden="true"></button>
+        <h3>Editer un client</h3>
+    </div>
+    <div class="modal-body">
+        <div class="row-fluid">
+            <div class="control-group">
+                <label class="control-label">Nom complet<span class="required">*</span></label>
+                <div class="controls">
+                    <input type="text" class="span12 m-wrap" ng-model="Client.NomComplet">
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Adresse</label>
+                <div class="controls">
+                    <input type="text" class="span12 m-wrap" ng-model="Client.Adresse">
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Contacts<span class="required">*</span></label>
+                <div class="controls">
+                    <input type="text" class="span12 m-wrap" ng-model="Client.Contacts">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" data-dismiss="modal" class="btn" ng-click="Annuler()">Annuler</button>
+        <button type="button" class="btn blue" data-dismiss="modal" ng-click="SendData()">Valider</button>
+    </div>
+</div>

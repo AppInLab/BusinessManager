@@ -17,5 +17,9 @@ namespace BusinessEngine.Models
         virtual public string Contacts { get; set; }
         virtual public decimal Doit { get; set; }
         virtual public decimal Avoir { get; set; }
+        virtual public bool IsChineur { get; set; }
+
+        //Pas en base
+        virtual public decimal SoldeInitial { get; set; }
     }
 }

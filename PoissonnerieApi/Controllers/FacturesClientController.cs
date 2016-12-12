@@ -48,6 +48,34 @@ namespace PoissonnerieApi.Controllers
             return responseData;
         }
 
+        // GET api/facturesclient
+        public object GetDetailsFacture(long details)
+        {
+            ResponseData responseData;
+            try
+            {
+                var detailsFacture = DataManager.GetList<DetailsFacturesClient>("FacturesClient", details);
+                foreach (var facture in detailsFacture)
+                {
+                    var montantHt = facture.PrixUnitaire * facture.Quantite;
+                    var montantTva = (facture.Tva / 100) * montantHt;
+                    var montantTtc = montantHt + montantTva;
+
+                    //facture.TotalHt += montantHt;
+                    //facture.TotalTva += montantTva;
+                    facture.MontantTtc = montantTtc;
+                }
+
+                responseData = ResponseData.GetSuccess(detailsFacture);
+            }
+            catch (Exception ex)
+            {
+                responseData = ResponseData.GetError(ex.Message);
+            }
+
+            return responseData;
+        }
+
         public object Post([FromBody]JToken data)
         {
             ResponseData responseData;

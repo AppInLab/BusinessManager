@@ -23,6 +23,8 @@ namespace PoissonnerieApi.Controllers
                 foreach (var caisse in caisses)
                 {
                     caisse.SortieDeCaisseTotal = DataManager.GetSumSortieDeCaisse(caisse.Id);
+                    caisse.EntreeDeCaisseTotal = DataManager.GetSumPaiementParCaisse(caisse.Id);
+                    caisse.MontantTotalEnCaisse = caisse.EntreeDeCaisseTotal - caisse.SortieDeCaisseTotal;
                     //Recuperer les sessions de caisses
                     //var sessionDeCaisse = DataManager.GetList<SessionCaisse>("Caisse.Id", caisse.Id);
                 }

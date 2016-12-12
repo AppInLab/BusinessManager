@@ -15,10 +15,9 @@ namespace BusinessEngine.Models
         virtual public bool IsClosed { get; set; }
         virtual public User ClotureePar { get; set; }
 
-        //
-        virtual public decimal MontantTotal { get; set; }
+        //Pas en base
+        virtual public decimal MontantTotalEnCaisse { get; set; }
         virtual public decimal SortieDeCaisseTotal { get; set; }
         virtual public decimal EntreeDeCaisseTotal { get; set; }
-
     }
 }

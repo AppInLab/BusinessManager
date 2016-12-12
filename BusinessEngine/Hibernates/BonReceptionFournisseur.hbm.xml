@@ -14,6 +14,10 @@
       <column name="DateModification"/>
     </property>
 
+    <property name="DateValidation">
+      <column name="DateValidation"/>
+    </property>
+
     <property name="Commentaire">
       <column name="Commentaire"/>
     </property>

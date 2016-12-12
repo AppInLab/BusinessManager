@@ -5531,6 +5531,8 @@ div.radio.disabled:hover {
 }
 #listProduits{
   padding-top:10px;
+  height: 550px;
+  overflow-y: auto;
 }
 
 /*#listProduits ul{
@@ -5654,6 +5656,11 @@ div.radio.disabled:hover {
 
 .text-green{
     color:green;
+    font-weight: bold;
+}
+
+.text-blue{
+    color:#0080ff;
     font-weight: bold;
 }
 

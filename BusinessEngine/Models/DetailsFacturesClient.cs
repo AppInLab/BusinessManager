@@ -12,6 +12,8 @@ namespace BusinessEngine.Models
         virtual public decimal PrixUnitaire { get; set; }
         virtual public decimal Tva { get; set; }
         virtual public int TypeColisage { get; set; }
-
+        
+        //Pas en base
+        virtual public decimal MontantTtc { get; set; }
     }
 }
