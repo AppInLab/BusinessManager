@@ -180,6 +180,16 @@ namespace PoissonnerieApi.Controllers
                         paiement.FacturesClient = facturesClient;
                         DataManager.Save(paiement);
                     }
+
+                    if (facturesClient.Client != null)
+                    {
+                        //Recuperer tous les achats du client
+                        var sommeFacturesClient = DataManager.GetSumFacturesParClients(facturesClient.Client.Id);
+                        //Recuperer tous les versements du client
+                        var sommeVersementClient = DataManager.GetSumPaiementParCLient(facturesClient.Client.Id);
+                        //Faire la difference pour obetenir la somme dû
+                        facturesClient.SommeDue = sommeFacturesClient - sommeVersementClient;
+                    }
                 }
 
                 responseData = ResponseData.GetSuccess(facturesClient);

@@ -22,6 +22,7 @@ namespace BusinessEngine.Models
         virtual public decimal TotalHt { get; set; }
         virtual public decimal TotalTva { get; set; }
         virtual public decimal TotalTtc { get; set; }
+        virtual public decimal SommeDue { get; set; }
 
         public List<PanierItem> Panier { get; set; }//RealOnly
     }
