@@ -143,7 +143,7 @@
         </ul>
     </li>-->
 
-    <li ng-if="Profil.IsSu || Profil.IsAdmin" ng-class="{active:isActive('/Depots') || isActive('/Categories') || isActive('/Produits')}">
+    <li ng-if="Profil.IsSu || Profil.IsAdmin" ng-class="{active:isActive('/Depots') || isActive('/Categories') || isActive('/Produits') || isActive('/DeplacerProduits')}">
         <a href="javascript:;">
             <i class="icon-barcode"></i>
             <span class="title">Stock</span>
@@ -178,13 +178,14 @@
                 </a>
             </li>-->
 
-            <!--<li ng-class="{active:isActive('/AdminFournisseurs')}">
-                <a href="#/AdminFournisseurs">
+            <li ng-class="{active:isActive('/DeplacerProduits')}">
+                <a href="#/DeplacerProduits">
                     <i class="icon-truck"></i>
-                    Inventaires
+                    Déplacer Produits
                 </a>
             </li>
-            <li ng-class="{active:isActive('/AdminChineurs')}">
+
+            <!--<li ng-class="{active:isActive('/AdminChineurs')}">
                 <a href="#/AdminChineurs">
                     <i class="icon-user-md"></i>
                     Bons de sortie

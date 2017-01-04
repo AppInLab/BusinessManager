@@ -1887,6 +1887,8 @@ function ($rootScope, $scope, $http, $routeParams) {
 
     $rootScope.PageName = "Sessions de caisse";
 
+    $scope.ListJournal = [];
+
     $scope.CalculerDifference = function () {
         $scope.SessionCaisseUser.DifferenceTotalEspece = Number($scope.SessionCaisseUser.TotalEspeceTheorique) - Number($scope.SessionCaisseUser.TotalEspeceSaisi);
     }
@@ -1907,7 +1909,23 @@ function ($rootScope, $scope, $http, $routeParams) {
         });
     }
 
+    $scope.JournalSessionCaisse = function () {
+        $http.get($rootScope.ServerURL + "Journal?sessionCaisseUser=" + $scope.Profil.Id)
+        .success(function (response) {
+            console.log(response);
+            if (response.ResponseCode == 0) {
+                $scope.ListJournal = response.Data;
+            } else {//Error
+                console.log(response);
+            }
+        })
+        .error(function (response) {
+            console.log(response);
+        });
+    }
+
     $rootScope.SESSIONCAISSE_USER_DATA();
+    $scope.JournalSessionCaisse();
 }]);
 
 //InventaireDeStockController
@@ -1937,12 +1955,11 @@ function ($rootScope, $scope, $http, $routeParams) {
     $rootScope.INVENTAIRE_DATA();
 }]);
 
-//AdminChineursController
-MainController.controller('AdminChineursController', ['$rootScope', '$scope', '$http',
+//DeplacerProduitsController
+MainController.controller('DeplacerProduitsController', ['$rootScope', '$scope', '$http',
 function ($rootScope, $scope, $http) {
 
-    $rootScope.PageName = "Chineurs";
-    $rootScope.PageDescription = "Administration des Chineurs";
+    $rootScope.PageName = "Déplacer des produits";
 
 }]);
 

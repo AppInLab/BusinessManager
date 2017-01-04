@@ -135,10 +135,10 @@ app.config(["$routeProvider",
                 controller: "ComptesController"
             });
 
-            //Gestion des fornisseurs      
-            $routeProvider.when("/AdminFournisseurs", {
-                templateUrl: "views/Admin/AdminFournisseurs.html",
-                controller: "AdminFournisseursController"
+            //Gestion des Deplacements de produits      
+            $routeProvider.when("/DeplacerProduits", {
+                templateUrl: "views/deplacerproduit.html",
+                controller: "DeplacerProduitsController"
             });
 
             //Gestion des Chineurs

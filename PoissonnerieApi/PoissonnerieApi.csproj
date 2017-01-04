@@ -211,6 +211,7 @@
     <Compile Include="Controllers\ClientsController.cs" />
     <Compile Include="Controllers\CommandeFournisseurController.cs" />
     <Compile Include="Controllers\FournisseursController.cs" />
+    <Compile Include="Controllers\JournalController.cs" />
     <Compile Include="Controllers\PaiementsController.cs" />
     <Compile Include="Controllers\PrivilegesController.cs" />
     <Compile Include="Controllers\SessionCaissesController.cs" />
@@ -227,6 +228,7 @@
     </Compile>
     <Compile Include="Models\FicheClient.cs" />
     <Compile Include="Models\Inventaire.cs" />
+    <Compile Include="Models\Journal.cs" />
     <Compile Include="Models\ResponseData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
