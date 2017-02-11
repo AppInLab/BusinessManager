@@ -135,19 +135,19 @@ app.config(["$routeProvider",
                 controller: "ComptesController"
             });
 
-            //Gestion des Deplacements de produits      
-            $routeProvider.when("/DeplacerProduits", {
-                templateUrl: "views/deplacerproduit.html",
-                controller: "DeplacerProduitsController"
+            //Gestion de la banques      
+            $routeProvider.when("/Banques", {
+                templateUrl: "views/banque.html",
+                controller: "BanquesController"
             });
 
             //Gestion des Chineurs
-            $routeProvider.when("/AdminChineurs", {
-                templateUrl: "views/Admin/AdminChineurs.html",
-                controller: "AdminChineursController"
+            $routeProvider.when("/Transferts", {
+                templateUrl: "views/transfert.html",
+                controller: "TransfertsController"
             });
 
-            //Gestion des Utilisateurs      
+            //Gestion des Utilisateurs
             $routeProvider.when("/AdminUtilisateurs", {
                     templateUrl: "views/Admin/AdminUtilisateurs.html",
                     controller: "AdminUtilisateursController"

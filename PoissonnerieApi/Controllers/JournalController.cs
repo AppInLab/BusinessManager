@@ -34,12 +34,13 @@ namespace PoissonnerieApi.Controllers
                     var journal = new Journal();
                     journal.Date = v.DateCreation;
 
-                    var client = "un INCONNU";
-                    if (v.Client != null)
-                        client = v.Client.NomComplet;
+                    //var client = "un INCONNU";
+                    //if (v.Client != null)
+                    //    client = v.Client.NomComplet;
 
                     journal.Montant = DataManager.GetSumFactures(v.Id);
-                    journal.Description = "Vente de produits à " + client + " d'un montant de ";
+                    journal.Operation = "Vente";
+                    journal.Owner = v.Client;
 
                     listJournal.Add(journal);
                 }
@@ -52,12 +53,13 @@ namespace PoissonnerieApi.Controllers
                     var journal = new Journal();
                     journal.Date = p.DateCreation;
 
-                    var client = "INCONNU";
-                    if (p.Client != null)
-                        client = p.Client.NomComplet;
+                    //var client = "INCONNU";
+                    //if (p.Client != null)
+                    //    client = p.Client.NomComplet;
 
-                    journal.Description = "Versement du client " + client + " d'un montant de ";
+                    journal.Operation = "Versement";
                     journal.Montant = p.Versement;
+                    journal.Owner = p.Client;
 
                     listJournal.Add(journal);
                 }

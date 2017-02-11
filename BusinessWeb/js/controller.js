@@ -23,14 +23,34 @@ function ($rootScope, $scope, $http, $location, $cookies, $cookieStore, $routePa
 
     $locale.NUMBER_FORMATS.GROUP_SEP = ' ';
 
+    $rootScope.TypeNetworkError = "NetworkError";
+    $rootScope.NetworkError = "Une erreur s'est produite pendant le traitement. Merci de vérifier votre connexion internet puis réessayer. Si le problème persiste, veuillez contacter votre administrateur";
+
     $rootScope.HandleClick = function () {
         //console.log("Test");
     }
 
-    $rootScope.Alert = function (type, icon, message) {
-        $scope.alertType = type;
-        $scope.alertIcon = icon;
-        $scope.alertMessage = message;
+    $rootScope.DateFormat = function (_datetime, _delimiter) {
+
+        var dateArray = _datetime.split("T");
+        var _date = dateArray[0];
+
+        var dateItems = _date.split(_delimiter);
+        var yearIndex = 0;
+        var monthIndex = 1;
+        var dayIndex = 2;
+        //var month = parseInt(dateItems[monthIndex]);
+        //month -= 1;
+        //var formatedDate = new Date(dateItems[yearIndex], month, dateItems[dayIndex]);
+        return dateItems[dayIndex] + "/" + dateItems[monthIndex] + "/" + dateItems[yearIndex];
+    }
+
+    $rootScope.Alert = function (message/*, type*/) {
+        //$scope.alertType = type;
+        //if (type === $rootScope.TypeNetworkError)
+        //    message = $rootScope.NetworkError;
+        //$scope.alertIcon = icon;
+        $scope.AlertMessage = message;
         $("#alertbox").fadeIn(1000).delay(3000).fadeOut(1000)
     }
 
@@ -62,11 +82,23 @@ function ($rootScope, $scope, $http, $location, $cookies, $cookieStore, $routePa
         });
     }
 
-    //$rootScope.ServerURL = "http://192.168.10.2/Poissonnerie/ws/api/";
+    $rootScope.OpenDateTimePicker = function (input) {
+        jQuery.datetimepicker.setLocale('fr');
+        jQuery("#" + input.target.id).datetimepicker({
+            format: "d/m/Y",
+            minDate: '2016/01/01',
+            timepicker: false
+        });
+    }
+
+    //$rootScope.BaseUrl = "http://192.168.1.12"
+    //$rootScope.ServerURL = $rootScope.BaseUrl +"/Poissonnerie/ws/api/";//PROD
+    //$rootScope.LienAbsPoisson = $rootScope.BaseUrl + "/Poissonnerie/assets/myimg/poisson.png";//PROD
+    //$rootScope.LienCssFacture = $rootScope.BaseUrl + "/Poissonnerie/assets/";//PROD
     $rootScope.ServerURL = "http://localhost:26686/api/";
-    $rootScope.LienAbsPoisson = "http://192.168.10.2/Poissonnerie/assets/myimg/poisson.png";
-    $rootScope.LienRelatifPoisson = "../assets/myimg/poisson.png";
-    $rootScope.LienPoisson = $rootScope.LienRelatifPoisson;
+    $rootScope.LienAbsPoisson = "../assets/myimg/poisson.png";
+    $rootScope.LienPoisson = $rootScope.LienAbsPoisson;
+    $rootScope.LienCssFacture = "../assets/";
 
     $scope.isActive = function (route) {
         var path = $location.path();
@@ -86,9 +118,13 @@ function ($rootScope, $scope, $http, $location, $cookies, $cookieStore, $routePa
                 $scope.Depots = response.Data;
             } else {//Error
                 console.log(response);
+                $rootScope.Alert(response.Message);
             }
         })
-        .error(function (response) { console.log(response); });
+        .error(function (response) {
+            console.log(response);
+            $rootScope.Alert($rootScope.NetworkError);
+        });
     }
 
     //CATEGORIES
@@ -100,9 +136,13 @@ function ($rootScope, $scope, $http, $location, $cookies, $cookieStore, $routePa
                 $scope.Categories = response.Data;
             } else {//Error
                 console.log(response);
+                $rootScope.Alert(response.Message);
             }
         })
-        .error(function (response) { console.log(response); });
+        .error(function (response) {
+            console.log(response);
+            $rootScope.Alert($rootScope.NetworkError);
+        });
     }
 
     //UNITES
@@ -114,9 +154,13 @@ function ($rootScope, $scope, $http, $location, $cookies, $cookieStore, $routePa
                 $scope.Unites = response.Data;
             } else {//Error
                 console.log(response);
+                $rootScope.Alert(response.Message);
             }
         })
-        .error(function (response) { console.log(response); });
+        .error(function (response) {
+            console.log(response);
+            $rootScope.Alert($rootScope.NetworkError);
+        });
     }
 
     //BLOCKS
@@ -128,9 +172,13 @@ function ($rootScope, $scope, $http, $location, $cookies, $cookieStore, $routePa
                 $scope.Blocks = response.Data;
             } else {//Error
                 console.log(response);
+                $rootScope.Alert(response.Message);
             }
         })
-        .error(function (response) { console.log(response); });
+        .error(function (response) {
+            console.log(response);
+            $rootScope.Alert($rootScope.NetworkError);
+        });
     }
 
     //PRODUITS
@@ -142,9 +190,13 @@ function ($rootScope, $scope, $http, $location, $cookies, $cookieStore, $routePa
                 $scope.Produits = response.Data;
             } else {//Error
                 console.log(response);
+                $rootScope.Alert(response.Message);
             }
         })
-        .error(function (response) { console.log(response); });
+        .error(function (response) {
+            console.log(response);
+            $rootScope.Alert($rootScope.NetworkError);
+        });
     }
 
     //CLIENTS
@@ -156,9 +208,13 @@ function ($rootScope, $scope, $http, $location, $cookies, $cookieStore, $routePa
                 $scope.Clients = response.Data;
             } else {//Error
                 console.log(response);
+                $rootScope.Alert(response.Message);
             }
         })
-        .error(function (response) { console.log(response); });
+        .error(function (response) {
+            console.log(response);
+            $rootScope.Alert($rootScope.NetworkError);
+        });
     }
 
     //FOURNISSEURS
@@ -170,9 +226,13 @@ function ($rootScope, $scope, $http, $location, $cookies, $cookieStore, $routePa
                 $scope.Fournisseurs = response.Data;
             } else {//Error
                 console.log(response);
+                $rootScope.Alert(response.Message);
             }
         })
-        .error(function (response) { console.log(response); });
+        .error(function (response) {
+            console.log(response);
+            $rootScope.Alert($rootScope.NetworkError);
+        });
     }
 
     //COMMANDES FOURNISSEUR
@@ -184,9 +244,13 @@ function ($rootScope, $scope, $http, $location, $cookies, $cookieStore, $routePa
                 $scope.CommandesFournisseur = response.Data;
             } else {//Error
                 console.log(response);
+                $rootScope.Alert(response.Message);
             }
         })
-        .error(function (response) { console.log(response); });
+        .error(function (response) {
+            console.log(response);
+            $rootScope.Alert($rootScope.NetworkError);
+        });
     }
 
     //BON DE RECEPTION FOURNISSEUR
@@ -198,9 +262,13 @@ function ($rootScope, $scope, $http, $location, $cookies, $cookieStore, $routePa
                 $scope.BonsReceptionFournisseur = response.Data;
             } else {//Error
                 console.log(response);
+                $rootScope.Alert(response.Message);
             }
         })
-        .error(function (response) { console.log(response); });
+        .error(function (response) {
+            console.log(response);
+            $rootScope.Alert($rootScope.NetworkError);
+        });
     }
 
     //COMPTES
@@ -212,9 +280,13 @@ function ($rootScope, $scope, $http, $location, $cookies, $cookieStore, $routePa
                 $scope.Comptes = response.Data;
             } else {//Error
                 console.log(response);
+                $rootScope.Alert(response.Message);
             }
         })
-        .error(function (response) { console.log(response); });
+        .error(function (response) {
+            console.log(response);
+            $rootScope.Alert($rootScope.NetworkError);
+        });
     }
 
     //PRIVILEGES
@@ -226,9 +298,13 @@ function ($rootScope, $scope, $http, $location, $cookies, $cookieStore, $routePa
                 $scope.Privileges = response.Data;
             } else {//Error
                 console.log(response);
+                $rootScope.Alert(response.Message);
             }
         })
-        .error(function (response) { console.log(response); });
+        .error(function (response) {
+            console.log(response);
+            $rootScope.Alert($rootScope.NetworkError);
+        });
     }
 
     //CAISSE
@@ -240,9 +316,13 @@ function ($rootScope, $scope, $http, $location, $cookies, $cookieStore, $routePa
                 $scope.Caisses = response.Data;
             } else {//Error
                 console.log(response);
+                $rootScope.Alert(response.Message);
             }
         })
-        .error(function (response) { console.log(response); });
+        .error(function (response) {
+            console.log(response);
+            $rootScope.Alert($rootScope.NetworkError);
+        });
     }
 
     //SORTIES DE CAISSE
@@ -254,9 +334,13 @@ function ($rootScope, $scope, $http, $location, $cookies, $cookieStore, $routePa
                 $scope.SortiesDeCaisses = response.Data;
             } else {//Error
                 console.log(response);
+                $rootScope.Alert(response.Message);
             }
         })
-        .error(function (response) { console.log(response); });
+        .error(function (response) {
+            console.log(response);
+            $rootScope.Alert($rootScope.NetworkError);
+        });
     }
 
     //SESSION DE CAISSE
@@ -268,9 +352,13 @@ function ($rootScope, $scope, $http, $location, $cookies, $cookieStore, $routePa
                 $scope.SessionCaisses = response.Data;
             } else {//Error
                 console.log(response);
+                $rootScope.Alert(response.Message);
             }
         })
-        .error(function (response) { console.log(response); });
+        .error(function (response) {
+            console.log(response);
+            $rootScope.Alert($rootScope.NetworkError);
+        });
     }
 
     //LISTE SESSION DE CAISSE USER OUVERTE
@@ -282,9 +370,13 @@ function ($rootScope, $scope, $http, $location, $cookies, $cookieStore, $routePa
                 $scope.SessionCaisseUser = response.Data;
             } else {//Error
                 console.log(response);
+                $rootScope.Alert(response.Message);
             }
         })
-        .error(function (response) { console.log(response); });
+        .error(function (response) {
+            console.log(response);
+            $rootScope.Alert($rootScope.NetworkError);
+        });
     }
 
     //--END LISTE
@@ -314,9 +406,13 @@ function ($rootScope, $scope, $http, $location, $cookies, $cookieStore, $routePa
             }
             else {//Error
                 console.log(response);
+                $rootScope.Alert(response.Message);
             }
         })
-        .error(function (response) { console.log(response); });
+        .error(function (response) {
+            console.log(response);
+            $rootScope.Alert($rootScope.NetworkError);
+        });
     }
 
     $rootScope.Connexion = function () {
@@ -328,13 +424,15 @@ function ($rootScope, $scope, $http, $location, $cookies, $cookieStore, $routePa
                     $cookies.Profil = JSON.stringify(response.Data);
                     window.location = "index.html";
                 } else {
-                    $rootScope.ErrorMessage = response.Message;
-                    $("#errorAlert").removeClass("hide");
+                    //$rootScope.ErrorMessage = response.Message;
+                    //$("#errorAlert").removeClass("hide");
+                    $rootScope.Alert(response.Message);
                 }
             })
             .error(function (response) {
-                $("#errorAlert").removeClass("hide");
-                $rootScope.ErrorMessage = response.Message;
+                //$("#errorAlert").removeClass("hide");
+                //$rootScope.ErrorMessage = response.Message;
+                $rootScope.Alert(response.Message);
             });
     }
 
@@ -349,7 +447,8 @@ function ($rootScope, $scope, $http, $location, $cookies, $cookieStore, $routePa
 
     $scope.AuthorizeAdmin = ['/Home', '/VenteComptoir', '/Categories', '/Produits',
                       '/Fournisseurs', '/CommandeFournisseur', '/BonReceptionFournisseur', '/Clients', '/FicheClients/:client',
-                      '/Comptes', '/Caisses', '/InfosSessionCaisses/:caisse', '/InventaireDeStocks/:caisse'];
+                      '/Comptes', '/Caisses', '/InfosSessionCaisses/:caisse', '/InventaireDeStocks/:caisse',
+                      '/NouveauBonReceptionFournisseur', '/NouvelleCommandeFournisseur', '/EditerBonReceptionFournisseur/:id', '/EditerCommandeFournisseur/:id'];
     $scope.Authorize = [];
     $rootScope.$on('$routeChangeStart', function (next, current) {
         if ($rootScope.Profil.IsUser)
@@ -405,10 +504,12 @@ function ($rootScope, $scope, $http) {
                 $rootScope.LISTE_DEPOTS_DATA();
             } else {//Error
                 console.log(response);
+                $rootScope.Alert(response.Message);
             }
         })
         .error(function (response) {
             console.log(response);
+            $rootScope.Alert($rootScope.NetworkError);
         });
     }
 
@@ -439,10 +540,12 @@ function ($rootScope, $scope, $http) {
                 $rootScope.LISTE_CATEGORIES_DATA();
             } else {//Error
                 console.log(response);
+                $rootScope.Alert(response.Message);
             }
         })
         .error(function (response) {
             console.log(response);
+            $rootScope.Alert($rootScope.NetworkError);
         });
     }
 
@@ -497,6 +600,7 @@ function ($rootScope, $scope, $http) {
         })
         .error(function (response) {
             console.log(response);
+            $rootScope.Alert($rootScope.NetworkError);
         });
     }
 
@@ -513,6 +617,10 @@ function ($rootScope, $scope, $http) {
 
     $scope.Annuler = function () {
         $scope.Produits = angular.copy($scope.CopyOfProduits);
+    }
+	
+	$scope.ResetSearch = function () {
+        $scope.searchText = "";
     }
 
     //Charger les données
@@ -652,9 +760,13 @@ function ($rootScope, $scope, $http, $filter) {
                 $scope.ProduitsParCategorie = response.Data;
             } else {//Error
                 console.log(response);
+                $rootScope.Alert(response.Message);
             }
         })
-        .error(function (response) { console.log(response); });
+        .error(function (response) {
+            console.log(response);
+            $rootScope.Alert($rootScope.NetworkError);
+        });
     }
 
     $scope.ResetComptoir = function () {
@@ -668,6 +780,9 @@ function ($rootScope, $scope, $http, $filter) {
 
     $scope.InfosFacture = {};
     $scope.SendData = function (mode, print) {
+		//$scope.PrintDoPreview("factureCash");
+		//$scope.PrintDoPreview("factureClient");
+		
         $scope.Facture = {};
         $scope.Facture.Client = $scope.ClientSelected;
         $scope.Facture.User = $rootScope.Profil;
@@ -693,10 +808,12 @@ function ($rootScope, $scope, $http, $filter) {
                 $scope.ResetComptoir();//Remettre le comptoir à Zero pour une nouvelle vente
             } else {//Error
                 console.log(response);
+                $rootScope.Alert(response.Message);
             }
         })
         .error(function (response) {
             console.log(response);
+            $rootScope.Alert($rootScope.NetworkError);
         });
     }
 
@@ -712,23 +829,26 @@ function ($rootScope, $scope, $http, $filter) {
                 $rootScope.LISTE_CLIENTS_DATA();
             } else {//Error
                 console.log(response);
+                $rootScope.Alert(response.Message);
             }
         })
         .error(function (response) {
             console.log(response);
+            $rootScope.Alert($rootScope.NetworkError);
         });
     }
 
     $scope.PrintDoPreview = function (factureId) {
         var toPrint = document.getElementById(factureId);
         var winPop = window.open('', '_blank', 'fullscreen=1,left=0,top=0');
-        winPop.document.write('<html><head><title>::Preview::</title><link href="assets/css/style-print.css" rel="stylesheet" /></head><body>');
+        winPop.document.write('<html><head><title>::Preview::</title><link href="'+$rootScope.LienCssFacture+'css/style-print.css" rel="stylesheet" /></head><body>');
         var outout = toPrint.outerHTML;
 
         var dateFacture = $filter('date')($scope.InfosFacture.DateCreation, 'EEE dd MMM yyyy HH:mm');
 
         outout = outout.replace("[:numFacture]", $scope.InfosFacture.Id)
-            .replace("[:dateFacture]", dateFacture);
+            .replace("[:dateFacture]", dateFacture)
+            .replace("[:resteApayer]", $scope.InfosFacture.SommeDue);
         winPop.document.write(outout);
         winPop.document.write('</body></html>');
         winPop.document.close();
@@ -765,10 +885,12 @@ function ($rootScope, $scope, $http) {
                 $rootScope.LISTE_CLIENTS_DATA();
             } else {//Error
                 console.log(response);
+                $rootScope.Alert(response.Message);
             }
         })
         .error(function (response) {
             console.log(response);
+            $rootScope.Alert($rootScope.NetworkError);
         });
     }
 
@@ -813,10 +935,12 @@ function ($rootScope, $scope, $http, $routeParams) {
                 $scope.FicheClient = response.Data;
             } else {//Error
                 console.log(response);
+                $rootScope.Alert(response.Message);
             }
         })
         .error(function (response) {
             console.log(response);
+            $rootScope.Alert($rootScope.NetworkError);
         });
     }
 
@@ -831,10 +955,12 @@ function ($rootScope, $scope, $http, $routeParams) {
                 $scope.DetailsFacture = response.Data;
             } else {//Error
                 console.log(response);
+                $rootScope.Alert(response.Message);
             }
         })
         .error(function (response) {
             console.log(response);
+            $rootScope.Alert($rootScope.NetworkError);
         });
     }
 
@@ -848,10 +974,12 @@ function ($rootScope, $scope, $http, $routeParams) {
                 //Imprimer le reçu du versement
             } else {//Error
                 console.log(response);
+                $rootScope.Alert(response.Message);
             }
         })
         .error(function (response) {
             console.log(response);
+            $rootScope.Alert($rootScope.NetworkError);
         });
     }
 
@@ -880,10 +1008,12 @@ function ($rootScope, $scope, $http) {
                 $rootScope.LISTE_FOURNISSEURS_DATA();
             } else {//Error
                 console.log(response);
+                $rootScope.Alert(response.Message);
             }
         })
         .error(function (response) {
             console.log(response);
+            $rootScope.Alert($rootScope.NetworkError);
         });
     }
 
@@ -919,10 +1049,12 @@ function ($rootScope, $scope, $http) {
                 $rootScope.LISTE_FOURNISSEURS_DATA();
             } else {//Error
                 console.log(response);
+                $rootScope.Alert(response.Message);
             }
         })
         .error(function (response) {
             console.log(response);
+            $rootScope.Alert($rootScope.NetworkError);
         });
     }
 
@@ -954,10 +1086,12 @@ function ($rootScope, $scope, $http) {
                 $scope.Commande = response.Data;
             } else {//Error
                 console.log(response);
+                $rootScope.Alert(response.Message);
             }
         })
         .error(function (response) {
             console.log(response);
+            $rootScope.Alert($rootScope.NetworkError);
         });
     }
 
@@ -965,8 +1099,8 @@ function ($rootScope, $scope, $http) {
 }]);
 
 //NouvelleCommandeFournisseurController
-MainController.controller('NouvelleCommandeFournisseurController', ['$rootScope', '$scope', '$http', '$window','$routeParams',
-function ($rootScope, $scope, $http, $window, $routeParams) {
+MainController.controller('NouvelleCommandeFournisseurController', ['$rootScope', '$scope', '$http', '$window','$routeParams','$filter',
+function ($rootScope, $scope, $http, $window, $routeParams, $filter) {
 
     $rootScope.PageName = "Nouvelle commande fournisseur";
     
@@ -977,6 +1111,7 @@ function ($rootScope, $scope, $http, $window, $routeParams) {
     $scope.TotauxPanierHt = 0;
     $scope.TotauxPanierTva = 0;
     $scope.TotauxPanierTtc = 0;
+    $scope.DateCreation = jQuery("#dateCommande").val();
 
     $scope.Init = function (produit) {
         $scope.IsNew = true;
@@ -1087,9 +1222,13 @@ function ($rootScope, $scope, $http, $window, $routeParams) {
                 $scope.ProduitsParCategorie = response.Data;
             } else {//Error
                 console.log(response);
+                $rootScope.Alert(response.Message);
             }
         })
-        .error(function (response) { console.log(response); });
+        .error(function (response) {
+            console.log(response);
+            $rootScope.Alert($rootScope.NetworkError);
+        });
     }
 
     $scope.ResetComptoir = function () {
@@ -1101,6 +1240,7 @@ function ($rootScope, $scope, $http, $window, $routeParams) {
         $scope.TotauxPanierTtc = 0;
         $scope.ProduitsParCategorie = [];
         $scope.Vente = {};
+        //$scope.DateCreation = $filter('date')(date[$scope.DateToday, "dd/MM/yyyy"]);
         $scope.Fournisseur = {};
     }
 
@@ -1109,6 +1249,7 @@ function ($rootScope, $scope, $http, $window, $routeParams) {
         $scope.Commande.Panier = $scope.Panier;
         $scope.Commande.Fournisseur = $scope.Fournisseur;
         $scope.Commande.Commentaire = $scope.Commentaire;
+        $scope.Commande.DateCreation = $scope.DateCreation;
         $scope.Commande.TransfertVersBonDeReception = bonDeReception;
 
         $http.post($rootScope.ServerURL + "CommandeFournisseur", $scope.Commande)
@@ -1119,10 +1260,12 @@ function ($rootScope, $scope, $http, $window, $routeParams) {
                 $window.location.href = "#/CommandeFournisseur";
             } else {//Error
                 console.log(response);
+                $rootScope.Alert(response.Message);
             }
         })
         .error(function (response) {
             console.log(response);
+            $rootScope.Alert($rootScope.NetworkError);
         });
     }
 
@@ -1156,6 +1299,7 @@ function ($rootScope, $scope, $http, $window, $routeParams) {
                 $scope.Commentaire = response.Data.Commentaire;
                 $scope.Panier = response.Data.Panier;
                 $scope.Fournisseur = response.Data.Fournisseur;
+                $scope.DateCreation = $rootScope.DateFormat(response.Data.DateCreation, "-");
 
                 $scope.Commande = {};
                 $scope.Commande.Id = response.Data.Id;
@@ -1167,9 +1311,13 @@ function ($rootScope, $scope, $http, $window, $routeParams) {
                 $scope.CalculerTotalPanier();
             } else {//Error
                 console.log(response);
+                $rootScope.Alert(response.Message);
             }
         })
-        .error(function (response) { console.log(response); });
+        .error(function (response) {
+            console.log(response);
+            $rootScope.Alert($rootScope.NetworkError);
+        });
     }
 
     $scope.Init = function (produit) {
@@ -1281,9 +1429,13 @@ function ($rootScope, $scope, $http, $window, $routeParams) {
                 $scope.ProduitsParCategorie = response.Data;
             } else {//Error
                 console.log(response);
+                $rootScope.Alert(response.Message);
             }
         })
-        .error(function (response) { console.log(response); });
+        .error(function (response) {
+            console.log(response);
+            $rootScope.Alert($rootScope.NetworkError);
+        });
     }
 
     $scope.ResetComptoir = function () {
@@ -1295,6 +1447,7 @@ function ($rootScope, $scope, $http, $window, $routeParams) {
         $scope.Commande.Panier = $scope.Panier;
         $scope.Commande.Fournisseur = $scope.Fournisseur;
         $scope.Commande.Commentaire = $scope.Commentaire;
+        $scope.Commande.DateCreation = $scope.DateCreation;
         $scope.Commande.TransfertVersBonDeReception = bonDeReception;
 
         $http.post($rootScope.ServerURL + "CommandeFournisseur", $scope.Commande)
@@ -1305,10 +1458,12 @@ function ($rootScope, $scope, $http, $window, $routeParams) {
                 $window.location.href = "#/CommandeFournisseur";
             } else {//Error
                 console.log(response);
+                $rootScope.Alert(response.Message);
             }
         })
         .error(function (response) {
             console.log(response);
+            $rootScope.Alert($rootScope.NetworkError);
         });
     }
 
@@ -1333,10 +1488,12 @@ function ($rootScope, $scope, $http) {
                 $scope.Commande = response.Data;
             } else {//Error
                 console.log(response);
+                $rootScope.Alert(response.Message);
             }
         })
         .error(function (response) {
             console.log(response);
+            $rootScope.Alert($rootScope.NetworkError);
         });
     }
 
@@ -1345,17 +1502,21 @@ function ($rootScope, $scope, $http) {
     }
 
     $scope.MarquerCommeRecu = function () {
-        $http.get($rootScope.ServerURL + "BonReceptionFournisseur?marquerCommeRecu=" + $scope.BonReception.Id)
+        $http.get($rootScope.ServerURL +
+        "BonReceptionFournisseur?marquerCommeRecu=" + $scope.BonReception.Id +
+        "&date=" + $scope.DateValidation)
         .success(function (response) {
             console.log(response);
             if (response.ResponseCode == 0) {
                 $rootScope.LISTE_BONRECEPTION_FOURNISSEUR_DATA();
             } else {//Error
                 console.log(response);
+                $rootScope.Alert(response.Message);
             }
         })
         .error(function (response) {
             console.log(response);
+            $rootScope.Alert($rootScope.NetworkError);
         });
     }
 
@@ -1507,6 +1668,7 @@ function ($rootScope, $scope, $http, $window, $routeParams) {
         $scope.Commande.Panier = $scope.Panier;
         $scope.Commande.Fournisseur = $scope.Fournisseur;
         $scope.Commande.Commentaire = $scope.Commentaire;
+        $scope.Commande.DateCreation = $scope.DateCreation;
         $scope.Commande.MarquerRecu = bonDeReception;
 
         $http.post($rootScope.ServerURL + "BonReceptionFournisseur", $scope.Commande)
@@ -1517,10 +1679,12 @@ function ($rootScope, $scope, $http, $window, $routeParams) {
                 $window.location.href = "#/BonReceptionFournisseur";
             } else {//Error
                 console.log(response);
+                $rootScope.Alert(response.Message);
             }
         })
         .error(function (response) {
             console.log(response);
+            $rootScope.Alert($rootScope.NetworkError);
         });
     }
 
@@ -1554,6 +1718,7 @@ function ($rootScope, $scope, $http, $window, $routeParams) {
                 $scope.Commentaire = response.Data.Commentaire;
                 $scope.Panier = response.Data.Panier;
                 $scope.Fournisseur = response.Data.Fournisseur;
+                $scope.DateCreation = $rootScope.DateFormat(response.Data.DateCreation, "-");
                 $scope.CommandesFournisseur = response.Data.CommandesFournisseur;
 
                 $scope.Commande = {};
@@ -1567,9 +1732,13 @@ function ($rootScope, $scope, $http, $window, $routeParams) {
                 $scope.CalculerTotalPanier();
             } else {//Error
                 console.log(response);
+                $rootScope.Alert(response.Message);
             }
         })
-        .error(function (response) { console.log(response); });
+        .error(function (response) {
+            console.log(response);
+            $rootScope.Alert($rootScope.NetworkError);
+        });
     }
 
     $scope.Init = function (produit) {
@@ -1681,9 +1850,13 @@ function ($rootScope, $scope, $http, $window, $routeParams) {
                 $scope.ProduitsParCategorie = response.Data;
             } else {//Error
                 console.log(response);
+                $rootScope.Alert(response.Message);
             }
         })
-        .error(function (response) { console.log(response); });
+        .error(function (response) {
+            console.log(response);
+            $rootScope.Alert($rootScope.NetworkError);
+        });
     }
 
     $scope.ResetComptoir = function () {
@@ -1695,6 +1868,7 @@ function ($rootScope, $scope, $http, $window, $routeParams) {
         $scope.Commande.Panier = $scope.Panier;
         $scope.Commande.Fournisseur = $scope.Fournisseur;
         $scope.Commande.Commentaire = $scope.Commentaire;
+        $scope.Commande.DateCreation = $scope.DateCreation;
         $scope.Commande.CommandesFournisseur = $scope.CommandesFournisseur;
         $scope.Commande.MarquerRecu = bonDeReception;
 
@@ -1706,10 +1880,12 @@ function ($rootScope, $scope, $http, $window, $routeParams) {
                 $window.location.href = "#/BonReceptionFournisseur";
             } else {//Error
                 console.log(response);
+                $rootScope.Alert(response.Message);
             }
         })
         .error(function (response) {
             console.log(response);
+            $rootScope.Alert($rootScope.NetworkError);
         });
     }
 
@@ -1742,10 +1918,12 @@ function ($rootScope, $scope, $http) {
                 $rootScope.LISTE_COMPTES_DATA();
             } else {//Error
                 console.log(response);
+                $rootScope.Alert(response.Message);
             }
         })
         .error(function (response) {
             console.log(response);
+            $rootScope.Alert($rootScope.NetworkError);
         });
     }
 
@@ -1757,10 +1935,12 @@ function ($rootScope, $scope, $http) {
                 $rootScope.LISTE_COMPTES_DATA();
             } else {//Error
                 console.log(response);
+                $rootScope.Alert(response.Message);
             }
         })
         .error(function (response) {
             console.log(response);
+            $rootScope.Alert($rootScope.NetworkError);
         });
     }
 
@@ -1789,10 +1969,30 @@ function ($rootScope, $scope, $http) {
                 $rootScope.LISTE_CAISSES_DATA();
             } else {//Error
                 console.log(response);
+                $rootScope.Alert(response.Message);
             }
         })
         .error(function (response) {
             console.log(response);
+            $rootScope.Alert($rootScope.NetworkError);
+        });
+    }
+
+    $scope.GetSortieDeCaisse = function (caisse) {
+        $http.get($rootScope.ServerURL + "SortieDeCaisses?caisse=" + caisse)
+        .success(function (response) {
+            console.log(response);
+            if (response.ResponseCode == 0) {
+                $scope.SortiesDeCaisses = response.Data;
+                $scope.TotalSortiesDeCaisses = response.Sender;
+            } else {//Error
+                console.log(response);
+                $rootScope.Alert(response.Message);
+            }
+        })
+        .error(function (response) {
+            console.log(response);
+            $rootScope.Alert($rootScope.NetworkError);
         });
     }
 
@@ -1818,10 +2018,12 @@ function ($rootScope, $scope, $http) {
                 $rootScope.LISTE_SORTIESDECAISSES_DATA();
             } else {//Error
                 console.log(response);
+                $rootScope.Alert(response.Message);
             }
         })
         .error(function (response) {
             console.log(response);
+            $rootScope.Alert($rootScope.NetworkError);
         });
     }
 
@@ -1855,10 +2057,12 @@ function ($rootScope, $scope, $http, $routeParams) {
                 $rootScope.LISTE_SESSIONCAISSES_DATA($scope.idCaisse);
             } else {//Error
                 console.log(response);
+                $rootScope.Alert(response.Message);
             }
         })
         .error(function (response) {
             console.log(response);
+            $rootScope.Alert($rootScope.NetworkError);
         });
     }
 
@@ -1871,10 +2075,30 @@ function ($rootScope, $scope, $http, $routeParams) {
                 $rootScope.LISTE_SESSIONCAISSES_DATA($scope.idCaisse);
             } else {//Error
                 console.log(response);
+                $rootScope.Alert(response.Message);
             }
         })
         .error(function (response) {
             console.log(response);
+            $rootScope.Alert($rootScope.NetworkError);
+        });
+    }
+
+    $scope.GetSortieDeCaisse = function (sessiondecaisse) {
+        $http.get($rootScope.ServerURL + "SortieDeCaisses?sessiondecaisse=" + sessiondecaisse)
+        .success(function (response) {
+            console.log(response);
+            if (response.ResponseCode == 0) {
+                $scope.SortiesDeCaisses = response.Data;
+                $scope.TotalSortiesDeCaisses = response.Sender;
+            } else {//Error
+                console.log(response);
+                $rootScope.Alert(response.Message);
+            }
+        })
+        .error(function (response) {
+            console.log(response);
+            $rootScope.Alert($rootScope.NetworkError);
         });
     }
     
@@ -1886,8 +2110,6 @@ MainController.controller('SessionCaisseController', ['$rootScope', '$scope', '$
 function ($rootScope, $scope, $http, $routeParams) {
 
     $rootScope.PageName = "Sessions de caisse";
-
-    $scope.ListJournal = [];
 
     $scope.CalculerDifference = function () {
         $scope.SessionCaisseUser.DifferenceTotalEspece = Number($scope.SessionCaisseUser.TotalEspeceTheorique) - Number($scope.SessionCaisseUser.TotalEspeceSaisi);
@@ -1902,30 +2124,16 @@ function ($rootScope, $scope, $http, $routeParams) {
                 $rootScope.SESSIONCAISSE_USER_DATA();
             } else {//Error
                 console.log(response);
+                $rootScope.Alert(response.Message);
             }
         })
         .error(function (response) {
             console.log(response);
-        });
-    }
-
-    $scope.JournalSessionCaisse = function () {
-        $http.get($rootScope.ServerURL + "Journal?sessionCaisseUser=" + $scope.Profil.Id)
-        .success(function (response) {
-            console.log(response);
-            if (response.ResponseCode == 0) {
-                $scope.ListJournal = response.Data;
-            } else {//Error
-                console.log(response);
-            }
-        })
-        .error(function (response) {
-            console.log(response);
+            $rootScope.Alert($rootScope.NetworkError);
         });
     }
 
     $rootScope.SESSIONCAISSE_USER_DATA();
-    $scope.JournalSessionCaisse();
 }]);
 
 //InventaireDeStockController
@@ -1947,20 +2155,87 @@ function ($rootScope, $scope, $http, $routeParams) {
                 $scope.Caisse = response.Sender;
             } else {//Error
                 console.log(response);
+                $rootScope.Alert(response.Message);
             }
         })
-        .error(function (response) { console.log(response); });
+        .error(function (response) {
+            console.log(response);
+            $rootScope.Alert($rootScope.NetworkError);
+        });
     }
 
     $rootScope.INVENTAIRE_DATA();
 }]);
 
-//DeplacerProduitsController
-MainController.controller('DeplacerProduitsController', ['$rootScope', '$scope', '$http',
+//BanquesController
+MainController.controller('BanquesController', ['$rootScope', '$scope', '$http',
 function ($rootScope, $scope, $http) {
 
-    $rootScope.PageName = "Déplacer des produits";
+    $rootScope.PageName = "Banque";
 
+    $scope.CopyOfBanques = [];//Sauvegarde
+    $scope.Init = function () {
+        $scope.Banque = {};
+        //Faire une sauvegarde de l'existants
+        angular.copy($scope.Banque, $scope.CopyOfBanques);
+
+        $scope.Calculer();
+    }
+
+    $scope.Annuler = function () {
+        $scope.Produits = angular.copy($scope.CopyOfBanques);
+    }
+
+    //LISTE SESSION DE CAISSE USER OUVERTE
+    $rootScope.BanqueInfos = function () {
+        $http.get($rootScope.ServerURL + "Banques")
+        .success(function (response) {
+            console.log(response);
+            if (response.ResponseCode == 0) {
+                $scope.TotalEnBanque = response.Data.TotalEnBanque;
+                $scope.TotalEnCaisse = response.Data.TotalEnCaisse;
+                $scope.Transactions = response.Data.ListVersement;
+
+                $scope.Banque = {};
+                $scope.Banque.TotalEnBanque = $scope.TotalEnBanque;
+                $scope.Banque.TotalEnCaisse = $scope.TotalEnCaisse;
+
+                //console.log($scope.Banque);
+            } else {//Error
+                console.log(response);
+                $rootScope.Alert(response.Message);
+            }
+        })
+        .error(function (response) {
+            console.log(response);
+            $rootScope.Alert($rootScope.NetworkError);
+        });
+    }
+
+    $scope.Calculer = function () {
+        $scope.ResteEnCaisse = $scope.TotalEnCaisse - $scope.Banque.Versement;
+    }
+
+    $scope.SendData = function () {
+        $scope.Banque.User = {};
+        $scope.Banque.User.Id = $rootScope.Profil.Id;
+        $http.post($rootScope.ServerURL + "Banques", $scope.Banque)
+        .success(function (response) {
+            console.log(response);
+            if (response.ResponseCode == 0) {
+                $rootScope.BanqueInfos();
+            } else {//Error
+                console.log(response);
+                $rootScope.Alert(response.Message);
+            }
+        })
+        .error(function (response) {
+            console.log(response);
+            $rootScope.Alert($rootScope.NetworkError);
+        });
+    }
+
+    $rootScope.BanqueInfos();
 }]);
 
 //AdminUtilisateursController

@@ -5664,3 +5664,16 @@ div.radio.disabled:hover {
     font-weight: bold;
 }
 
+#alertbox{
+    display:block;
+    position:absolute;
+    right:0px;
+    bottom:0px;
+    background:#ffffff;
+    padding:8px;
+    width:600px;
+    min-height:200px;
+    text-align:center;
+    box-shadow:rgba(00, 160, 255, 0.7) 2px 2px inset;
+    color:#0080ff;
+}

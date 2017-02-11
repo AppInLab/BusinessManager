@@ -4,6 +4,7 @@ using BusinessEngine.Manager;
 using BusinessEngine.Models;
 using Newtonsoft.Json.Linq;
 using PoissonnerieApi.Models;
+using PoissonnerieApi.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +22,7 @@ namespace PoissonnerieApi.Controllers
             ResponseData responseData;
             try
             {
-                var commandesFournisseur = DataManager.GetAll<BonReceptionFournisseur>();
+                var commandesFournisseur = DataManager.GetAll<BonReceptionFournisseur>("DateCreation", "DESC");
 
                 foreach (var cmd in commandesFournisseur)
                 {
@@ -97,7 +98,7 @@ namespace PoissonnerieApi.Controllers
         }
 
         // GET api/bonreceptionfournisseur?marquerCommeRecu=5
-        public object GetMarquerCommeRecu(int marquerCommeRecu)
+        public object GetMarquerCommeRecu([FromUri]int marquerCommeRecu, [FromUri]string date)
         {
             ResponseData responseData;
             try
@@ -105,7 +106,24 @@ namespace PoissonnerieApi.Controllers
                 //Recuperation de la commande
                 var bonReceptionFournisseur = DataManager.Get<BonReceptionFournisseur>(marquerCommeRecu);
                 bonReceptionFournisseur.MarquerRecu = true;
-                bonReceptionFournisseur.DateValidation = DateTime.UtcNow;
+
+                if (string.IsNullOrWhiteSpace(date))
+                {
+                    bonReceptionFournisseur.DateValidation = DateTime.UtcNow;
+                }
+                else
+                {
+                    var stringToDate = Helper.parseDateWithFrenchCulture(date);
+                    if (DateTime.UtcNow.Date == stringToDate.Date)
+                    {
+                        bonReceptionFournisseur.DateValidation = DateTime.UtcNow;
+                    }
+                    else
+                    {
+                        bonReceptionFournisseur.DateValidation = Helper.parseDateWithFrenchCulture(date);
+                    }
+                }
+                
                 DataManager.Save(bonReceptionFournisseur);
 
                 responseData = ResponseData.GetSuccess("OK");
@@ -124,10 +142,29 @@ namespace PoissonnerieApi.Controllers
             ResponseData responseData;
             try
             {
+                var dateCreationString = data["DateCreation"];//.ToString();
+                Helper.RemoveFields(data, new[] { "DateCreation" });//Retirer le champ
+
                 var bonReceptionFournisseur = data.ToObject<BonReceptionFournisseur>();
+
+                if (dateCreationString == null || string.IsNullOrWhiteSpace(dateCreationString.ToString()))
+                {
+                    if (bonReceptionFournisseur.Id > 0)
+                    {//Modification du bon
+                        return ResponseData.GetError("Date bon de reception invalide !");
+                    }
+
+                    bonReceptionFournisseur.DateCreation = DateTime.UtcNow;
+                }
+                else
+                {
+                    bonReceptionFournisseur.DateCreation = Helper.parseDateWithFrenchCulture(dateCreationString.ToString());
+                }
+                bonReceptionFournisseur.DateModification = DateTime.UtcNow;
+
+
                 if (bonReceptionFournisseur.Id > 0)//Mise à jour du bon de reception
                 {
-                    bonReceptionFournisseur.DateModification = DateTime.UtcNow;
                     DataManager.Save(bonReceptionFournisseur);//Enregistrement des modifications
 
                     //Suppression des details
@@ -142,8 +179,6 @@ namespace PoissonnerieApi.Controllers
                 }
                 else//Nouvelle commande
                 {
-                    bonReceptionFournisseur.DateCreation = DateTime.UtcNow;
-                    bonReceptionFournisseur.DateModification = bonReceptionFournisseur.DateCreation;
                     //Enregistrer le bon
                     DataManager.Save(bonReceptionFournisseur);
                     //Enregistrer les details du bon
@@ -168,7 +203,7 @@ namespace PoissonnerieApi.Controllers
                 var details = new DetailsBonReceptionFournisseur();
                 details.BonReceptionFournisseur = bonReceptionFournisseur;
                 details.Produit = panierItem.Produit;
-                details.DateCreation = DateTime.UtcNow;
+                details.DateCreation = bonReceptionFournisseur.DateCreation;
 
                 //Recuperer la quantité
                 if (panierItem.TypeVenteId == Constants.TYPE_BLOCK_KEY)

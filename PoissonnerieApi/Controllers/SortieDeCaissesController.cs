@@ -46,6 +46,64 @@ namespace PoissonnerieApi.Controllers
             return responseData;
         }
 
+        // GET api/caisses?caisse=idCaisse
+        public object GetDetailsSortieDeCaisseParCaisse([FromUri]long caisse)
+        {
+            ResponseData responseData;
+            try
+            {
+
+                var _caisse = DataManager.Get<Caisse>(caisse);
+                if (_caisse == null)
+                {
+                    return responseData = ResponseData.GetError("Caisse introuvable !");
+                }
+
+                var sortiesDeCaisse = DataManager.GetList<SortieDeCaisse>("SessionCaisse.Caisse", _caisse.Id, "DateCreation DESC");
+                decimal total = 0;
+                foreach (var sortie in sortiesDeCaisse)
+                {
+                    total += sortie.Montant;
+                }
+                responseData = ResponseData.GetSuccess(sortiesDeCaisse, total);
+            }
+            catch (Exception ex)
+            {
+                responseData = ResponseData.GetError(ex.Message);
+            }
+
+            return responseData;
+        }
+
+        // GET api/caisses?sessiondecaisse=idSessionCaisse
+        public object GetDetailsSortieDeCaisseParSession([FromUri]long sessiondecaisse)
+        {
+            ResponseData responseData;
+            try
+            {
+                var _sessiondecaisse = DataManager.Get<SessionCaisse>(sessiondecaisse);
+
+                if (_sessiondecaisse == null)
+                {
+                    return responseData = ResponseData.GetError("Session de caisse introuvable !");
+                }
+
+                var sortiesDeCaisse = DataManager.GetList<SortieDeCaisse>("SessionCaisse", _sessiondecaisse.Id, "DateCreation DESC");
+                decimal total = 0;
+                foreach (var sortie in sortiesDeCaisse)
+                {
+                    total += sortie.Montant;
+                }
+                responseData = ResponseData.GetSuccess(sortiesDeCaisse, total);
+            }
+            catch (Exception ex)
+            {
+                responseData = ResponseData.GetError(ex.Message);
+            }
+
+            return responseData;
+        }
+
         public object GetSortieDeCaisseDuJour(long user)
         {
             ResponseData responseData;

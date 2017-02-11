@@ -66,6 +66,7 @@
     <Compile Include="DataModel\PanierItem.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="Manager\DataManager.cs" />
+    <Compile Include="Models\CommandesFournisseur.cs" />
     <Compile Include="Models\SessionCaisse.cs" />
     <Compile Include="Models\DetailsFacturesClient.cs" />
     <Compile Include="Models\FacturesClient.cs" />
@@ -74,10 +75,9 @@
     <Compile Include="Models\BonReceptionFournisseur.cs" />
     <Compile Include="Models\DetailsBonReceptionFournisseur.cs" />
     <Compile Include="Models\DetailsCommandesFournisseur.cs" />
+    <Compile Include="Models\SortieDeCaisse.cs" />
     <Compile Include="Models\Unite.cs" />
     <Compile Include="Models\ProduitsSortieChineur.cs" />
-    <Compile Include="Models\SortieDeCaisse.cs" />
-    <Compile Include="Models\CommandesFournisseur.cs" />
     <Compile Include="Models\Caisse.cs" />
     <Compile Include="Models\BonLivraison.cs" />
     <Compile Include="Models\Categorie.cs" />
@@ -92,7 +92,7 @@
     <Compile Include="Models\Depot.cs" />
     <Compile Include="Models\TypeTransaction.cs" />
     <Compile Include="Models\User.cs" />
-    <Compile Include="Models\Transaction.cs" />
+    <Compile Include="Models\VersementBanque.cs" />
     <Compile Include="Models\Paiement.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -101,6 +101,7 @@
     <Content Include="ExternalDLLs\MySql.Data.dll" />
     <Content Include="ExternalDLLs\Newtonsoft.Json.dll" />
     <Content Include="ExternalDLLs\NHibernate.dll" />
+    <EmbeddedResource Include="Hibernates\CommandesFournisseur.hbm.xml" />
     <EmbeddedResource Include="Hibernates\SessionCaisse.hbm.xml" />
     <EmbeddedResource Include="Hibernates\DetailsFacturesClient.hbm.xml" />
     <EmbeddedResource Include="Hibernates\FacturesClient.hbm.xml" />
@@ -116,7 +117,6 @@
     <EmbeddedResource Include="Hibernates\ProduitsSortieChineur.hbm.xml" />
     <EmbeddedResource Include="Hibernates\SortieDeCaisse.hbm.xml" />
     <EmbeddedResource Include="Hibernates\Chineur.hbm.xml" />
-    <EmbeddedResource Include="Hibernates\CommandesFournisseur.hbm.xml" />
     <EmbeddedResource Include="Hibernates\Caisse.hbm.xml" />
     <EmbeddedResource Include="Hibernates\BonLivraison.hbm.xml" />
     <EmbeddedResource Include="Hibernates\Categorie.hbm.xml" />
@@ -135,7 +135,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Hibernates\TypeTransaction.hbm.xml" />
     <EmbeddedResource Include="Hibernates\User.hbm.xml" />
-    <EmbeddedResource Include="Hibernates\Transaction.hbm.xml" />
+    <EmbeddedResource Include="Hibernates\VersementBanque.hbm.xml" />
     <EmbeddedResource Include="Hibernates\Paiement.hbm.xml">
       <SubType>Designer</SubType>
     </EmbeddedResource>

@@ -42,7 +42,7 @@ namespace PoissonnerieApi.Controllers
             ResponseData responseData;
             try
             {
-                responseData = ResponseData.GetSuccess(DataManager.GetList<Produit>("Categorie.Id", categorie));
+                responseData = ResponseData.GetSuccess(DataManager.GetList<Produit>("Categorie.Id", categorie, "Libelle ASC"));
             }
             catch (Exception ex)
             {
@@ -58,7 +58,7 @@ namespace PoissonnerieApi.Controllers
             ResponseData responseData;
             try
             {
-                var produits = DataManager.GetList<Produit>("Categorie.Id", categorieAvecQuantite);
+                var produits = DataManager.GetList<Produit>("Categorie.Id", categorieAvecQuantite, "Libelle ASC");
                 foreach (var produit in produits)
                     CalculerQuantiteProduit(produit);
                 responseData = ResponseData.GetSuccess(produits);

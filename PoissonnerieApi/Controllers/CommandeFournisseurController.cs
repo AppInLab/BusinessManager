@@ -4,6 +4,7 @@ using BusinessEngine.Manager;
 using BusinessEngine.Models;
 using Newtonsoft.Json.Linq;
 using PoissonnerieApi.Models;
+using PoissonnerieApi.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -150,10 +151,29 @@ namespace PoissonnerieApi.Controllers
             ResponseData responseData;
             try
             {
+
+                var dateCreationString = data["DateCreation"];//.ToString();
+                Helper.RemoveFields(data, new[] { "DateCreation" });//Retirer le champ
+
                 var commandeFournisseur = data.ToObject<CommandesFournisseur>();
+
+                if (dateCreationString == null || string.IsNullOrWhiteSpace(dateCreationString.ToString()))
+                {
+                    if (commandeFournisseur.Id > 0)
+                    {//Modification de commande
+                        return ResponseData.GetError("Date commande invalide !");
+                    }
+
+                    commandeFournisseur.DateCreation = DateTime.UtcNow;
+                }
+                else
+                {
+                    commandeFournisseur.DateCreation = Helper.parseDateWithFrenchCulture(dateCreationString.ToString());
+                }
+                commandeFournisseur.DateModification = DateTime.UtcNow;
+
                 if (commandeFournisseur.Id > 0)//Mise à jour commande
                 {
-                    commandeFournisseur.DateModification = DateTime.UtcNow;
                     DataManager.Save(commandeFournisseur);//Enregistrement des modifications
 
                     //Suppression des details
@@ -168,9 +188,6 @@ namespace PoissonnerieApi.Controllers
                 }
                 else//Nouvelle commande
                 {
-                    commandeFournisseur.DateCreation = DateTime.UtcNow;
-                    commandeFournisseur.DateModification = DateTime.UtcNow;
-
                     //Enregistrer la commande
                     DataManager.Save(commandeFournisseur);
 
@@ -196,7 +213,7 @@ namespace PoissonnerieApi.Controllers
                 var detailsCmdFournisseur = new DetailsCommandesFournisseur();
                 detailsCmdFournisseur.CommandesFournisseur = commandeFournisseur;
                 detailsCmdFournisseur.Produit = panierItem.Produit;
-                detailsCmdFournisseur.DateCreation = DateTime.UtcNow;
+                detailsCmdFournisseur.DateCreation = commandeFournisseur.DateCreation;
 
                 //Recuperer la quantité
                 if (panierItem.TypeVenteId == Constants.TYPE_BLOCK_KEY)

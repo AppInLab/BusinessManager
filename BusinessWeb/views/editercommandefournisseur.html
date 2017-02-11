@@ -11,13 +11,25 @@
             </div>
         </div>
     </div>
-    <div class="span10">
+    <div class="span8">
         <h4 class="form-section">Infos commande</h4>
         <div class="row-fluid">
             <div class="span12">
                 <div class="control-group">
                     <div class="controls">
                         <input type="text" class="span12 m-wrap" ng-model="Commentaire" placeholder="Commentaires" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="span2">
+        <h4 class="form-section">Date de commande</h4>
+        <div class="row-fluid">
+            <div class="span12">
+                <div class="control-group">
+                    <div class="controls">
+                        <input type="text" id="dateCommande" ng-mouseover="OpenDateTimePicker($event)" class="span12 m-wrap" ng-model="DateCreation" value="{{DateToday | date:'dd/MM/yyyy'}}" placeholder="Aujourd'hui" />
                     </div>
                 </div>
             </div>
@@ -117,7 +129,7 @@
     <div class="modal-footer">
         <button type="button" data-dismiss="modal" class="btn">Annuler</button>
         <button type="button" data-dismiss="modal" class="btn blue" ng-click="SendData(false)">Valider la commande</button>
-        <button type="button" data-dismiss="modal" class="btn green" ng-click="SendData(true)">Valider &amp; Créer un Bon de Reception</button>
+        <!--<button type="button" data-dismiss="modal" class="btn green" ng-click="SendData(true)">Valider &amp; Créer un Bon de Reception</button>-->
     </div>
 </div>
 

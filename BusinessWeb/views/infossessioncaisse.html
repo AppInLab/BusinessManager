@@ -30,7 +30,7 @@
                         <td>{{sessionItem.DateOuverture | date : 'dd/MM/yyyy HH:mm'}}</td>
                         <td>{{sessionItem.DateCloture | date : 'dd/MM/yyyy HH:mm'}}</td>
                         <td>{{sessionItem.FondDeCaisse}}</td>
-                        <td>{{sessionItem.SortiesDeCaisse}}</td>
+                        <td><a data-toggle="modal" data-target="#detailssortiedecaisse" ng-click="GetSortieDeCaisse(sessionItem.Id)" ng-if="sessionItem.SortiesDeCaisse > 0" href="" class="icon-info-sign text-error"></a> {{sessionItem.SortiesDeCaisse}}</td>
                         <td>{{sessionItem.TotalPaiement}}</td>
                         <td>{{sessionItem.TotalEspeceTheorique}}</td>
                         <td class="bold">{{sessionItem.TotalEspeceFermeture}}</td>
@@ -59,3 +59,48 @@
     </div>
 </div>
 
+<div id="detailssortiedecaisse" class="modal hide fade" tabindex="-1" data-width="760" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+        <h3>Details sorties de caisse</h3>
+        <div class="modal-body">
+            <div class="row-fluid">
+                <div class="span12 responsive" data-tablet="span6" data-desktop="span12">
+                    <div id="detailVente" class="flip-scroll" style="height:250px;">
+                        <table class="table table-striped table-bordered table-hover">
+                            <thead>
+                                <tr role="row">
+                                    <th role="columnheader">Date</th>
+                                    <th role="columnheader">Montant</th>
+                                    <th role="columnheader">Motif</th>
+                                </tr>
+                            </thead>
+
+                            <tbody role="alert" aria-live="polite" aria-relevant="all">
+                                <tr dir-paginate="sortiesDeCaisse in SortiesDeCaisses | itemsPerPage: 8">
+                                    <td>{{sortiesDeCaisse.DateCreation | date : 'dd/MM/yyyy HH:mm'}}</td>
+                                    <td>{{sortiesDeCaisse.Montant}}</td>
+                                    <td>{{sortiesDeCaisse.Motif}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="row-fluid">
+                            <div class="span12">
+                                <div class="dataTables_paginate paging_bootstrap pagination">
+                                    <dir-pagination-controls></dir-pagination-controls>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div id="footerVente" style="text-align:left">
+            <h3>Total<span class="pull-right text-bold">{{TotalSortiesDeCaisses}} F</span></h3>
+        </div>
+        <button type="button" data-dismiss="modal" class="btn">Fermer</button>
+    </div>
+</div>

@@ -10,10 +10,6 @@
       <column name="DateCreation"/>
     </property>
     
-    <!--<property name="NetAPayer">
-      <column name="NetAPayer"/>
-    </property>-->
-    
     <property name="Versement">
       <column name="Versement"/>
     </property>

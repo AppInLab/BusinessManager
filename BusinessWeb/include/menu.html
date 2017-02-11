@@ -143,7 +143,7 @@
         </ul>
     </li>-->
 
-    <li ng-if="Profil.IsSu || Profil.IsAdmin" ng-class="{active:isActive('/Depots') || isActive('/Categories') || isActive('/Produits') || isActive('/DeplacerProduits')}">
+    <li ng-if="Profil.IsSu || Profil.IsAdmin" ng-class="{active:isActive('/Depots') || isActive('/Categories') || isActive('/Produits')}">
         <a href="javascript:;">
             <i class="icon-barcode"></i>
             <span class="title">Stock</span>
@@ -178,14 +178,13 @@
                 </a>
             </li>-->
 
-            <li ng-class="{active:isActive('/DeplacerProduits')}">
-                <a href="#/DeplacerProduits">
+            <!--<li ng-class="{active:isActive('/AdminFournisseurs')}">
+                <a href="#/AdminFournisseurs">
                     <i class="icon-truck"></i>
-                    Déplacer Produits
+                    Inventaires
                 </a>
             </li>
-
-            <!--<li ng-class="{active:isActive('/AdminChineurs')}">
+            <li ng-class="{active:isActive('/AdminChineurs')}">
                 <a href="#/AdminChineurs">
                     <i class="icon-user-md"></i>
                     Bons de sortie
@@ -226,13 +225,13 @@
                     Bon de reception
                 </a>
             </li>
-            <!--<li ng-class="{active:isActive('/AdminFournisseurs')}">
-                <a href="#/AdminFournisseurs">
-                    <i class="icon-truck"></i>
-                    Factures
+            <li ng-class="{active:isActive('/Transferts')}">
+                <a href="#/Transferts">
+                    <i class="icon-share"></i>
+                    Transfert
                 </a>
             </li>
-            <li ng-class="{active:isActive('/AdminChineurs')}">
+            <!--<li ng-class="{active:isActive('/AdminChineurs')}">
                 <a href="#/AdminChineurs">
                     <i class="icon-user-md"></i>
                     Paiements
@@ -251,6 +250,23 @@
                     Remboursemments
                 </a>
             </li>-->
+        </ul>
+    </li>
+
+    <li ng-if="Profil.IsSu || Profil.IsAdmin" class="last" ng-class="{active:isActive('/Banques')}">
+        <a href="javascript:;">
+            <i class="icon-home"></i>
+            <span class="title">Banque</span>
+            <span class="selected"></span>
+            <span class="arrow"></span>
+        </a>
+        <ul class="sub-menu">
+            <li ng-class="{active:isActive('/Banques')}">
+                <a href="#/Banques">
+                    <i class="icon-home"></i>
+                    Banque
+                </a>
+            </li>
         </ul>
     </li>
 

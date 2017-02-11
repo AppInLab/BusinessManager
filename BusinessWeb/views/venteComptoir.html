@@ -22,6 +22,7 @@
                 <span class="badge" ng-class="{'badge-success' : cProduit.QuantiteStockBlock > cProduit.StockMinimum, 'badge-important' : cProduit.QuantiteStockBlock <= cProduit.StockMinimum}" ng-if="cProduit.UniteParBlock <= 1">{{cProduit.QuantiteStockBlock}}</span>
             </div>
         </div>
+        <input class="m-wrap span12" type="text" name="name" ng-model="searchProduit" placeholder="Recherche">
     </div>
 
     <div class="span5 responsive" data-tablet="span6" data-desktop="span5">
@@ -211,7 +212,7 @@
     <div class="modal-header">
         <button type="button" ng-click="Annuler()" class="close" data-dismiss="modal" aria-hidden="true"></button>
         <h3>Nouveau client</h3>
-        {{Client}}
+        <!--{{Client}}-->
     </div>
     <div class="modal-body">
         <form novalidate name="formClient">
@@ -234,6 +235,13 @@
                     <label class="control-label">Adresse</label>
                     <div class="controls">
                         <input type="text" class="span12 m-wrap" ng-model="Client.Adresse">
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label">Solde inital<span class="required">*</span></label>
+                    <div class="controls">
+                        <input type="text" class="span12 m-wrap" ng-model="Client.SoldeInitial">
                     </div>
                 </div>
             </div>
@@ -263,7 +271,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="control-group">
+                    <!--<div class="control-group">
                         <label class="control-label">Remise</label>
                         <div class="controls">
                             <div class="input-append">
@@ -271,7 +279,7 @@
                                 <span class="add-on"> F</span>
                             </div>
                         </div>
-                    </div>
+                    </div>-->
                     <div class="control-group">
                         <label class="control-label">NET A PAYER</label>
                         <div class="controls">
@@ -353,7 +361,7 @@
                             <div class="control-group">
                                 <label class="control-label">Prix</label>
                                 <div class="controls">
-                                    <input type="number" ng-change="Calculer()" ng-model="ProduitAajouter.PrixBlock" class="m-wrap span12" min="1" required disabled />
+                                    <input type="number" ng-change="Calculer()" ng-model="ProduitAajouter.PrixBlock" class="m-wrap span12" min="1" required />
                                 </div>
                             </div>
                         </div>
@@ -386,7 +394,7 @@
                             <div class="control-group">
                                 <label class="control-label">Prix</label>
                                 <div class="controls">
-                                    <input type="number" ng-change="Calculer()" 1 ng-model="ProduitAajouter.PrixUnitaire" min="1" class="m-wrap span12 number" required disabled />
+                                    <input type="number" ng-change="Calculer()" 1 ng-model="ProduitAajouter.PrixUnitaire" min="1" class="m-wrap span12 number" required />
                                 </div>
                             </div>
                         </div>

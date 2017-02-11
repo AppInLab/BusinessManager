@@ -25,8 +25,8 @@
                     <tr dir-paginate="bonReception in BonsReceptionFournisseur | itemsPerPage: 15">
                         <td>{{$index + 1}}</td>
                         <td class="aligncenter">
-                            <a href="" title="Lié a une commande" style="color:green" ng-if="bonReception.CommandesFournisseur.Id > 0"><i class=" icon-link"></i></a>
-                            <a href="" title="Pas de commande rattachée" style="color:red" ng-if="!bonReception.CommandesFournisseur"><i class=" icon-minus"></i></a>
+                            <a href="#/EditerCommandeFournisseur/{{bonReception.CommandesFournisseur.Id}}" title="Ouvrir la commande associée" style="color:green" ng-if="bonReception.CommandesFournisseur.Id > 0"><i class=" icon-link"></i></a>
+                            <a title="Pas de commande rattachée" style="color:red" ng-if="!bonReception.CommandesFournisseur"><i class=" icon-minus"></i></a>
                         </td>
                         <td>{{bonReception.DateCreation | date : 'dd/MM/yyyy HH:mm'}}</td>
                         <td>{{bonReception.Fournisseur.RaisonSociale}}</td>
@@ -65,6 +65,21 @@
     <div class="modal-body">
         <h4 class="bold">Confirmez-vous que vous avez reçu le bon de reception ?</h4>
         <p>Cette opération provequera la mise en stock des produits contenu dans le bon</p>
+
+        <div class="row">
+            <div class="span12">
+                <h4 class="form-section">Date de validation (de mise en stock) de la commande.</h4>
+                <div class="row-fluid">
+                    <div class="span12">
+                        <div class="control-group">
+                            <div class="controls">
+                                <input type="text" id="dateValidation" ng-mouseover="OpenDateTimePicker($event)" class="span12 m-wrap" ng-model="DateValidation" value="{{DateToday | date:'dd/MM/yyyy'}}" placeholder="Aujourd'hui" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="modal-footer">
         <button type="button" data-dismiss="modal" class="btn">Annuler</button>

@@ -13,7 +13,7 @@
             </div>
         </div>
     </div>
-    <div class="span10">
+    <div class="span8">
         <h4 class="form-section">Infos commande</h4>
         <div class="row-fluid">
             <div class="span12">
@@ -25,10 +25,24 @@
             </div>
         </div>
     </div>
+
+    <div class="span2">
+        <h4 class="form-section">Date de commande</h4>
+        <div class="row-fluid">
+            <div class="span12">
+                <div class="control-group">
+                    <div class="controls">
+                        <input type="text" id="dateCommande" ng-mouseover="OpenDateTimePicker($event)" class="span12 m-wrap" ng-model="DateCreation" value="{{DateToday | date:'dd/MM/yyyy'}}" placeholder="Aujourd'hui" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 <div class="row-fluid">
     <div class="span2 responsive" data-tablet="span6" data-desktop="span2">
-        <input class="m-wrap span12" type="text" name="name" value="" placeholder="Recherche">
+        <input class="m-wrap span12" type="text" name="name" value="" ng-model="searchText" placeholder="Recherche">
         <div id="categorieProduit" class="list-item">
             <ul>
                 <li ng-class="{active: categorie.Id == SelectedItem}" ng-repeat="categorie in Categories" ng-click="ChargerProduits(categorie)">
@@ -43,11 +57,12 @@
             Produits
         </div>
         <div id="listProduits" class="row-fluid">
-            <div ng-click="Init(cProduit)" class="button-tem" data-toggle="modal" data-target="#AjouterProduitAuPanier" ng-repeat="cProduit in ProduitsParCategorie">
+            <div ng-click="Init(cProduit)" class="button-tem" data-toggle="modal" data-target="#AjouterProduitAuPanier" ng-repeat="cProduit in ProduitsParCategorie | filter:searchText">
                 <i class="text-bold">{{cProduit.Libelle}}</i>
                 <div></div>
             </div>
         </div>
+        <input class="m-wrap span12" type="text" name="name" value="" ng-model="searchText" placeholder="Recherche">
     </div>
 
     <div class="span5 responsive" data-tablet="span6" data-desktop="span5">
@@ -119,7 +134,7 @@
     <div class="modal-footer">
         <button type="button" data-dismiss="modal" class="btn">Annuler</button>
         <button type="button" data-dismiss="modal" class="btn blue" ng-click="SendData(false)">Valider la commande</button>
-        <button type="button" data-dismiss="modal" class="btn green" ng-click="SendData(true)">Valider &amp; Créer un Bon de Reception</button>
+        <!--<button type="button" data-dismiss="modal" class="btn green" ng-click="SendData(true)">Valider &amp; Créer un Bon de Reception</button>-->
     </div>
 </div>
 

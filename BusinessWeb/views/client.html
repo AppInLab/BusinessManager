@@ -29,7 +29,7 @@
                 </thead>
 
                 <tbody role="alert" aria-live="polite" aria-relevant="all">
-                    <tr dir-paginate="clientItem in Clients | itemsPerPage: 15 | filter:searchText">
+                    <tr ng-repeat="clientItem in Clients | filter:searchText">
                         <td>{{clientItem.NomComplet}}</td>
                         <td>{{clientItem.Adresse}}</td>
                         <td>{{clientItem.Contacts}}</td>
@@ -43,13 +43,13 @@
                 </tbody>
             </table>
 
-            <div class="row-fluid">
+            <!--<div class="row-fluid">
                 <div class="span12">
                     <div class="dataTables_paginate paging_bootstrap pagination">
                         <dir-pagination-controls></dir-pagination-controls>
                     </div>
                 </div>
-            </div>
+            </div>-->
         </div>
     </div>
 </div>
