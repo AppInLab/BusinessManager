@@ -157,7 +157,7 @@ namespace PoissonnerieApi.Controllers
 
                 var commandeFournisseur = data.ToObject<CommandesFournisseur>();
 
-                if (dateCreationString == null || string.IsNullOrWhiteSpace(dateCreationString.ToString()))
+                if (dateCreationString == null || string.IsNullOrWhiteSpace(dateCreationString.ToString()) || dateCreationString.ToString() == "undefined")
                 {
                     if (commandeFournisseur.Id > 0)
                     {//Modification de commande
@@ -169,6 +169,10 @@ namespace PoissonnerieApi.Controllers
                 else
                 {
                     commandeFournisseur.DateCreation = Helper.parseDateWithFrenchCulture(dateCreationString.ToString());
+                    if (commandeFournisseur.DateCreation.Date == DateTime.UtcNow.Date)
+                    {
+                        commandeFournisseur.DateCreation = DateTime.UtcNow;
+                    }
                 }
                 commandeFournisseur.DateModification = DateTime.UtcNow;
 

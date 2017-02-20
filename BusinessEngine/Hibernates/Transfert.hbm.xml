@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="BusinessEngine.Models" assembly="BusinessEngine">
+  <class name="Transfert" table="Transfert" lazy="false">
+    <id name="Id">
+      <column name="Id"/>
+      <generator class="native"/>
+    </id>
+
+    <property name="DateCreation">
+      <column name="DateCreation"/>
+    </property>
+
+    <property name="Commentaire">
+      <column name="Commentaire"/>
+    </property>
+
+    <property name="MarquerTransfere">
+      <column name="MarquerTransfere"/>
+    </property>
+
+    <property name="DateTransfertEffectue">
+      <column name="DateTransfertEffectue"/>
+    </property>
+
+    <many-to-one name ="Fournisseur" lazy="false" class ="Fournisseur" column="Fournisseur"/>
+    <!--<many-to-one name ="CommandesFournisseur" lazy="false" class ="CommandesFournisseur" column="CommandesFournisseur"/>-->
+  
+  </class>
+</hibernate-mapping>

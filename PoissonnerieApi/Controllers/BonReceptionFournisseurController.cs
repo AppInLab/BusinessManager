@@ -107,7 +107,7 @@ namespace PoissonnerieApi.Controllers
                 var bonReceptionFournisseur = DataManager.Get<BonReceptionFournisseur>(marquerCommeRecu);
                 bonReceptionFournisseur.MarquerRecu = true;
 
-                if (string.IsNullOrWhiteSpace(date))
+                if (string.IsNullOrWhiteSpace(date) || date == "undefined")
                 {
                     bonReceptionFournisseur.DateValidation = DateTime.UtcNow;
                 }

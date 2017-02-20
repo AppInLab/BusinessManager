@@ -146,8 +146,13 @@ namespace PoissonnerieApi.Controllers
                     var facturesClientInitialSorti = DataManager.GetListProduitsParFactures(produit.Id, _caisse.DateOuverture);
                     decimal produitsSorti = CalculerQuantiteSortieDuStockProduits(produit, facturesClientInitialSorti);
 
+                    ///-------- TRANSFERT INITIAL ---------
+                    //4. On recupère la liste des produit transferé
+                    var transfertInitialSorti = DataManager.GetListProduitsParTransfert(produit.Id, _caisse.DateOuverture);
+                    decimal produitTransfere = CalculerQuantiteTransfertParProduits(produit, transfertInitialSorti);
+
                     //5. On fait la difference
-                    decimal produitsInitial = produitsEntres - produitsSorti;
+                    decimal produitsInitial = produitsEntres - produitsSorti - produitTransfere;
 
                     if (produit.Unite.IsBlock)
                         inv.StockInitialBlock = (long)(produitsInitial / produit.UniteParBlock);
@@ -158,8 +163,12 @@ namespace PoissonnerieApi.Controllers
                     #endregion
 
                     #region STOCK VENDU
+                    //Facture client vendu
                     var facturesClientVendu = DataManager.GetListProduitsVenduParFactures(produit.Id, _caisse.DateOuverture);
                     var produitsVendus = CalculerQuantiteSortieDuStockProduits(produit, facturesClientVendu);
+
+                    var listTransfereEffectue = DataManager.GetListProduitsTransferes(produit.Id, _caisse.DateOuverture);
+                    var transfereEffectue = CalculerQuantiteTransfertParProduits(produit, listTransfereEffectue);
 
                     if (produitsVendus > 0)
                     {
@@ -171,11 +180,22 @@ namespace PoissonnerieApi.Controllers
                             inv.StockVenduBlock = produitsVendus / produit.UniteParBlock;
                         inv.StockVenduResteUnite = produitsVendus % produit.UniteParBlock;
                     }
+
+                    if (transfereEffectue > 0)
+                    {
+                        inv.IsVendu = true;
+
+                        if (produit.Unite.IsBlock)
+                            inv.StockTransfereBlock = (long)(transfereEffectue / produit.UniteParBlock);
+                        else
+                            inv.StockTransfereBlock = transfereEffectue / produit.UniteParBlock;
+                        inv.StockTransfereResteUnite = transfereEffectue % produit.UniteParBlock;
+                    }
                     #endregion
 
 
                     #region STOCK FINAL
-                    var produitsFinaux = produitsInitial - produitsVendus;
+                    var produitsFinaux = produitsInitial - produitsVendus - transfereEffectue;
                     if (produit.Unite.IsBlock)
                         inv.StockFinalBlock = (long)(produitsFinaux / produit.UniteParBlock);
                     else
@@ -233,6 +253,25 @@ namespace PoissonnerieApi.Controllers
             return produitsSorti;
         }
 
+        private decimal CalculerQuantiteTransfertParProduits(Produit p, List<DetailsTransfert> detailsTransfert)
+        {
+            decimal produitsSorti = 0;
+            foreach (var details in detailsTransfert)
+            {
+                //4. On calcul le nombre en unité : Quantité x UniteParBlock
+                if (details.TypeColisage == Constants.TYPE_BLOCK_KEY)
+                {
+                    produitsSorti += (details.Quantite * p.UniteParBlock);
+                }
+                else if (details.TypeColisage == Constants.TYPE_UNITE_KEY)
+                {
+                    produitsSorti += details.Quantite;
+                }
+            }
+
+            return produitsSorti;
+        }
+
         private void CalculerQuantiteProduit(Produit p)
         {
             ///-------- ENTREE ---------
@@ -246,8 +285,13 @@ namespace PoissonnerieApi.Controllers
             var facturesClient = DataManager.GetList<DetailsFacturesClient>("Produit.Id", p.Id);
             decimal produitsSorti = CalculerQuantiteSortieDuStockProduits(p, facturesClient);
 
+            ///-------- TRANSFERT INITIAL ---------
+            //4. On recupère la liste des produit transferé
+            var transfertInitialSorti = DataManager.GetListProduitsTransferes(p.Id);
+            decimal produitTransfere = CalculerQuantiteTransfertParProduits(p, transfertInitialSorti);
+
             //5. On fait la difference
-            decimal produitsRestant = produitsEntre - produitsSorti;
+            decimal produitsRestant = produitsEntre - produitsSorti - produitTransfere;
 
             if(p.Unite.IsBlock)
                 p.QuantiteStockBlock = (long)(produitsRestant / p.UniteParBlock);

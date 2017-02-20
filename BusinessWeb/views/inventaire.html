@@ -15,6 +15,7 @@
                         <th role="columnheader">Produit</th>
                         <th role="columnheader">Stock initial</th>
                         <th role="columnheader">Stock vendu</th>
+                        <th role="columnheader">Stock transferé</th>
                         <th role="columnheader">Stock final</th>
                     </tr>
                 </thead>
@@ -57,6 +58,25 @@
                                 </span>
                             </div>
                         </td>
+
+                        <td>
+                            <div ng-class="{'text-blue':inventaire.IsVendu}" ng-if="inventaire.Produit.Unite.IsBlock">
+                                <span>
+                                    {{inventaire.StockTransfereBlock}} {{inventaire.Produit.Block.Libelle | limitTo : 4}}{{inventaire.Produit.Block.Libelle.length > 4 ? '.' : ''}}
+                                </span>
+
+                                <span ng-if="inventaire.StockTransfereResteUnite != 0">
+                                    {{inventaire.StockTransfereResteUnite}} {{inventaire.Produit.Unite.Libelle | limitTo : 4}}{{inventaire.Produit.Unite.Libelle.length > 4 ? '.' : ''}}
+                                </span>
+                            </div>
+
+                            <div ng-class="{'text-blue':inventaire.IsVendu}" ng-if="!inventaire.Produit.Unite.IsBlock">
+                                <span>
+                                    {{inventaire.StockTransfereBlock}} {{inventaire.Produit.Unite.Libelle | limitTo : 4}}{{inventaire.Produit.Unite.Libelle.length > 4 ? '.' : ''}}
+                                </span>
+                            </div>
+                        </td>
+
                         <td>
                             <div ng-class="{'text-blue':inventaire.IsVendu}" ng-if="inventaire.Produit.Unite.IsBlock">
                                 <span>

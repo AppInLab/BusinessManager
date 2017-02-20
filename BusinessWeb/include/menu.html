@@ -199,7 +199,7 @@
         </ul>
     </li>
 
-    <li ng-if="Profil.IsSu || Profil.IsAdmin" ng-class="{active:isActive('/Fournisseurs') || isActive('/CommandeFournisseur') || isActive('/NouvelleCommandeFournisseur') || isActive('/EditerCommandeFournisseur') || isActive('/BonReceptionFournisseur') || isActive('/NouveauBonReceptionFournisseur')}">
+    <li ng-if="Profil.IsSu || Profil.IsAdmin" ng-class="{active:isActive('/Fournisseurs') || isActive('/CommandeFournisseur') || isActive('/NouvelleCommandeFournisseur') || isActive('/EditerCommandeFournisseur') || isActive('/BonReceptionFournisseur') || isActive('/NouveauBonReceptionFournisseur') || isActive('/Transferts') || isActive('/NouveauTransfert')}">
         <a href="javascript:;">
             <i class="icon-truck"></i>
             <span class="title">Achats</span>
@@ -225,7 +225,7 @@
                     Bon de reception
                 </a>
             </li>
-            <li ng-class="{active:isActive('/Transferts')}">
+            <li ng-class="{active:isActive('/Transferts') || isActive('/NouveauTransfert')}">
                 <a href="#/Transferts">
                     <i class="icon-share"></i>
                     Transfert

@@ -66,6 +66,8 @@
     <Compile Include="DataModel\PanierItem.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="Manager\DataManager.cs" />
+    <Compile Include="Models\DetailsTransfert.cs" />
+    <Compile Include="Models\Transfert.cs" />
     <Compile Include="Models\CommandesFournisseur.cs" />
     <Compile Include="Models\SessionCaisse.cs" />
     <Compile Include="Models\DetailsFacturesClient.cs" />
@@ -101,6 +103,12 @@
     <Content Include="ExternalDLLs\MySql.Data.dll" />
     <Content Include="ExternalDLLs\Newtonsoft.Json.dll" />
     <Content Include="ExternalDLLs\NHibernate.dll" />
+    <EmbeddedResource Include="Hibernates\DetailsTransfert.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Hibernates\Transfert.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Hibernates\CommandesFournisseur.hbm.xml" />
     <EmbeddedResource Include="Hibernates\SessionCaisse.hbm.xml" />
     <EmbeddedResource Include="Hibernates\DetailsFacturesClient.hbm.xml" />

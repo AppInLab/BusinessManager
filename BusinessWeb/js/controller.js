@@ -235,6 +235,24 @@ function ($rootScope, $scope, $http, $location, $cookies, $cookieStore, $routePa
         });
     }
 
+    //FOURNISSEURS INTERNE
+    $rootScope.LISTE_FOURNISSEURS_INTERNE_DATA = function () {
+        $http.get($rootScope.ServerURL + "Fournisseurs?interne=true")
+        .success(function (response) {
+            console.log(response);
+            if (response.ResponseCode == 0) {
+                $scope.Fournisseurs = response.Data;
+            } else {//Error
+                console.log(response);
+                $rootScope.Alert(response.Message);
+            }
+        })
+        .error(function (response) {
+            console.log(response);
+            $rootScope.Alert($rootScope.NetworkError);
+        });
+    }
+
     //COMMANDES FOURNISSEUR
     $rootScope.LISTE_COMMANDES_FOURNISSEUR_DATA = function () {
         $http.get($rootScope.ServerURL + "CommandeFournisseur")
@@ -260,6 +278,24 @@ function ($rootScope, $scope, $http, $location, $cookies, $cookieStore, $routePa
             console.log(response);
             if (response.ResponseCode == 0) {
                 $scope.BonsReceptionFournisseur = response.Data;
+            } else {//Error
+                console.log(response);
+                $rootScope.Alert(response.Message);
+            }
+        })
+        .error(function (response) {
+            console.log(response);
+            $rootScope.Alert($rootScope.NetworkError);
+        });
+    }
+
+    //BON DE TRANSFERT
+    $rootScope.LISTE_TRANSFERT_DATA = function () {
+        $http.get($rootScope.ServerURL + "Transfert")
+        .success(function (response) {
+            console.log(response);
+            if (response.ResponseCode == 0) {
+                $scope.Transferts = response.Data;
             } else {//Error
                 console.log(response);
                 $rootScope.Alert(response.Message);
@@ -1646,9 +1682,13 @@ function ($rootScope, $scope, $http, $window, $routeParams) {
                 $scope.ProduitsParCategorie = response.Data;
             } else {//Error
                 console.log(response);
+                $rootScope.Alert(response.Message);
             }
         })
-        .error(function (response) { console.log(response); });
+        .error(function (response) {
+            console.log(response);
+            $rootScope.Alert($rootScope.NetworkError);
+        });
     }
 
     $scope.ResetComptoir = function () {
@@ -1669,7 +1709,7 @@ function ($rootScope, $scope, $http, $window, $routeParams) {
         $scope.Commande.Fournisseur = $scope.Fournisseur;
         $scope.Commande.Commentaire = $scope.Commentaire;
         $scope.Commande.DateCreation = $scope.DateCreation;
-        $scope.Commande.MarquerRecu = bonDeReception;
+        //$scope.Commande.MarquerRecu = bonDeReception;
 
         $http.post($rootScope.ServerURL + "BonReceptionFournisseur", $scope.Commande)
         .success(function (response) {
@@ -2236,6 +2276,167 @@ function ($rootScope, $scope, $http) {
     }
 
     $rootScope.BanqueInfos();
+}]);
+
+//TransfertsController
+MainController.controller('TransfertsController', ['$rootScope', '$scope', '$http',
+function ($rootScope, $scope, $http) {
+
+    $rootScope.PageName = "Transferts de produits";
+
+    $scope.MarquerCommeTransfere = function () {
+        $http.get($rootScope.ServerURL +
+        "Transfert?marquerCommeTransfere=" + $scope.Transfert.Id +
+        "&date=" + $scope.DateValidation)
+        .success(function (response) {
+            console.log(response);
+            if (response.ResponseCode == 0) {
+                $rootScope.LISTE_TRANSFERT_DATA();
+            } else {//Error
+                console.log(response);
+                $rootScope.Alert(response.Message);
+            }
+        })
+        .error(function (response) {
+            console.log(response);
+            $rootScope.Alert($rootScope.NetworkError);
+        });
+    }
+
+    $scope.InfosTransfert = function (data) {
+        $scope.Commande = { };
+        $http.get($rootScope.ServerURL + "Transfert?id=" +data.Id)
+        .success(function (response) {
+            console.log(response);
+            if (response.ResponseCode == 0) {
+                $scope.Transfert = response.Data;
+                } else {//Error
+                console.log(response);
+                $rootScope.Alert(response.Message);
+                }
+            })
+        .error(function (response) {
+            console.log(response);
+            $rootScope.Alert($rootScope.NetworkError);
+            });
+    }
+
+    $scope.SetTransfert = function (data) {
+        $scope.Transfert = data;
+    }
+
+    $rootScope.LISTE_TRANSFERT_DATA();
+}]);
+
+//NouveauTransfertsController
+MainController.controller('NouveauTransfertsController', ['$rootScope', '$scope', '$http','$window',
+function ($rootScope, $scope, $http, $window) {
+
+    $rootScope.PageName = "Nouveau transfert de produits";
+
+    //Index de chargement des produits en fonction de la categorie
+    $scope.SelectedItem = null;
+    $scope.Panier = [];
+
+    $scope.Init = function (produit) {
+        $scope.IsNew = true;
+        $scope.ProduitAajouter = {};
+        $scope.ProduitAajouter.Produit = produit;
+        $scope.ProduitAajouter.PrixAchat = produit.PrixAchat;
+        $scope.ProduitAajouter.QuantiteUnitaire = 0;
+        $scope.ProduitAajouter.QuantiteBlock = 0;
+        $scope.ProduitAajouter.Tva = 0;
+        $scope.ProduitAajouter.Ttc = 0;
+        $scope.ProduitAajouter.TotalBlock = $scope.ProduitAajouter.QuantiteBlock * produit.PrixAchat;
+        $scope.ProduitAajouter.TotalUnitaire = $scope.ProduitAajouter.QuantiteUnitaire * produit.PrixAchat;
+        $scope.ProduitAajouter.Tht = Number($scope.ProduitAajouter.TotalBlock) + Number($scope.ProduitAajouter.TotalUnitaire);
+
+        $scope.TypesDeVente = [];
+        if (produit.Unite.IsBlock) {//Vente au carton
+            $scope.TypesDeVente.push({ Id: $rootScope.TYPE_VENTE_BLOCK_KEY, Libelle: produit.Block.Libelle });
+            if (produit.UniteParBlock > 1)
+                $scope.TypesDeVente.push({ Id: $rootScope.TYPE_VENTE_UNITE_KEY, Libelle: produit.Unite.Libelle });
+            else
+                $scope.ProduitAajouter.TypeVenteId = $scope.TypesDeVente[0].Id;//Selectionner le premier élément
+        } else {//Vente en plaquette
+            $scope.TypesDeVente.push({ Id: $rootScope.TYPE_VENTE_UNITE_KEY, Libelle: produit.Unite.Libelle });
+            $scope.ProduitAajouter.TypeVenteId = $scope.TypesDeVente[0].Id;//Selectionner le premier élément
+        }
+    }
+
+    $scope.AjouterAuPanier = function (produit) {
+        if ($scope.IsNew)
+            $scope.Panier.push(produit);
+        else
+            $scope.Panier = angular.copy($scope.Panier);
+    }
+
+    $scope.SupprimerItemPanier = function (index) {
+        $scope.Panier.splice(index, 1);
+    }
+
+    $scope.Annuler = function () {
+        if (!$scope.IsNew)
+            $scope.Panier = angular.copy($scope.AncienPanier);
+    }
+
+    $scope.ResetComptoir = function () {
+        $scope.SelectedItem = null;
+        $scope.Commentaire = null;
+        $scope.Panier = [];
+        $scope.TotauxPanierHt = 0;
+        $scope.TotauxPanierTva = 0;
+        $scope.TotauxPanierTtc = 0;
+        $scope.ProduitsParCategorie = [];
+        $scope.Vente = {};
+        $scope.Fournisseur = {};
+    }
+
+    $scope.ChargerProduits = function (categorie) {
+        $scope.SelectedItem = categorie.Id;
+        $http.get($rootScope.ServerURL + "Produits?categorie=" + categorie.Id)
+        .success(function (response) {
+            console.log(response);
+            if (response.ResponseCode == 0) {
+                $scope.ProduitsParCategorie = response.Data;
+            } else {//Error
+                console.log(response);
+                $rootScope.Alert(response.Message);
+            }
+        })
+        .error(function (response) {
+            console.log(response);
+            $rootScope.Alert($rootScope.NetworkError);
+        });
+    }
+
+    $scope.SendData = function () {
+        $scope.Transfert = {};
+        $scope.Transfert.Panier = $scope.Panier;
+        $scope.Transfert.Fournisseur = $scope.Fournisseur;
+        $scope.Transfert.Commentaire = $scope.Commentaire;
+        $scope.Transfert.DateCreation = $scope.DateCreation;
+
+        $http.post($rootScope.ServerURL + "Transfert", $scope.Transfert)
+        .success(function (response) {
+            console.log(response);
+            if (response.ResponseCode == 0) {
+                $rootScope.CloseModal('confirmationValidation');
+                $window.location.href = "#/Transferts";
+            } else {//Error
+                console.log(response);
+                $rootScope.Alert(response.Message);
+            }
+        })
+        .error(function (response) {
+            console.log(response);
+            $rootScope.Alert($rootScope.NetworkError);
+        });
+    }
+
+    //Recuperer les categories
+    $rootScope.LISTE_CATEGORIES_DATA();
+    $rootScope.LISTE_FOURNISSEURS_INTERNE_DATA();
 }]);
 
 //AdminUtilisateursController

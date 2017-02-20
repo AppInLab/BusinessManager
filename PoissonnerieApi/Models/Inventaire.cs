@@ -15,6 +15,9 @@ namespace PoissonnerieApi.Models
         public decimal StockVenduBlock { get; set; }
         public decimal StockVenduResteUnite { get; set; }
 
+        public decimal StockTransfereBlock { get; set; }
+        public decimal StockTransfereResteUnite { get; set; }
+
         public decimal StockFinalBlock { get; set; }
         public decimal StockFinalResteUnite { get; set; }
         public bool IsVendu { get; set; }

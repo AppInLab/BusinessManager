@@ -141,10 +141,16 @@ app.config(["$routeProvider",
                 controller: "BanquesController"
             });
 
-            //Gestion des Chineurs
+            //Gestion des Transferts
             $routeProvider.when("/Transferts", {
                 templateUrl: "views/transfert.html",
                 controller: "TransfertsController"
+            });
+
+            //Gestion des nouveaux transferts
+            $routeProvider.when("/NouveauTransfert", {
+                templateUrl: "views/nouveautransfert.html",
+                controller: "NouveauTransfertsController"
             });
 
             //Gestion des Utilisateurs

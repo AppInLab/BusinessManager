@@ -2,7 +2,7 @@
     <div class="portlet-body">
         <div class="table-toolbar">
             <div class="btn-group">
-                <a ng-click="Init()" href="#/NouveauBonReceptionFournisseur" class="btn green">Nouveau Bon de Reception <i class="icon-plus"></i></a>
+                <a ng-click="Init()" href="#/NouveauTransfert" class="btn green">Nouveau transfert <i class="icon-plus"></i></a>
             </div>
         </div>
         <div class="dataTables_wrapper form-inline" role="grid">
@@ -10,37 +10,30 @@
                 <thead>
                     <tr role="row">
                         <th role="columnheader"><!--Code--></th>
-                        <th role="columnheader">CMD</th>
-                        <th role="columnheader">Date</th>
-                        <th role="columnheader">Fournisseurs</th>
-                        <th role="columnheader">Total HT</th>
-                        <th role="columnheader">Total TVA</th>
-                        <th role="columnheader">Total TTC</th>
-                        <th role="columnheader">Valider</th>
+                        <th role="columnheader">Date Creation</th>
+                        <th role="columnheader">Commentaire</th>
+                        <th role="columnheader">Transferé à</th>
+                        <th role="columnheader">Validation</th>
+                        <th role="columnheader">Date validation</th>
                         <th role="columnheader" style="text-align:center;">#</th>
                     </tr>
                 </thead>
 
                 <tbody role="alert" aria-live="polite" aria-relevant="all">
-                    <tr dir-paginate="bonReception in BonsReceptionFournisseur | itemsPerPage: 15">
+                    <tr dir-paginate="transfert in Transferts | itemsPerPage: 15">
                         <td>{{$index + 1}}</td>
-                        <td class="aligncenter">
-                            <a href="#/EditerCommandeFournisseur/{{bonReception.CommandesFournisseur.Id}}" title="Ouvrir la commande associée" style="color:green" ng-if="bonReception.CommandesFournisseur.Id > 0"><i class=" icon-link"></i></a>
-                            <a title="Pas de commande rattachée" style="color:red" ng-if="!bonReception.CommandesFournisseur"><i class=" icon-minus"></i></a>
-                        </td>
-                        <td>{{bonReception.DateCreation | date : 'dd/MM/yyyy HH:mm'}}</td>
-                        <td>{{bonReception.Fournisseur.RaisonSociale}}</td>
-                        <td>{{bonReception.TotalHt}}</td>
-                        <td>{{bonReception.TotalTva}}</td>
-                        <td>{{bonReception.TotalTtc}}</td>
+                        <td>{{transfert.DateCreation | date : 'dd/MM/yyyy HH:mm'}}</td>
+                        <td>{{transfert.Commentaire}}</td>
+                        <td>{{transfert.Fournisseur.RaisonSociale}}</td>
                         <td>
-                            <a ng-if="!bonReception.MarquerRecu" href="" ng-click="SetBonReception(bonReception)" data-toggle="modal" data-target="#confirmationValiderCommeRecu" style="color:red"><i class="halflings-icon share-alt"></i> Marquer comme reçu</a>
-                            <span ng-if="bonReception.MarquerRecu" style="color:green"><i class="icon-ok-circle"></i> Reçu</span>
+                            <a ng-if="!transfert.MarquerTransfere" href="" ng-click="SetTransfert(transfert)" data-toggle="modal" data-target="#confirmationValiderCommeRecu" style="color:red"><i class="halflings-icon share-alt"></i> Valider le transfert</a>
+                            <span ng-if="transfert.MarquerTransfere" style="color:green"><i class="icon-ok-circle"></i> Transferé</span>
                         </td>
+                        <td>{{transfert.DateTransfertEffectue | date : 'dd/MM/yyyy HH:mm'}}</td>
                         <td>
-                            <a href="" data-toggle="modal" data-target="#detailsbonreceptionfournisseur" ng-click="InfosBonReception(bonReception)" class="btn mini blue"><i class="icon-info"></i></a>
-                            <a ng-if="!bonReception.MarquerRecu" href="#/EditerBonReceptionFournisseur/{{bonReception.Id}}" class="btn mini green"><i class="icon-edit"></i></a>
-                            <a ng-if="!bonReception.MarquerRecu" href="" class="btn mini red"><i class="icon-trash"></i></a>
+                            <a href="" data-toggle="modal" data-target="#detailstransfert" ng-click="InfosTransfert(transfert)" class="btn mini blue"><i class="icon-info"></i></a>
+                            <!--<a ng-if="!transfert.MarquerTransfere" href="#/EditerBonReceptionFournisseur/{{transfert.Id}}" class="btn mini green"><i class="icon-edit"></i></a>-->
+                            <!--<a ng-if="!transfert.MarquerTransfere" href="" class="btn mini red"><i class="icon-trash"></i></a>-->
                         </td>
                     </tr>
                 </tbody>
@@ -60,13 +53,13 @@
 <div id="confirmationValiderCommeRecu" class="modal hide fade" tabindex="-1" aria-hidden="true">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-        <h3>Marquer comme reçu</h3>
+        <h3>Valider le transfert</h3>
     </div>
     <div class="modal-body">
-        <h4 class="bold">Confirmez-vous que vous avez reçu le bon de reception ?</h4>
-        <p>Cette opération provequera la mise en stock des produits contenu dans le bon</p>
+        <h4 class="bold">Confirmez-vous le transfert des produits ?</h4>
+        <p>Cette opération provequera le retrait en stock des produits contenus dans le transfert</p>
 
-        <h4 class="form-section">Date de validation (de mise en stock) de la commande.</h4>
+        <h4 class="form-section">Date de transfert (de retrait en stock)</h4>
         <div class="row-fluid">
             <div class="span12">
                 <div class="control-group">
@@ -76,10 +69,11 @@
                 </div>
             </div>
         </div>
+
     </div>
     <div class="modal-footer">
         <button type="button" data-dismiss="modal" class="btn">Annuler</button>
-        <button type="button" data-dismiss="modal" class="btn blue" ng-click="MarquerCommeRecu(bonReception)">Marquer comme reçu</button>
+        <button type="button" data-dismiss="modal" class="btn blue" ng-click="MarquerCommeTransfere(bonReception)">Valider le transfert</button>
     </div>
 </div>
 
@@ -122,18 +116,18 @@
     </div>
 </div>
 
-<div id="detailsbonreceptionfournisseur" class="modal hide fade" tabindex="-1" data-width="760" aria-hidden="true">
+<div id="detailstransfert" class="modal hide fade" tabindex="-1" data-width="760" aria-hidden="true">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-        <h3>Details du bon de reception</h3>
+        <h3>Details transfert</h3>
     </div>
     <div class="modal-body">
         <div class="row-fluid">
             <div class="span6">
                 <div class="control-group">
-                    <label>Fournisseur</label>
+                    <label>Fournisseur interne</label>
                     <div class="controls">
-                        <span class="bold">{{Commande.Fournisseur.RaisonSociale}}</span>
+                        <span class="bold">{{Transfert.Fournisseur.RaisonSociale}}</span>
                     </div>
                 </div>
             </div>
@@ -141,7 +135,7 @@
                 <div class="control-group">
                     <label>Commentaire</label>
                     <div class="controls">
-                        <span class="bold">{{Commande.Commentaire}}</span>
+                        <span class="bold">{{Transfert.Commentaire}}</span>
                     </div>
                 </div>
             </div>
@@ -149,32 +143,23 @@
 
         <div class="row-fluid">
             <div class="span12 responsive" data-tablet="span6" data-desktop="span12">
-                <!--<div class="title2">Détails de la note</div>-->
                 <div id="detailVente" class="flip-scroll" style="height:250px;">
                     <table class="table-bordered table-striped table-condensed flip-content">
                         <thead>
                             <tr>
-                                <th class="alignleft">DESI.</th>
-                                <th class="aligncenter">QTE</th>
-                                <th class="aligncenter">PU</th>
-                                <th class="aligncenter">Mt HT</th>
-                                <th class="aligncenter">TVA</th>
-                                <th class="aligncenter">Mt TTC</th>
+                                <th class="alignleft"></th>
+                                <th class="alignleft">DESIGNATION</th>
+                                <th class="aligncenter">QUANTITE</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr dir-paginate="panierItem in Commande.Panier | itemsPerPage: 8">
+                            <tr dir-paginate="panierItem in Transfert.Panier | itemsPerPage: 8">
+                                <td>{{$index + 1}}</td>
                                 <td>{{panierItem.Produit.Libelle}}</td>
                                 <td class="aligncenter">
                                     <span ng-if="panierItem.TypeVenteId == TYPE_VENTE_UNITE_KEY">{{panierItem.QuantiteUnitaire}} {{panierItem.Produit.Unite.Libelle | limitTo : 4}}{{panierItem.Produit.Unite.Libelle.length > 4 ? '.' : ''}}</span>
                                     <span ng-if="panierItem.TypeVenteId == TYPE_VENTE_BLOCK_KEY">{{panierItem.QuantiteBlock}} {{panierItem.Produit.Block.Libelle | limitTo : 4}}{{panierItem.Produit.Block.Libelle.length > 4 ? '.' : ''}}</span>
                                 </td>
-                                <td class="aligncenter">
-                                    <span>{{panierItem.PrixAchat}}</span>
-                                </td>
-                                <td class="alignright">{{panierItem.Tht}}</td>
-                                <td class="alignright">{{panierItem.Tva}}%</td>
-                                <td class="alignright">{{panierItem.Ttc}}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -190,11 +175,6 @@
         </div>
     </div>
     <div class="modal-footer">
-        <div id="footerVente" style="text-align:left">
-            <h5>Total Hors Taxe : <span class="pull-right text-bold">{{Commande.TotalHt}} F</span></h5>
-            <h5>Total TVA : <span class="pull-right text-bold">{{Commande.TotalTva}} F</span></h5>
-            <h5>Total TTC : <span class="pull-right text-bold">{{Commande.TotalTtc}} F</span></h5>
-        </div>
         <button type="button" data-dismiss="modal" class="btn">Fermer</button>
     </div>
 </div>

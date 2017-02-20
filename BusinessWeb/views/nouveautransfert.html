@@ -1,0 +1,205 @@
+﻿<div class="row-fluid">
+    
+    <div class="span2">
+        <h4 class="form-section">Date transfert</h4>
+        <div class="row-fluid">
+            <div class="span12">
+                <div class="control-group">
+                    <div class="controls">
+                        <input type="text" id="dateCommande" ng-mouseover="OpenDateTimePicker($event)" class="span12 m-wrap" ng-model="DateCreation" value="{{DateToday | date:'dd/MM/yyyy'}}" placeholder="Aujourd'hui" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="span8">
+        <h4 class="form-section">Infos transfert</h4>
+        <div class="row-fluid">
+            <div class="span12">
+                <div class="control-group">
+                    <div class="controls">
+                        <input type="text" class="span12 m-wrap" ng-model="Commentaire" placeholder="Commentaires" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="span2">
+        <h4 class="form-section">Destinataire</h4>
+        <div class="row-fluid">
+            <div class="span12">
+                <div class="control-group">
+                    <div class="controls">
+                        <select class="m-wrap span12" ng-model="Fournisseur.Id">
+                            <option ng-repeat="item in Fournisseurs" value="{{item.Id}}">{{item.RaisonSociale}}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="row-fluid">
+    <div class="span2 responsive" data-tablet="span6" data-desktop="span2">
+        <!--<input class="m-wrap span12" type="text" name="name" value="" placeholder="Recherche">-->
+        <div class="title2">
+            Catégorie
+        </div>
+        <div id="categorieProduit" class="list-item">
+            <ul>
+                <li ng-class="{active: categorie.Id == SelectedItem}" ng-repeat="categorie in Categories" ng-click="ChargerProduits(categorie)">
+                    <a>{{categorie.Libelle}}</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="span5 responsive" data-tablet="span6" data-desktop="span5">
+        <div class="title2">
+            Produits
+        </div>
+        <div id="listProduits" class="row-fluid" style="height:370px;">
+            <div ng-click="Init(cProduit)" class="button-tem" data-toggle="modal" data-target="#AjouterProduitAuPanier" ng-repeat="cProduit in ProduitsParCategorie">
+                <i class="text-bold">{{cProduit.Libelle}}</i>
+                <div></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="span5 responsive" data-tablet="span6" data-desktop="span5">
+        <div class="title2">
+            Détails
+        </div>
+        <div id="detailVente" class="flip-scroll" >
+            <table class="table-bordered table-striped table-condensed flip-content">
+                <thead>
+                    <tr>
+                        <th class="alignleft">DESIGNATION</th>
+                        <th class="aligncenter">QUANTITE</th>
+                        <th class="aligncenter">#</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr dir-paginate="panierItem in Panier | itemsPerPage: 8">
+                        <td>{{panierItem.Produit.Libelle}}</td>
+                        <td class="aligncenter">
+                            <span ng-if="panierItem.TypeVenteId == TYPE_VENTE_UNITE_KEY">{{panierItem.QuantiteUnitaire}} {{panierItem.Produit.Unite.Libelle | limitTo : 4}}{{panierItem.Produit.Unite.Libelle.length > 4 ? '.' : ''}}</span>
+                            <span ng-if="panierItem.TypeVenteId == TYPE_VENTE_BLOCK_KEY">{{panierItem.QuantiteBlock}} {{panierItem.Produit.Block.Libelle | limitTo : 4}}{{panierItem.Produit.Block.Libelle.length > 4 ? '.' : ''}}</span>
+                        </td>
+                        <td>
+                            <a ng-click="SupprimerItemPanier($index)" class="btn mini red"><i class="icon-trash"></i></a>
+                            <a ng-click="Modifier(panierItem)" data-toggle="modal" data-target="#AjouterProduitAuPanier" class="btn mini default"><i class="icon-edit"></i></a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="row-fluid">
+                <div class="span12">
+                    <div class="dataTables_paginate paging_bootstrap pagination">
+                        <dir-pagination-controls></dir-pagination-controls>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="footerVente">
+            <p>
+                <a ng-if="Panier.length > 0" data-toggle="modal" data-target="#confirmationValidation" class="btn blue big" ng-click="CaisseInit()"> TRANSFERER</a>
+                <a class="btn big" data-toggle="modal" data-target="#confirmationAnnulation"><i class="icon-cancel"></i> ANNULER</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+<div id="confirmationValidation" class="modal hide fade" tabindex="-1" data-width="760" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+        <h4>Confirmation transfert</h4>
+    </div>
+    <div class="modal-body">
+        <h4 class="bold">Voulez-vous transferer les produits ?</h4>
+    </div>
+    <div class="modal-footer">
+        <button type="button" data-dismiss="modal" class="btn">Annuler</button>
+        <button type="button" data-dismiss="modal" class="btn blue" ng-click="SendData()">Transferer</button>
+    </div>
+</div>
+
+<div id="confirmationAnnulation" class="modal hide fade" tabindex="-1" data-width="760" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+        <h3>Annulation</h3>
+    </div>
+    <div class="modal-body">
+        <h4>Voulez-vous annuler ce bon de reception ?</h4>
+    </div>
+    <div class="modal-footer">
+        <button type="button" data-dismiss="modal" class="btn">Non</button>
+        <button type="button" data-dismiss="modal" class="btn red" ng-click="ResetComptoir()">Oui</button>
+    </div>
+</div>
+
+<div id="AjouterProduitAuPanier" class="modal hide fade" tabindex="-1" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+        <h4>Ajouter au panier</h4>
+    </div>
+    <div class="modal-body">
+        <div class="row-fluid">
+            <div class="span12">
+                <form class="horizontal-form">
+                    <h4 class="form-section text-bold">{{ProduitAajouter.Produit.Libelle}}</h4>
+
+                    <div class="row-fluid">
+                        <div class="span12">
+                            <div class="control-group">
+                                <label class="control-label">Type de colisage</label>
+                                <div class="controls">
+                                    <select class="m-wrap span12" ng-model="ProduitAajouter.TypeVenteId" ng-change="Calculer()">
+                                        <option ng-repeat="item in TypesDeVente" value="{{item.Id}}">{{item.Libelle}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h4 class="form-section" ng-if="(ProduitAajouter.Produit.Unite.IsBlock) && (ProduitAajouter.TypeVenteId == TYPE_VENTE_BLOCK_KEY)">Produit en block</h4>
+                    <div class="row-fluid" ng-if="(ProduitAajouter.Produit.Unite.IsBlock) && (ProduitAajouter.TypeVenteId == TYPE_VENTE_BLOCK_KEY)">
+                        <div class="span12">
+                            <div class="control-group">
+                                <label class="control-label">Quantité</label>
+                                <div class="controls">
+                                    <div class="input-append">
+                                        <input type="number" ng-change="Calculer()" ng-model="ProduitAajouter.QuantiteBlock" class="m-wrap span12" min="1" required>
+                                        <span class="add-on">{{ProduitAajouter.Produit.Block.Libelle}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h4 class="form-section" ng-if="((ProduitAajouter.Produit.Unite.IsBlock && ProduitAajouter.Produit.UniteParBlock > 1) || !ProduitAajouter.Produit.Unite.IsBlock) && (ProduitAajouter.TypeVenteId == TYPE_VENTE_UNITE_KEY)">Produit en unité</h4>
+                    <div class="row-fluid" ng-if="((ProduitAajouter.Produit.Unite.IsBlock && ProduitAajouter.Produit.UniteParBlock > 1) || !ProduitAajouter.Produit.Unite.IsBlock) && (ProduitAajouter.TypeVenteId == TYPE_VENTE_UNITE_KEY)">
+                        <div class="span12">
+                            <div class="control-group">
+                                <label class="control-label">Quantité</label>
+                                <div class="controls">
+                                    <div class="input-append">
+                                        <input type="number" ng-change="Calculer()" ng-model="ProduitAajouter.QuantiteUnitaire" min="1" class="m-wrap span12" required />
+                                        <span class="add-on">{{ProduitAajouter.Produit.Unite.Libelle}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" data-dismiss="modal" class="btn" ng-click="Annuler()">Annuler</button>
+        <button type="button" data-dismiss="modal" class="btn blue" ng-click="AjouterAuPanier(ProduitAajouter)">Valider</button>
+    </div>
+</div>
