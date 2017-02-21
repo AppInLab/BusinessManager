@@ -478,13 +478,13 @@ function ($rootScope, $scope, $http, $location, $cookies, $cookieStore, $routePa
         window.location = "index.html";
     }
 
-    $scope.AuthorizeUser = ['/Home', '/VenteComptoir', '/SessionCaisses', '/SortiesDeCaisses', '/Clients', '/FicheClients/:client'];
+    $scope.AuthorizeUser = ['/Home', '/VenteComptoir', '/SessionCaisses', '/SortiesDeCaisses', '/Clients', '/FicheClients/:client', '/Transferts', '/NouveauTransfert'];
     $scope.AuthorizeStockUser = ['/Home', '/Caisses', '/InfosSessionCaisses/:caisse', '/InventaireDeStocks/:caisse', '/Clients', '/FicheClients/:client'];
 
     $scope.AuthorizeAdmin = ['/Home', '/VenteComptoir', '/Categories', '/Produits',
                       '/Fournisseurs', '/CommandeFournisseur', '/BonReceptionFournisseur', '/Clients', '/FicheClients/:client',
                       '/Comptes', '/Caisses', '/InfosSessionCaisses/:caisse', '/InventaireDeStocks/:caisse',
-                      '/NouveauBonReceptionFournisseur', '/NouvelleCommandeFournisseur', '/EditerBonReceptionFournisseur/:id', '/EditerCommandeFournisseur/:id'];
+                      '/NouveauBonReceptionFournisseur', '/NouvelleCommandeFournisseur', '/EditerBonReceptionFournisseur/:id', '/EditerCommandeFournisseur/:id', '/Transferts', '/NouveauTransfert'];
     $scope.Authorize = [];
     $rootScope.$on('$routeChangeStart', function (next, current) {
         if ($rootScope.Profil.IsUser)

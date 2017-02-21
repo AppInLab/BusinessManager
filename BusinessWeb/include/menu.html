@@ -44,6 +44,14 @@
         </a>
     </li>
 
+    <li ng-if="Profil.IsSu || Profil.IsAdmin || Profil.IsStockUser || Profil.IsUser" ng-class="{active:isActive('/Transferts') || isActive('/NouveauTransfert')}">
+        <a href="#/Transferts">
+            <i class="icon-share"></i>
+            <span class="title">Transfert</span>
+            <span class="selected"></span>
+        </a>
+    </li>
+
     <li ng-if="Profil.IsSu || Profil.IsAdmin || Profil.IsUser || Profil.IsStockUser" ng-class="{active:isActive('/Clients') || isActive('/FicheClients')}">
         <a href="javascript:;">
             <i class="icon-barcode"></i>
@@ -199,7 +207,7 @@
         </ul>
     </li>
 
-    <li ng-if="Profil.IsSu || Profil.IsAdmin" ng-class="{active:isActive('/Fournisseurs') || isActive('/CommandeFournisseur') || isActive('/NouvelleCommandeFournisseur') || isActive('/EditerCommandeFournisseur') || isActive('/BonReceptionFournisseur') || isActive('/NouveauBonReceptionFournisseur') || isActive('/Transferts') || isActive('/NouveauTransfert')}">
+    <li ng-if="Profil.IsSu || Profil.IsAdmin" ng-class="{active:isActive('/Fournisseurs') || isActive('/CommandeFournisseur') || isActive('/NouvelleCommandeFournisseur') || isActive('/EditerCommandeFournisseur') || isActive('/BonReceptionFournisseur') || isActive('/NouveauBonReceptionFournisseur')}">
         <a href="javascript:;">
             <i class="icon-truck"></i>
             <span class="title">Achats</span>
@@ -207,28 +215,22 @@
             <span class="arrow"></span>
         </a>
         <ul class="sub-menu">
-            <li ng-class="{active:isActive('/Fournisseurs')}">
+            <li ng-if="Profil.IsSu || Profil.IsAdmin" ng-class="{active:isActive('/Fournisseurs')}">
                 <a href="#/Fournisseurs">
                     <i class="icon-home"></i>
                     Fournisseurs
                 </a>
             </li>
-            <li ng-class="{active:isActive('/CommandeFournisseur') || isActive('/NouvelleCommandeFournisseur') || isActive('/EditerCommandeFournisseur')}">
+            <li ng-if="Profil.IsSu || Profil.IsAdmin" ng-class="{active:isActive('/CommandeFournisseur') || isActive('/NouvelleCommandeFournisseur') || isActive('/EditerCommandeFournisseur')}">
                 <a href="#/CommandeFournisseur">
                     <i class="icon-reorder"></i>
                     Commandes
                 </a>
             </li>
-            <li ng-class="{active:isActive('/BonReceptionFournisseur') || isActive('/NouveauBonReceptionFournisseur') || isActive('/EditerBonReceptionFournisseur')}">
+            <li ng-if="Profil.IsSu || Profil.IsAdmin" ng-class="{active:isActive('/BonReceptionFournisseur') || isActive('/NouveauBonReceptionFournisseur') || isActive('/EditerBonReceptionFournisseur')}">
                 <a href="#/BonReceptionFournisseur">
                     <i class="icon-barcode"></i>
                     Bon de reception
-                </a>
-            </li>
-            <li ng-class="{active:isActive('/Transferts') || isActive('/NouveauTransfert')}">
-                <a href="#/Transferts">
-                    <i class="icon-share"></i>
-                    Transfert
                 </a>
             </li>
             <!--<li ng-class="{active:isActive('/AdminChineurs')}">
