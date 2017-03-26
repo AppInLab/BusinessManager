@@ -20,7 +20,20 @@ namespace PoissonnerieApi.Controllers
             ResponseData responseData;
             try
             {
-                responseData = ResponseData.GetSuccess(DataManager.GetAll<Client>());
+                var clients = DataManager.GetAll<Client>();
+                foreach (var c in clients)
+                {
+                    var soldeInitial = DataManager.GetVersementInitial(c.Id);
+                    if (soldeInitial == null)
+                    {
+                        c.SoldeInitial = 0;
+                        continue;
+                    }
+
+                    c.SoldeInitial = -soldeInitial.Versement;
+                }
+
+                return ResponseData.GetSuccess(clients);
             }
             catch (Exception ex)
             {
@@ -40,7 +53,7 @@ namespace PoissonnerieApi.Controllers
             }
             catch (Exception ex)
             {
-                responseData = ResponseData.GetError(ex.Message);
+                return ResponseData.GetError(ex.Message);
             }
 
             return responseData;
@@ -95,6 +108,27 @@ namespace PoissonnerieApi.Controllers
                 if (_data.Id > 0)
                 {
                     _data.DateModification = DateTime.UtcNow;
+
+                    //Recherche le solde initial
+                    var ancienSolde = DataManager.GetVersementInitial(_data.Id);
+                    if (ancienSolde == null)
+                    {
+                        var paiement = new Paiement();
+                        paiement.Client = _data;
+                        paiement.IsSoldeInitial = true;
+                        paiement.Versement = _data.SoldeInitial * (-1);
+                        paiement.DateCreation = DateTime.UtcNow;
+
+                        DataManager.Save(paiement);
+                    }
+                    else
+                    {
+                        if (ancienSolde.Versement != -_data.SoldeInitial)
+                        {
+                            ancienSolde.Versement = _data.SoldeInitial * (-1);
+                            DataManager.Save(ancienSolde);
+                        }
+                    }                    
                 }else{
                     _data.DateCreation = DateTime.UtcNow;
                     _data.DateModification = DateTime.UtcNow;
@@ -105,20 +139,21 @@ namespace PoissonnerieApi.Controllers
                         _data.SoldeInitial = _data.SoldeInitial * (-1);
                         isSoldeInitial = true;
                     }
+
+                    //Si c'est le solde initial, on effectue un paiement inverse
+                    if (isSoldeInitial)
+                    {
+                        var paiement = new Paiement();
+                        paiement.Client = _data;
+                        paiement.IsSoldeInitial = true;
+                        paiement.Versement = _data.SoldeInitial;
+                        paiement.DateCreation = DateTime.UtcNow;
+
+                        DataManager.Save(paiement);
+                    }
                 }
 
                 DataManager.Save(_data);
-
-                //Si c'est le solde initial, on effectue un paiement inverse
-                if(isSoldeInitial){
-                    var paiement = new Paiement();
-                    paiement.Client = _data;
-                    paiement.IsSoldeInitial = true;
-                    paiement.Versement = _data.SoldeInitial;
-                    paiement.DateCreation = DateTime.UtcNow;
-
-                    DataManager.Save(paiement);
-                }
 
                 responseData = ResponseData.GetSuccess(_data);
             }

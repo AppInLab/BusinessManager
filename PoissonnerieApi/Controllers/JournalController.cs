@@ -10,53 +10,68 @@ using System.Web.Http;
 
 namespace PoissonnerieApi.Controllers
 {
+
     public class JournalController : ApiController
     {
+        static private string OP_FACTURE = "OP_FACTURE";
+        static private string OP_VERSEMENT = "OP_VERSEMENT";
+
         // GET api/journal/5
-        public object Get(int sessionCaisseUser)
+        public object Get(int user)
         {
-            ResponseData responseData;
             try
             {
-                var sessionsCaisse = DataManager.GetSessionCaisseUserOuvertes(sessionCaisseUser);
+                var sessionsCaisse = DataManager.GetSessionCaisseUserOuvertes(user);
                 if (sessionsCaisse == null)
                 {
-                    sessionsCaisse = DataManager.GetLastSessionCaisseUser(sessionCaisseUser);
-                    //return responseData = ResponseData.GetError("Session introuvable !");
+                    sessionsCaisse = DataManager.GetLastSessionCaisseUser(user);
                 }
 
-                var listJournal = new List<Journal>();
+                //Factures client avec versement
+                //Factures client sans versement
+                //Vente cash
+                //Versement client sans facture
 
+                var listJournal = new List<Journal>();
                 //Recuperation des ventes
                 var ventes = DataManager.GetList<FacturesClient>("SessionCaisse", sessionsCaisse.Id);
                 foreach (var v in ventes)
                 {
                     var journal = new Journal();
                     journal.Date = v.DateCreation;
-
-                    //var client = "un INCONNU";
-                    //if (v.Client != null)
-                    //    client = v.Client.NomComplet;
-
                     journal.Montant = DataManager.GetSumFactures(v.Id);
-                    journal.Operation = "Vente";
                     journal.Owner = v.Client;
+                    journal.IdOperation = v.Id;
 
+                    var versement = DataManager.Get<Paiement>("FacturesClient", v.Id);
+                    if (versement == null)//Facture sans versement
+                    {
+                        journal.Operation = "Facture client SANS versement";
+                    }
+                    else
+                    {
+                        if (v.Client == null)
+                        {
+                            journal.Operation = "Vente cash";
+                        }
+                        else
+                        {
+                            journal.MontantFactureAvecVersement = versement.Versement;
+                            journal.Operation = "Facture client AVEC versement";
+                        }
+                    }
+                    
                     listJournal.Add(journal);
                 }
                 //Recuperation des sorties de caisses
-                var sortieDeCaisses = DataManager.GetList<SortieDeCaisse>("SessionCaisse", sessionsCaisse.Id);
+                //var sortieDeCaisses = DataManager.GetList<SortieDeCaisse>("SessionCaisse", sessionsCaisse.Id);
+                
                 //Recuperation des versements
-                var paiements = DataManager.GetList<Paiement>("SessionCaisse", sessionsCaisse.Id);
+                var paiements = DataManager.GetListVersementsClientParSessionCaisse(sessionsCaisse.Id);
                 foreach (var p in paiements)
                 {
                     var journal = new Journal();
                     journal.Date = p.DateCreation;
-
-                    //var client = "INCONNU";
-                    //if (p.Client != null)
-                    //    client = p.Client.NomComplet;
-
                     journal.Operation = "Versement";
                     journal.Montant = p.Versement;
                     journal.Owner = p.Client;
@@ -64,16 +79,85 @@ namespace PoissonnerieApi.Controllers
                     listJournal.Add(journal);
                 }
 
-                listJournal.OrderByDescending(x => x.Date);
-                
-                responseData = ResponseData.GetSuccess(listJournal);
+                return ResponseData.GetSuccess(listJournal.OrderByDescending(x => x.Date));
             }
             catch (Exception ex)
             {
-                responseData = ResponseData.GetError(ex.Message);
+                return ResponseData.GetError(ex.Message);
             }
+        }
 
-            return responseData;
+        public object GetParSessionCaisse(int sessionCaisse)
+        {
+            try
+            {
+                var sessionsCaisse = DataManager.Get<SessionCaisse>(sessionCaisse);
+                if (sessionsCaisse == null)
+                {
+                    return ResponseData.GetError("Session introuvable !");
+                }
+
+                //Factures client avec versement
+                //Factures client sans versement
+                //Vente cash
+                //Versement client sans facture
+
+                var listJournal = new List<Journal>();
+                //Recuperation des ventes
+                var ventes = DataManager.GetList<FacturesClient>("SessionCaisse", sessionsCaisse.Id);
+                foreach (var v in ventes)
+                {
+                    var journal = new Journal();
+                    journal.Date = v.DateCreation;
+                    journal.Montant = DataManager.GetSumFactures(v.Id);
+                    journal.Owner = v.Client;
+                    journal.IdOperation = v.Id;
+                    journal.OpCode = OP_FACTURE;
+
+                    var versement = DataManager.Get<Paiement>("FacturesClient", v.Id);
+                    if (versement == null)//Facture sans versement
+                    {
+                        journal.Operation = "Facture client SANS versement";
+                    }
+                    else
+                    {
+                        if (v.Client == null)
+                        {
+                            journal.Operation = "Vente cash";
+                        }
+                        else
+                        {
+                            journal.MontantFactureAvecVersement = versement.Versement;
+                            journal.Operation = "Facture client AVEC versement";
+                        }
+                    }
+
+                    listJournal.Add(journal);
+                }
+                //Recuperation des sorties de caisses
+                //var sortieDeCaisses = DataManager.GetList<SortieDeCaisse>("SessionCaisse", sessionsCaisse.Id);
+
+                //Recuperation des versements
+                var paiements = DataManager.GetListVersementsClientParSessionCaisse(sessionsCaisse.Id);
+                foreach (var p in paiements)
+                {
+                    var journal = new Journal();
+                    journal.Date = p.DateCreation;
+                    journal.Operation = "Versement";
+                    journal.Montant = p.Versement;
+                    journal.Owner = p.Client;
+                    journal.OpCode = OP_VERSEMENT;
+                    journal.IdOperation = p.Id;
+
+                    listJournal.Add(journal);
+                }
+
+                return ResponseData.GetSuccess(listJournal.OrderByDescending(x => x.Date));
+            }
+            catch (Exception ex)
+            {
+                return ResponseData.GetError(ex.Message);
+            }
         }
     }
 }

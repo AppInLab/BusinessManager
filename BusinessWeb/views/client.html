@@ -16,13 +16,14 @@
                     </div>
                 </div>
             </div>
+
             <table class="table table-striped table-bordered table-hover">
                 <thead>
                     <tr role="row">
                         <th role="columnheader" style="min-width: 30%">Nom &amp; prenoms</th>
                         <th role="columnheader">Adresse</th>
                         <th role="columnheader">Contacts</th>
-                        <!--<th role="columnheader">Doit</th>-->
+                        <th role="columnheader">Solde Initial</th>
                         <!--<th role="columnheader">Avoir</th>-->
                         <th role="columnheader">#</th>
                     </tr>
@@ -33,7 +34,7 @@
                         <td>{{clientItem.NomComplet}}</td>
                         <td>{{clientItem.Adresse}}</td>
                         <td>{{clientItem.Contacts}}</td>
-                        <!--<td>{{clientItem.Doit}}</td>-->
+                        <td>{{clientItem.SoldeInitial}}</td>
                         <!--<td>{{clientItem.Avoir}}</td>-->
                         <td>
                             <button ng-if="(!Profil.IsUser) && (!Profil.IsStockUser)" ng-click="Modifier(clientItem)" data-toggle="modal" data-target="#client" type="button" class="btn mini default"><i class="icon-edit"></i> Modifier</button>
@@ -80,10 +81,10 @@
                 </div>
             </div>
 
-            <div class="control-group" ng-if="!Modif">
+            <div class="control-group" ng-if="(!Profil.IsUser) && (!Profil.IsStockUser)">
                 <label class="control-label">Solde inital<span class="required">*</span></label>
                 <div class="controls">
-                    <input type="text" class="span12 m-wrap" ng-model="Client.SoldeInitial">
+                    <input type="number" class="span12 m-wrap" ng-model="Client.SoldeInitial" required min="0" >
                 </div>
             </div>
         </div>

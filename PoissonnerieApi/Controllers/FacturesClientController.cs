@@ -48,6 +48,41 @@ namespace PoissonnerieApi.Controllers
             return responseData;
         }
 
+        [HttpGet]
+        public object SupprimerData(long del)
+        {
+            try
+            {
+                var data = DataManager.Get<FacturesClient>(del);
+                if (data == null)
+                {
+                    return ResponseData.GetError("L'information que vous essayez de supprimer l'existe pas.");
+                }
+
+                //On recupere tous les versments effectué sur cette facture
+                var paiements = DataManager.GetList<Paiement>("FacturesClient", data.Id);
+                foreach (var p in paiements)
+                {
+                    DataManager.Delete(p);
+                }
+
+                //On recupere tous les details de la facture
+                var detailsFacturesClient = DataManager.GetList<DetailsFacturesClient>("FacturesClient", data.Id);
+                foreach (var d in detailsFacturesClient)
+                {
+                    DataManager.Delete(d);
+                }
+
+                DataManager.Delete(data);
+                //Recuperer la session en cours
+                return ResponseData.GetSuccess("OK");
+            }
+            catch (Exception ex)
+            {
+                return ResponseData.GetError(ex.Message);
+            }
+        }
+
         // GET api/facturesclient
         public object GetDetailsFacture(long details)
         {
@@ -168,15 +203,16 @@ namespace PoissonnerieApi.Controllers
                         paiement.NetAPayer = facturesClient.TotalTtc;
                         paiement.MontantPercu = facturesClient.MontantPercu;
 
-                        if (facturesClient.MontantPercu > facturesClient.TotalTtc)
-                        {
-                            paiement.Versement = facturesClient.TotalTtc;
-                        }
-                        else
-                        {
-                            paiement.Versement = facturesClient.MontantPercu;
-                        }
+                        //if (facturesClient.MontantPercu > facturesClient.TotalTtc)
+                        //{
+                        //    paiement.Versement = facturesClient.TotalTtc;
+                        //}
+                        //else
+                        //{
+                        //    paiement.Versement = facturesClient.MontantPercu;
+                        //}
 
+                        paiement.Versement = facturesClient.MontantPercu;
                         paiement.FacturesClient = facturesClient;
                         DataManager.Save(paiement);
                     }

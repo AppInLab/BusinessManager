@@ -1,122 +1,134 @@
 ﻿<div class="row-fluid">
-    <div class="portlet-body form">
-        <!-- BEGIN FORM-->
-        <div class="form-horizontal form-view">
-            <div class="row-fluid">
-                <div class="span6 ">
-                    <div class="control-group">
-                        <label class="control-label" style="width:initial;" for="firstName">Session ouverte le </label>
-                        <div class="controls">
-                            <span class="text">{{SessionCaisseUser.DateOuverture | date : 'dd/MM/yyyy HH:mm'}}</span>
+    <div class="span12">
+        <div class="tabbable tabbable-custom">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="" data-target="#tab_session_caisse" data-toggle="tab">Session de caisse</a></li>
+                <li class=""><a href="" data-target="#tab_historique" data-toggle="tab">Historiques</a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" id="tab_session_caisse">
+                    <!-- BEGIN FORM-->
+                    <div class="form-horizontal form-view">
+                        <div class="row-fluid">
+                            <div class="span6 ">
+                                <div class="control-group">
+                                    <label class="control-label" style="width:initial;" for="firstName">Session ouverte le </label>
+                                    <div class="controls">
+                                        <span class="text">{{SessionCaisseUser.DateOuverture | date : 'dd/MM/yyyy HH:mm'}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/span-->
+                            <div class="span6 ">
+                                <div class="control-group">
+                                    <label class="control-label" style="width:initial;">Total sorties de caisse </label>
+                                    <div class="controls">
+                                        <span class="text">{{SessionCaisseUser.SortiesDeCaisse}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/span-->
                         </div>
-                    </div>
-                </div>
-                <!--/span-->
-                <div class="span6 ">
-                    <div class="control-group">
-                        <label class="control-label" style="width:initial;">Total sorties de caisse </label>
-                        <div class="controls">
-                            <span class="text">{{SessionCaisseUser.SortiesDeCaisse}}</span>
+                        <!--/row-->
+                        <div class="row-fluid">
+                            <div class="span6 ">
+                                <div class="control-group">
+                                    <label class="control-label" style="width:initial;">Session fermée le </label>
+                                    <div class="controls">
+                                        <span class="text">{{SessionCaisseUser.DateCloture | date : 'dd/MM/yyyy HH:mm'}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/span-->
+                            <div class="span6 ">
+                                <div class="control-group">
+                                    <label class="control-label" style="width:initial;">Transaction en espèce </label>
+                                    <div class="controls">
+                                        <span class="text bold">{{SessionCaisseUser.TotalPaiement}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/span-->
                         </div>
-                    </div>
-                </div>
-                <!--/span-->
-            </div>
-            <!--/row-->
-            <div class="row-fluid">
-                <div class="span6 ">
-                    <div class="control-group">
-                        <label class="control-label" style="width:initial;">Session fermée le </label>
-                        <div class="controls">
-                            <span class="text">{{SessionCaisseUser.DateCloture | date : 'dd/MM/yyyy HH:mm'}}</span>
+                        <!--/row-->
+                        <div class="row-fluid">
+                            <!--/span-->
+                            <div class="span6">
+                                <div class="control-group">
+                                    <label class="control-label" style="width:initial;">Fond de caisse </label>
+                                    <div class="controls">
+                                        <span class="text bold">{{SessionCaisseUser.FondDeCaisse}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/span-->
+                            <!--/span-->
+                            <div class="span6">
+                                <div class="control-group">
+                                    <label class="control-label bold text-green" style="width:initial;">Total espèce theorique </label>
+                                    <div class="controls">
+                                        <span class="text bold text-green">{{SessionCaisseUser.TotalEspeceTheorique}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/span-->
                         </div>
-                    </div>
-                </div>
-                <!--/span-->
-                <div class="span6 ">
-                    <div class="control-group">
-                        <label class="control-label" style="width:initial;">Transaction en espèce </label>
-                        <div class="controls">
-                            <span class="text bold">{{SessionCaisseUser.TotalPaiement}}</span>
-                        </div>
-                    </div>
-                </div>
-                <!--/span-->
-            </div>
-            <!--/row-->
-            <div class="row-fluid">
-                <!--/span-->
-                <div class="span6">
-                    <div class="control-group">
-                        <label class="control-label" style="width:initial;">Fond de caisse </label>
-                        <div class="controls">
-                            <span class="text bold">{{SessionCaisseUser.FondDeCaisse}}</span>
-                        </div>
-                    </div>
-                </div>
-                <!--/span-->
 
-                <!--/span-->
-                <div class="span6">
-                    <div class="control-group">
-                        <label class="control-label bold text-green" style="width:initial;">Total espèce theorique </label>
-                        <div class="controls">
-                            <span class="text bold text-green">{{SessionCaisseUser.TotalEspeceTheorique}}</span>
+                        <div class="row-fluid">
+                            <!--/span-->
+                            <div class="offset6 span6">
+                                <div class="control-group">
+                                    <label class="control-label bold text-blue" style="width:initial;">Total espèce fermeture </label>
+                                    <div class="controls">
+                                        <span class="text bold text-blue">{{SessionCaisseUser.TotalEspeceFermeture}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/span-->
+                        </div>
+
+                        <div class="row-fluid" style="margin-bottom:10px;" ng-if="!SessionCaisseUser.IsClosed">
+                            <div class="span4" style="margin-top: 5px;">
+                                <span class="text-blue" style="font-style:italic; font-size:1.4em" ;>Total d'espèce à la fermeture</span>
+                            </div>
+                            <div class="span6">
+                                <input type="text" style="font-size:1.3em" class="span12 m-wrap bold" ng-change="CalculerDifference()" ng-model="SessionCaisseUser.TotalEspeceSaisi" />
+                            </div>
+                            <div class="span2">
+                                <button type="button" ng-if="SessionCaisseUser.TotalEspeceSaisi >= 0" class="btn green" data-toggle="modal" data-target="#fermetureCaisse"><i class="icon-lock"></i> Fermer la session</button>
+                            </div>
                         </div>
                     </div>
+                    <!-- END FORM-->
                 </div>
-                <!--/span-->
-            </div>
+                <div class="tab-pane" id="tab_historique">
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead>
+                            <tr role="row">
+                                <th role="columnheader">N°</th>
+                                <th role="columnheader">Date</th>
+                                <th role="columnheader">Opération</th>
+                                <th role="columnheader">Montant</th>
+                                <th role="columnheader">Client</th>
+                            </tr>
+                        </thead>
 
-            <div class="row-fluid">
-                <!--/span-->
-                <div class="offset6 span6">
-                    <div class="control-group">
-                        <label class="control-label bold text-blue" style="width:initial;">Total espèce fermeture </label>
-                        <div class="controls">
-                            <span class="text bold text-blue">{{SessionCaisseUser.TotalEspeceFermeture}}</span>
-                        </div>
-                    </div>
-                </div>
-                <!--/span-->
-            </div>
-
-            <div class="row-fluid" style="margin-bottom:10px;" ng-if="!SessionCaisseUser.IsClosed">
-                <div class="span4" style="margin-top: 5px;">
-                    <span class="text-blue" style="font-style:italic; font-size:1.4em" ;>Total d'espèce à la fermeture</span>
-                </div>
-                <div class="span6">
-                    <input type="text" style="font-size:1.3em" class="span12 m-wrap bold" ng-change="CalculerDifference()" ng-model="SessionCaisseUser.TotalEspeceSaisi" />
-                </div>
-                <div class="span2">
-                    <button type="button" ng-if="SessionCaisseUser.TotalEspeceSaisi >= 0" class="btn green" data-toggle="modal" data-target="#fermetureCaisse"><i class="icon-lock"></i> Fermer la session</button>
+                        <tbody role="alert" aria-live="polite" aria-relevant="all">
+                            <tr ng-repeat="journal in ListJournal">
+                                <td>{{$index + 1}}</td>
+                                <td>{{journal.Date | date : 'dd/MM/yyyy HH:mm'}}</td>
+                                <td>{{journal.Operation}} <span ng-if="journal.MontantFactureAvecVersement > 0"> de [<span class="text-bold">{{journal.MontantFactureAvecVersement}}</span>]</span></td>
+                                <td class="bold">{{journal.Montant}} F</td>
+                                <td>{{journal.Owner.NomComplet}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
-           
         </div>
-        <!-- END FORM-->
-
-        <!--<table class="table table-striped table-bordered table-hover">
-            <thead>
-                <tr role="row">
-                    <th role="columnheader">N°</th>
-                    <th role="columnheader">Date</th>
-                    <th role="columnheader">Opération</th>
-                    <th role="columnheader">Montant</th>
-                    <th role="columnheader">Client</th>
-                </tr>
-            </thead>
-
-            <tbody role="alert" aria-live="polite" aria-relevant="all">
-                <tr ng-repeat="journal in ListJournal">
-                    <td>{{$index + 1}}</td>
-                    <td>{{journal.Date | date : 'dd/MM/yyyy HH:mm'}}</td>
-                    <td>{{journal.Operation}}</td>
-                    <td class="bold">{{journal.Montant}} F</td>
-                    <td>{{journal.Owner.NomComplet}}</td>
-                </tr>
-            </tbody>
-        </table>-->
+    </div>
+    <div class="portlet-body form">
+        
     </div>
 </div>
 

@@ -16,7 +16,7 @@ namespace PoissonnerieApi.Tests.Controllers
 
             var produitId = 1;
             var produit = DataManager.Get<Produit>(produitId);
-            var quantite = produitController.CalculerQuantiteProduit(produit);
+            //var quantite = produitController.CalculerQuantiteProduit(produit);
         }
     }
 }

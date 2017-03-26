@@ -415,6 +415,22 @@ function ($rootScope, $scope, $http, $location, $cookies, $cookieStore, $routePa
         });
     }
 
+    //JOURNAL SESSION DE CAISSE
+    $rootScope.JOURNAL_SESSIONCAISSE_DATA = function () {
+        $http.get($rootScope.ServerURL + "Journal?user=" + $rootScope.Profil.Id)
+        .success(function (response) {
+            console.log(response);
+            if (response.ResponseCode == 0) { 
+                $scope.ListJournal = response.Data;
+            } else {//Error
+                $rootScope.Alert(response.Message);
+            }
+        })
+        .error(function (response) {
+            $rootScope.Alert($rootScope.NetworkError);
+        });
+    }
+
     //--END LISTE
 
     //Start Connexion-------------------------------
@@ -460,14 +476,10 @@ function ($rootScope, $scope, $http, $location, $cookies, $cookieStore, $routePa
                     $cookies.Profil = JSON.stringify(response.Data);
                     window.location = "index.html";
                 } else {
-                    //$rootScope.ErrorMessage = response.Message;
-                    //$("#errorAlert").removeClass("hide");
                     $rootScope.Alert(response.Message);
                 }
             })
             .error(function (response) {
-                //$("#errorAlert").removeClass("hide");
-                //$rootScope.ErrorMessage = response.Message;
                 $rootScope.Alert(response.Message);
             });
     }
@@ -672,8 +684,6 @@ MainController.controller('VenteController', ['$rootScope', '$scope', '$http','$
 function ($rootScope, $scope, $http, $filter) {
 
     $rootScope.PageName = "Vente au comptoir";
-    //$scope.MODE_VENTE_CASH = "_cash";
-    //$scope.MODE_VENTE_CLIENT = "_client";
 
     //Index de chargement des produits en fonction de la categorie
     $scope.SelectedItem = null;
@@ -815,17 +825,14 @@ function ($rootScope, $scope, $http, $filter) {
     }
 
     $scope.InfosFacture = {};
-    $scope.SendData = function (mode, print) {
-		//$scope.PrintDoPreview("factureCash");
-		//$scope.PrintDoPreview("factureClient");
-		
+    $scope.SendData = function (mode, print) {		
         $scope.Facture = {};
         $scope.Facture.Client = $scope.ClientSelected;
         $scope.Facture.User = $rootScope.Profil;
         $scope.Facture.Caisse = $scope.Caisse;
         $scope.Facture.Panier = $scope.Panier;
         $scope.Facture.MontantPercu = $scope.Caisse.MontantPercu;
-        $scope.Facture.Remise = $scope.Caisse.Remise;
+        //$scope.Facture.Remise = $scope.Caisse.Remise;
         
         $http.post($rootScope.ServerURL + "FacturesClient", $scope.Facture)
         .success(function (response) {
@@ -2141,6 +2148,66 @@ function ($rootScope, $scope, $http, $routeParams) {
             $rootScope.Alert($rootScope.NetworkError);
         });
     }
+
+    //JOURNAL SESSION DE CAISSE
+    $scope.CurrentSession = {};
+    $scope.JournalSessionCaisse = function (session) {
+        $scope.CurrentSession = session;
+        $scope.ListJournal = [];
+
+        $http.get($rootScope.ServerURL + "Journal?sessionCaisse=" + session.Id)
+        .success(function (response) {
+            console.log(response);
+            if (response.ResponseCode == 0) {
+                $scope.ListJournal = response.Data;
+            } else {//Error
+                $rootScope.Alert(response.Message);
+            }
+        })
+        .error(function (response) {
+            $rootScope.Alert($rootScope.NetworkError);
+        });
+    }
+
+    $scope.DelItem = {};
+    $scope.DelItemAction = function (journal, session) {
+        $scope.DelItem = journal;
+    }
+
+    //JOURNAL 
+    $scope.Del = function () {
+        if ($scope.DelItem.OpCode === "OP_FACTURE") {
+            $http.get($rootScope.ServerURL + "FacturesClient?del=" + $scope.DelItem.IdOperation)
+            .success(function (response) {
+                console.log(response);
+                if (response.ResponseCode == 0) {
+                    $rootScope.LISTE_SESSIONCAISSES_DATA($scope.idCaisse);
+                    $scope.JournalSessionCaisse($scope.CurrentSession);
+                } else {//Error
+                    $rootScope.Alert(response.Message);
+                }
+            })
+            .error(function (response) {
+                $rootScope.Alert($rootScope.NetworkError);
+            });
+        } else if ($scope.DelItem.OpCode === "OP_VERSEMENT") {
+            $http.get($rootScope.ServerURL + "Paiements?del=" + $scope.DelItem.IdOperation)
+            .success(function (response) {
+                console.log(response);
+                if (response.ResponseCode == 0) {
+                    $rootScope.LISTE_SESSIONCAISSES_DATA($scope.idCaisse);
+                    $scope.JournalSessionCaisse($scope.CurrentSession);
+                } else {//Error
+                    $rootScope.Alert(response.Message);
+                }
+            })
+            .error(function (response) {
+                $rootScope.Alert($rootScope.NetworkError);
+            });
+        }
+
+        
+    }
     
     $rootScope.LISTE_SESSIONCAISSES_DATA($scope.idCaisse);
 }]);
@@ -2163,17 +2230,16 @@ function ($rootScope, $scope, $http, $routeParams) {
             if (response.ResponseCode == 0) {
                 $rootScope.SESSIONCAISSE_USER_DATA();
             } else {//Error
-                console.log(response);
                 $rootScope.Alert(response.Message);
             }
         })
         .error(function (response) {
-            console.log(response);
             $rootScope.Alert($rootScope.NetworkError);
         });
     }
 
     $rootScope.SESSIONCAISSE_USER_DATA();
+    $rootScope.JOURNAL_SESSIONCAISSE_DATA();//Recuperer la derniere session
 }]);
 
 //InventaireDeStockController

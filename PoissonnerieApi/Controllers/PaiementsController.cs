@@ -30,6 +30,28 @@ namespace PoissonnerieApi.Controllers
             return responseData;
         }
 
+        [HttpGet]
+        public object SupprimerData(long del)
+        {
+            try
+            {
+                var paiement = DataManager.Get<Paiement>(del);
+                if (paiement == null)
+                {
+                    return ResponseData.GetError("L'information que vous essayez de supprimer l'existe pas.");
+                }
+
+                DataManager.Delete(paiement);
+                //Recuperer la session en cours
+                return ResponseData.GetSuccess("OK");
+            }
+            catch (Exception ex)
+            {
+                return ResponseData.GetError(ex.Message);
+            }
+
+        }
+
         public object Post([FromBody]JToken data)
         {
             ResponseData responseData;
