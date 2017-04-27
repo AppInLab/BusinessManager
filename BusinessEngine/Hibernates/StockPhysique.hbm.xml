@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="BusinessEngine.Models" assembly="BusinessEngine">
+  <class name="StockPhysique" table="StockPhysique" lazy="false">
+
+    <id name="Id">
+      <column name="Id"/>
+      <generator class="native"/>
+    </id>
+    
+    <property name="DateCreation">
+      <column name="DateCreation"/>
+    </property>
+    
+    <property name="QuantiteStockBlock">
+      <column name="QuantiteStockBlock"/>
+    </property>
+    
+    <property name="QuantiteStockResteEnUnite">
+      <column name="QuantiteStockResteEnUnite"/>
+    </property>
+
+    <many-to-one name ="Caisse" lazy="false" class ="Caisse" column="Caisse"/>
+    <many-to-one name ="Produit" lazy="false" class ="Produit" column="Produit"/>
+  
+  </class>
+</hibernate-mapping>

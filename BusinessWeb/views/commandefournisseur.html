@@ -33,7 +33,7 @@
                             <span ng-if="cmdFournisseur.EstLieABonReception" style="color:green"><i class="icon-ok-circle"></i> Transférée</span>
                         </td>
                         <td>
-                            <a href="" data-toggle="modal" data-target="#detailscommandefournisseur" ng-click="InfosBonReception(cmdFournisseur)" class="btn mini blue"><i class="icon-info"></i></a>
+                            <button data-toggle="modal" data-target="#detailscommandefournisseur" ng-click="InfosBonReception(cmdFournisseur)" class="btn mini blue"><i class="icon-info"></i></button>
                             <a ng-if="!cmdFournisseur.EstLieABonReception"  href="#/EditerCommandeFournisseur/{{cmdFournisseur.Id}}" class="btn mini green"><i class="icon-edit"></i></a>
                             <a ng-if="!cmdFournisseur.EstLieABonReception" href="" class="btn mini red"><i class="icon-trash"></i></a>
                         </td>
@@ -66,7 +66,7 @@
     </div>
 </div>
 
-<div id="commandefournisseur" class="modal hide fade" tabindex="-1" data-width="760" aria-hidden="true">
+<div id="commandefournisseur" class="modal container hide fade" tabindex="-1" aria-hidden="true">
     <div class="modal-header">
         <button type="button" ng-click="Annuler()" class="close" data-dismiss="modal" aria-hidden="true"></button>
         <h3>Editer un fournisseur</h3>
@@ -105,7 +105,7 @@
     </div>
 </div>
 
-<div id="detailscommandefournisseur" class="modal hide fade" tabindex="-1" data-width="760" aria-hidden="true">
+<div id="detailscommandefournisseur" class="modal container hide fade" tabindex="-1" aria-hidden="true">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
         <h3>Details commande</h3>

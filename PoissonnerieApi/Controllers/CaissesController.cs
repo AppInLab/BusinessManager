@@ -68,29 +68,26 @@ namespace PoissonnerieApi.Controllers
                 }
 
                 var caisse = DataManager.Get<Caisse>(cloturer);
-                
                 if (caisse == null)
                 {
-                    responseData = ResponseData.GetError("Caisse introuvable !");
+                    return ResponseData.GetError("Caisse introuvable !");
                 }
-                else
+                
+                if (caisse.IsClosed)
                 {
-                    if (caisse.IsClosed)
-                    {
-                        return ResponseData.GetError("La caisse a déjà été fermer !");
-                    }
-
-                    //Verifier que toutes les sessions de caisse sont cloturées
-                    var sessionsDeCaisse = DataManager.GetSessionCaisseOuvertes(caisse.Id);
-                    if(sessionsDeCaisse.Any())
-                        return ResponseData.GetError("Impossible de cloturer la caisse. Fermer les sessions de caisse en cours puis réessayer.");
-
-                    caisse.IsClosed = true;
-                    caisse.DateCloture = DateTime.UtcNow;
-                    caisse.ClotureePar = _user;
-                    DataManager.Save(caisse);
-                    responseData = ResponseData.GetSuccess(caisse);
+                    return ResponseData.GetError("La caisse a déjà été fermer !");
                 }
+
+                //Verifier que toutes les sessions de caisse sont cloturées
+                var sessionsDeCaisse = DataManager.GetSessionCaisseOuvertes(caisse.Id);
+                if(sessionsDeCaisse.Any())
+                    return ResponseData.GetError("Impossible de cloturer la caisse. Fermer les sessions de caisse en cours puis réessayer.");
+
+                caisse.IsClosed = true;
+                caisse.DateCloture = DateTime.UtcNow;
+                caisse.ClotureePar = _user;
+                DataManager.Save(caisse);
+                responseData = ResponseData.GetSuccess(caisse);
             }
             catch (Exception ex)
             {

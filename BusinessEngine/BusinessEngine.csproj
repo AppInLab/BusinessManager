@@ -67,6 +67,8 @@
     <Compile Include="Entity.cs" />
     <Compile Include="Manager\DataManager.cs" />
     <Compile Include="Models\DetailsTransfert.cs" />
+    <Compile Include="Models\SortieDeCaisse.cs" />
+    <Compile Include="Models\StockPhysique.cs" />
     <Compile Include="Models\Transfert.cs" />
     <Compile Include="Models\CommandesFournisseur.cs" />
     <Compile Include="Models\SessionCaisse.cs" />
@@ -77,7 +79,6 @@
     <Compile Include="Models\BonReceptionFournisseur.cs" />
     <Compile Include="Models\DetailsBonReceptionFournisseur.cs" />
     <Compile Include="Models\DetailsCommandesFournisseur.cs" />
-    <Compile Include="Models\SortieDeCaisse.cs" />
     <Compile Include="Models\Unite.cs" />
     <Compile Include="Models\ProduitsSortieChineur.cs" />
     <Compile Include="Models\Caisse.cs" />
@@ -103,6 +104,7 @@
     <Content Include="ExternalDLLs\MySql.Data.dll" />
     <Content Include="ExternalDLLs\Newtonsoft.Json.dll" />
     <Content Include="ExternalDLLs\NHibernate.dll" />
+    <EmbeddedResource Include="Hibernates\StockPhysique.hbm.xml" />
     <EmbeddedResource Include="Hibernates\DetailsTransfert.hbm.xml">
       <SubType>Designer</SubType>
     </EmbeddedResource>

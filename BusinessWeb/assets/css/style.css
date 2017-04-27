@@ -5664,6 +5664,11 @@ div.radio.disabled:hover {
     font-weight: bold;
 }
 
+.text-red{
+    color:#e02222;
+    font-weight: bold;
+}
+
 #alertbox{
     display:block;
     position:absolute;

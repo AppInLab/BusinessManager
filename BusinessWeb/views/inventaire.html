@@ -17,6 +17,8 @@
                         <th role="columnheader">Stock vendu</th>
                         <th role="columnheader">Stock transferé</th>
                         <th role="columnheader">Stock final</th>
+                        <th role="columnheader">Stock Physique</th>
+                        <th role="columnheader">Stock Diff.</th>
                     </tr>
                 </thead>
 
@@ -91,6 +93,42 @@
                             <div ng-class="{'text-blue':inventaire.IsVendu}" ng-if="!inventaire.Produit.Unite.IsBlock">
                                 <span>
                                     {{inventaire.StockFinalBlock}} {{inventaire.Produit.Unite.Libelle | limitTo : 4}}{{inventaire.Produit.Unite.Libelle.length > 4 ? '.' : ''}}
+                                </span>
+                            </div>
+                        </td>
+
+                        <td>
+                            <div ng-class="{'text-blue':inventaire.IsVendu}" ng-if="inventaire.Produit.Unite.IsBlock">
+                                <span>
+                                    {{inventaire.StockPhysiqueBlock}} {{inventaire.Produit.Block.Libelle | limitTo : 4}}{{inventaire.Produit.Block.Libelle.length > 4 ? '.' : ''}}
+                                </span>
+
+                                <span ng-if="inventaire.StockPhysiqueResteUnite != 0">
+                                    {{inventaire.StockPhysiqueResteUnite}} {{inventaire.Produit.Unite.Libelle | limitTo : 4}}{{inventaire.Produit.Unite.Libelle.length > 4 ? '.' : ''}}
+                                </span>
+                            </div>
+
+                            <div ng-class="{'text-blue':inventaire.IsVendu}" ng-if="!inventaire.Produit.Unite.IsBlock">
+                                <span>
+                                    {{inventaire.StockPhysiqueBlock}} {{inventaire.Produit.Unite.Libelle | limitTo : 4}}{{inventaire.Produit.Unite.Libelle.length > 4 ? '.' : ''}}
+                                </span>
+                            </div>
+                        </td>
+
+                        <td>
+                            <div ng-class="{'text-red':(inventaire.StockDiffBlock != 0 || inventaire.StockDiffResteUnite != 0)}" ng-if="inventaire.Produit.Unite.IsBlock">
+                                <span>
+                                    {{inventaire.StockDiffBlock}} {{inventaire.Produit.Block.Libelle | limitTo : 4}}{{inventaire.Produit.Block.Libelle.length > 4 ? '.' : ''}}
+                                </span>
+
+                                <span ng-if="inventaire.StockDiffResteUnite != 0">
+                                    {{inventaire.StockDiffResteUnite}} {{inventaire.Produit.Unite.Libelle | limitTo : 4}}{{inventaire.Produit.Unite.Libelle.length > 4 ? '.' : ''}}
+                                </span>
+                            </div>
+
+                            <div ng-class="{'text-red':(inventaire.StockDiffBlock != inventaire.StockPhysiqueBlock)}" ng-if="!inventaire.Produit.Unite.IsBlock">
+                                <span>
+                                    {{inventaire.StockDiffBlock}} {{inventaire.Produit.Unite.Libelle | limitTo : 4}}{{inventaire.Produit.Unite.Libelle.length > 4 ? '.' : ''}}
                                 </span>
                             </div>
                         </td>

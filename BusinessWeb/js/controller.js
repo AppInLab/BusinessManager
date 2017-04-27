@@ -181,7 +181,7 @@ function ($rootScope, $scope, $http, $location, $cookies, $cookieStore, $routePa
         });
     }
 
-    //PRODUITS
+    //PRODUITS 
     $rootScope.LISTE_PRODUITS_DATA = function () {
         $http.get($rootScope.ServerURL + "Produits")
         .success(function (response) {
@@ -2008,8 +2008,15 @@ function ($rootScope, $scope, $http) {
 
     $rootScope.PageName = "Caisse";
 
-    $scope.CloturerCaisse = function (caisse) {
-        $http.get($rootScope.ServerURL + "Caisses?cloturer=" + caisse + "&user=" + $scope.Profil.Id)
+    $scope.CloturerCaisse = function () {
+
+        $scope.Data = {
+            ListStockPhysique: $scope.StockPhysiques,
+            CaisseId: $scope.CaisseInventairePhysique,
+            UserId: $scope.Profil.Id
+        };
+
+        $http.post($rootScope.ServerURL + "Stocks", $scope.Data)
         .success(function (response) {
             console.log(response);
             if (response.ResponseCode == 0) {
@@ -2041,6 +2048,33 @@ function ($rootScope, $scope, $http) {
             console.log(response);
             $rootScope.Alert($rootScope.NetworkError);
         });
+    }
+
+    //PRODUITS 
+    $scope.GetProduisSansQuantite = function () {
+        $http.get($rootScope.ServerURL + "Stocks")
+        .success(function (response) {
+            console.log(response);
+            if (response.ResponseCode == 0) {
+                $scope.StockPhysiques = response.Data;
+            } else {//Error
+                console.log(response);
+                $rootScope.Alert(response.Message);
+            }
+        })
+        .error(function (response) {
+            console.log(response);
+            $rootScope.Alert($rootScope.NetworkError);
+        });
+    }
+
+    $scope.CaisseInventairePhysique = null;
+    $scope.GetProduitsPourInventairePhysique = function (caisse) {
+        $scope.CaisseInventairePhysique = caisse;
+
+        //Recuperations de tous les produits
+        //$rootScope.LISTE_PRODUITS_DATA();
+        $scope.GetProduisSansQuantite();
     }
 
     $rootScope.LISTE_CAISSES_DATA();

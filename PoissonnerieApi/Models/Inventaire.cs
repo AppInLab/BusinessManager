@@ -20,6 +20,15 @@ namespace PoissonnerieApi.Models
 
         public decimal StockFinalBlock { get; set; }
         public decimal StockFinalResteUnite { get; set; }
+
+        public decimal StockPhysiqueBlock { get; set; }
+        public decimal StockPhysiqueResteUnite { get; set; }
+
+        //StockPhysiqueBlock - StockFinalBlock
+        public decimal StockDiffBlock { get; set; }
+        //StockPhysiqueResteUnite - StockFinalResteUnite
+        public decimal StockDiffResteUnite { get; set; }
+
         public bool IsVendu { get; set; }
 
     }

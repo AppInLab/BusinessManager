@@ -16,15 +16,26 @@ namespace PoissonnerieApi.Controllers
     {
 
         // GET api/produits
-        public object GetAll()
+        public object GetAll(bool withQuantity = true)
         {
             ResponseData responseData;
             try
             {
                 var produits = DataManager.GetAll<Produit>();
-                foreach (var produit in produits)
+                if (withQuantity)
                 {
-                    CalculerQuantiteProduit(produit);
+                    foreach (var produit in produits)
+                    {
+                        CalculerQuantiteProduit(produit);
+                    }
+                }
+                else
+                {
+                    foreach (var prod in produits)
+                    {
+                        prod.QuantiteStockBlock = 0;
+                        prod.QuantiteStockResteEnUnite = 0;
+                    }
                 }
                 responseData = ResponseData.GetSuccess(produits);
             }
@@ -193,7 +204,6 @@ namespace PoissonnerieApi.Controllers
                     }
                     #endregion
 
-
                     #region STOCK FINAL
                     var produitsFinaux = produitsInitial - produitsVendus - transfereEffectue;
                     if (produit.Unite.IsBlock)
@@ -201,6 +211,33 @@ namespace PoissonnerieApi.Controllers
                     else
                         inv.StockFinalBlock = produitsFinaux / produit.UniteParBlock;
                     inv.StockFinalResteUnite = produitsFinaux % produit.UniteParBlock;
+                    #endregion
+
+                    #region STOCK PHYSIQUE
+                    decimal produitsStockPhysiques = 0;
+
+                    var stockPhysique = DataManager.GetStockPhysique(_caisse.Id, produit.Id);
+                    if (stockPhysique != null)
+                    {
+                        inv.StockPhysiqueBlock = stockPhysique.QuantiteStockBlock;
+                        inv.StockPhysiqueResteUnite = stockPhysique.QuantiteStockResteEnUnite;
+
+                        if (produit.Unite.IsBlock)
+                        {
+                            produitsStockPhysiques = (stockPhysique.QuantiteStockBlock * produit.UniteParBlock);
+                            produitsStockPhysiques += stockPhysique.QuantiteStockResteEnUnite;
+                        }
+                        else
+                        {
+                            produitsStockPhysiques = (stockPhysique.QuantiteStockBlock * produit.UniteParBlock);
+                        }
+                    }
+
+                    var diff = produitsStockPhysiques - produitsFinaux;
+                    inv.StockDiffBlock = diff / produit.UniteParBlock;
+                    if (produit.Unite.IsBlock)
+                        inv.StockDiffBlock = (long)(inv.StockDiffBlock);
+                    inv.StockDiffResteUnite = diff % produit.UniteParBlock;
                     #endregion
 
                     listInventaire.Add(inv);
