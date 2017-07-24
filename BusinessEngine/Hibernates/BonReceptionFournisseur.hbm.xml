@@ -28,5 +28,6 @@
 
     <many-to-one name ="Fournisseur" lazy="false" class ="Fournisseur" column="Fournisseur"/>
     <many-to-one name ="CommandesFournisseur" lazy="false" class ="CommandesFournisseur" column="CommandesFournisseur"/>
+    <many-to-one name ="RetourFacturesClient" lazy="false" class ="RetourFacturesClient" column="RetourFacturesClient"/>
   </class>
 </hibernate-mapping>

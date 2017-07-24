@@ -176,6 +176,38 @@ namespace PoissonnerieApi.Controllers
                     #region STOCK VENDU
                     //Facture client vendu
                     var facturesClientVendu = DataManager.GetListProduitsVenduParFactures(produit.Id, _caisse.DateOuverture);
+                    inv.DetailsFactureClient = facturesClientVendu;
+
+                    foreach(var detailsFacture in inv.DetailsFactureClient){
+
+                        if (detailsFacture.Produit.Unite.IsBlock)
+                        {
+                            if (detailsFacture.TypeColisage == Constants.TYPE_BLOCK_KEY)
+                            {
+                                detailsFacture.QuantiteBlock = detailsFacture.Quantite;
+                            }
+                            else
+                            {
+                                detailsFacture.QuantiteResteUnite = detailsFacture.Quantite;
+                            }
+                        }
+                        else
+                        {
+                            detailsFacture.QuantiteBlock = detailsFacture.Quantite;
+                        }
+
+                        //if (detailsFacture.TypeColisage == Constants.TYPE_BLOCK_KEY)
+                        //{
+                        //    detailsFacture.QuantiteBlock = detailsFacture.Quantite;
+                        //}
+                        //else if (detailsFacture.TypeColisage == Constants.TYPE_UNITE_KEY)
+                        //{
+                        //    detailsFacture.QuantiteResteUnite = detailsFacture.Quantite;
+                        //}
+                        //else
+                        //    detailsFacture.QuantiteBlock = detailsFacture.Quantite;
+                    }
+
                     var produitsVendus = CalculerQuantiteSortieDuStockProduits(produit, facturesClientVendu);
 
                     var listTransfereEffectue = DataManager.GetListProduitsTransferes(produit.Id, _caisse.DateOuverture);

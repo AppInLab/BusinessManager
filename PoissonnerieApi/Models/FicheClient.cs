@@ -13,5 +13,6 @@ namespace PoissonnerieApi.Models
         public List<Paiement> Paiements { get; set; }
         public List<Produit> Produits { get; set; }
         public List<FacturesClient> Factures { get; set; }
+        public List<RetourFacturesClient> RetourFactures { get; set; }
     }
 }

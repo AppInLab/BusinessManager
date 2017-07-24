@@ -23,7 +23,7 @@
                 </thead>
 
                 <tbody role="alert" aria-live="polite" aria-relevant="all">
-                    <tr dir-paginate="inventaire in Inventaires | itemsPerPage: 60">
+                    <tr ng-repeat="inventaire in Inventaires">
                         <td>{{inventaire.Produit.Categorie.Libelle}}</td>
                         <td>{{inventaire.Produit.Libelle}}</td>
                         <td>
@@ -44,21 +44,23 @@
                             </div>
                         </td>
                         <td>
-                            <div ng-class="{'text-blue':inventaire.IsVendu}" ng-if="inventaire.Produit.Unite.IsBlock">
-                                <span>
-                                    {{inventaire.StockVenduBlock}} {{inventaire.Produit.Block.Libelle | limitTo : 4}}{{inventaire.Produit.Block.Libelle.length > 4 ? '.' : ''}}
-                                </span>
+                            <a data-toggle="modal" data-target="#detailsProduitsVendu" ng-click="detailsProduits(inventaire)">
+                                <div ng-class="{'text-blue':inventaire.IsVendu}" ng-if="inventaire.Produit.Unite.IsBlock">
+                                    <span>
+                                        {{inventaire.StockVenduBlock}} {{inventaire.Produit.Block.Libelle | limitTo : 4}}{{inventaire.Produit.Block.Libelle.length > 4 ? '.' : ''}}
+                                    </span>
 
-                                <span ng-if="inventaire.StockVenduResteUnite != 0">
-                                    {{inventaire.StockVenduResteUnite}} {{inventaire.Produit.Unite.Libelle | limitTo : 4}}{{inventaire.Produit.Unite.Libelle.length > 4 ? '.' : ''}}
-                                </span>
-                            </div>
+                                    <span ng-if="inventaire.StockVenduResteUnite != 0">
+                                        {{inventaire.StockVenduResteUnite}} {{inventaire.Produit.Unite.Libelle | limitTo : 4}}{{inventaire.Produit.Unite.Libelle.length > 4 ? '.' : ''}}
+                                    </span>
+                                </div>
 
-                            <div ng-class="{'text-blue':inventaire.IsVendu}" ng-if="!inventaire.Produit.Unite.IsBlock">
-                                <span>
-                                    {{inventaire.StockVenduBlock}} {{inventaire.Produit.Unite.Libelle | limitTo : 4}}{{inventaire.Produit.Unite.Libelle.length > 4 ? '.' : ''}}
-                                </span>
-                            </div>
+                                <div ng-class="{'text-blue':inventaire.IsVendu}" ng-if="!inventaire.Produit.Unite.IsBlock">
+                                    <span>
+                                        {{inventaire.StockVenduBlock}} {{inventaire.Produit.Unite.Libelle | limitTo : 4}}{{inventaire.Produit.Unite.Libelle.length > 4 ? '.' : ''}}
+                                    </span>
+                                </div>
+                            </a>
                         </td>
 
                         <td>
@@ -136,46 +138,76 @@
                 </tbody>
             </table>
 
-            <div class="row-fluid">
+            <!--<div class="row-fluid">
                 <div class="span12">
                     <div class="dataTables_paginate paging_bootstrap pagination">
                         <dir-pagination-controls></dir-pagination-controls>
                     </div>
                 </div>
-            </div>
+            </div>-->
         </div>
     </div>
 </div>
 
-<div id="client" class="modal hide fade" tabindex="-1" data-width="760" aria-hidden="true">
+<div id="detailsProduitsVendu" class="modal hide fade" tabindex="-1" data-width="760" aria-hidden="true">
     <div class="modal-header">
-        <button type="button" ng-click="Annuler()" class="close" data-dismiss="modal" aria-hidden="true"></button>
-        <h3>Editer un client</h3>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+        <h3>Details des produits</h3>
     </div>
     <div class="modal-body">
         <div class="row-fluid">
-            <div class="control-group">
-                <label class="control-label">Nom complet<span class="required">*</span></label>
-                <div class="controls">
-                    <input type="text" class="span12 m-wrap" ng-model="Client.NomComplet">
-                </div>
-            </div>
-            <div class="control-group">
-                <label class="control-label">Adresse</label>
-                <div class="controls">
-                    <input type="text" class="span12 m-wrap" ng-model="Client.Adresse">
-                </div>
-            </div>
-            <div class="control-group">
-                <label class="control-label">Contacts<span class="required">*</span></label>
-                <div class="controls">
-                    <input type="text" class="span12 m-wrap" ng-model="Client.Contacts">
+            <div class="span12 responsive" data-tablet="span6" data-desktop="span12">
+                <!--<div class="title2">Détails de la note</div>-->
+                <div id="detailVente" class="flip-scroll" style="height:250px;">
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead>
+                            <tr role="row">
+                                <th role="columnheader">N°</th>
+                                <th role="columnheader">Date</th>
+                                <th role="columnheader">Client</th>
+                                <th role="columnheader">Nombre de produit</th>
+                                <!--<th role="columnheader">Facture N</th>-->
+                                <!--<th role="columnheader">Utilisateur</th>-->
+                            </tr>
+                        </thead>
+
+                        <tbody role="alert" aria-live="polite" aria-relevant="all">
+                            <tr ng-repeat="facture in detailsFactureClient">
+                                <td>{{$index + 1}}</td>
+                                <td>{{facture.DateCreation | date : 'dd/MM/yyyy HH:mm'}}</td>
+                                <td class="bold">
+                                    <span ng-if="facture.FacturesClient.Client.NomComplet.length > 0">{{facture.FacturesClient.Client.NomComplet}}</span>
+                                    <span ng-if="!facture.FacturesClient.Client.NomComplet || facture.FacturesClient.Client.NomComplet.length <= 0" class="text-red">CLIENT CASH</span>
+                                    
+                                </td>
+                                <td>
+                                    <!--{{facture.Quantite}}-->
+                                    <div ng-if="facture.Produit.Unite.IsBlock">
+                                        <span>
+                                            {{facture.QuantiteBlock}} {{facture.Produit.Block.Libelle | limitTo : 4}}{{facture.Produit.Block.Libelle.length > 4 ? '.' : ''}}
+                                        </span>
+
+                                        <span ng-if="facture.QuantiteResteUnite != 0">
+                                            {{facture.QuantiteResteUnite}} {{facture.Produit.Unite.Libelle | limitTo : 4}}{{facture.Produit.Unite.Libelle.length > 4 ? '.' : ''}}
+                                        </span>
+                                    </div>
+
+                                    <div ng-if="!facture.Produit.Unite.IsBlock">
+                                        <span>
+                                            {{facture.QuantiteBlock}} {{facture.Produit.Unite.Libelle | limitTo : 4}}{{facture.Produit.Unite.Libelle.length > 4 ? '.' : ''}}
+                                        </span>
+                                    </div>
+                                </td>
+                                <!--<td>{{facture.Monnaie}}</td>-->
+                                <!--<td>{{facture.SessionCaisse.User.Login}}</td>-->
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
     <div class="modal-footer">
-        <button type="button" data-dismiss="modal" class="btn" ng-click="Annuler()">Annuler</button>
-        <button type="button" class="btn blue" data-dismiss="modal" ng-click="SendData()">Valider</button>
+        <button type="button" data-dismiss="modal" class="btn">Fermer</button>
     </div>
 </div>

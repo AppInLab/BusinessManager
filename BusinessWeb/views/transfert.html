@@ -20,7 +20,7 @@
                 </thead>
 
                 <tbody role="alert" aria-live="polite" aria-relevant="all">
-                    <tr dir-paginate="transfert in Transferts | itemsPerPage: 15">
+                    <tr ng-repeat="transfert in Transferts">
                         <td>{{$index + 1}}</td>
                         <td>{{transfert.DateCreation | date : 'dd/MM/yyyy HH:mm'}}</td>
                         <td>{{transfert.Commentaire}}</td>
@@ -31,21 +31,13 @@
                         </td>
                         <td>{{transfert.DateTransfertEffectue | date : 'dd/MM/yyyy HH:mm'}}</td>
                         <td>
-                            <a href="" data-toggle="modal" data-target="#detailstransfert" ng-click="InfosTransfert(transfert)" class="btn mini blue"><i class="icon-info"></i></a>
+                            <a data-toggle="modal" data-target="#detailstransfert" ng-click="InfosTransfert(transfert)" class="btn mini blue"><i class="icon-info"></i></a>
                             <!--<a ng-if="!transfert.MarquerTransfere" href="#/EditerBonReceptionFournisseur/{{transfert.Id}}" class="btn mini green"><i class="icon-edit"></i></a>-->
                             <!--<a ng-if="!transfert.MarquerTransfere" href="" class="btn mini red"><i class="icon-trash"></i></a>-->
                         </td>
                     </tr>
                 </tbody>
             </table>
-
-            <div class="row-fluid">
-                <div class="span12">
-                    <div class="dataTables_paginate paging_bootstrap pagination">
-                        <dir-pagination-controls></dir-pagination-controls>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </div>

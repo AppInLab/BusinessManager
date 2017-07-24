@@ -92,6 +92,17 @@ namespace BusinessEngine.Manager
             }
         }
 
+        public static T Get<T>(string fielName, string value)
+        {
+            using (ISession session = Dao.GetCurrentSession())
+            {
+                var classeName = typeof(T).Name;
+                IQuery req = session.CreateQuery("SELECT x FROM " + classeName + " x WHERE x." + fielName + " = ?");
+                req.SetString(0, value);
+                return req.List<T>().FirstOrDefault();
+            }
+        }
+
         public static List<T> GetList<T>(string fielName, long value)
         {
             using (ISession session = Dao.GetCurrentSession())
@@ -171,8 +182,25 @@ namespace BusinessEngine.Manager
             {
                 IQuery req = session.CreateQuery("SELECT x FROM FacturesClient x WHERE x.Client = :clientId ORDER BY x.DateCreation DESC");
                 req.SetInt64("clientId", clientId);
-                req.SetMaxResults(max);
+
+                if (max > 0)
+                    req.SetMaxResults(max);
+
                 return (List<FacturesClient>)req.List<FacturesClient>();
+            }
+        }
+
+        public static List<RetourFacturesClient> GetListRetourFacturesClient(long clientId, int max = 100)
+        {
+            using (ISession session = Dao.GetCurrentSession())
+            {
+                IQuery req = session.CreateQuery("SELECT x FROM RetourFacturesClient x WHERE x.FacturesClient.Client = :clientId ORDER BY x.DateCreation DESC");
+                req.SetInt64("clientId", clientId);
+
+                if (max > 0)
+                    req.SetMaxResults(max);
+
+                return (List<RetourFacturesClient>)req.List<RetourFacturesClient>();
             }
         }
 
@@ -189,12 +217,66 @@ namespace BusinessEngine.Manager
             }
         }
 
+        public static decimal GetSumRetourFactures(long factureId)
+        {
+            using (ISession session = Dao.GetCurrentSession())
+            {
+                IQuery req = session.CreateQuery("SELECT ( SUM(x.Quantite * x.PrixUnitaire) + ((x.Tva/100) * SUM(x.Quantite * x.PrixUnitaire))) FROM DetailsRetourFacturesClient x WHERE x.RetourFacturesClient = :factureId");
+                req.SetInt64("factureId", factureId);
+
+                var result = req.UniqueResult();
+                if (result == null) return 0;
+                return (decimal)req.UniqueResult();
+            }
+        }
+
         public static decimal GetSumFacturesParClients(long clientId)
         {
             using (ISession session = Dao.GetCurrentSession())
             {
                 IQuery req = session.CreateQuery("SELECT ( SUM(x.Quantite * x.PrixUnitaire) + ((x.Tva/100) * SUM(x.Quantite * x.PrixUnitaire))) FROM DetailsFacturesClient x WHERE x.FacturesClient.Client = :clientId");
                 req.SetInt64("clientId", clientId);
+
+                var result = req.UniqueResult();
+                if (result == null) return 0;
+                return (decimal)req.UniqueResult();
+            }
+        }
+
+        public static decimal GetSumFacturesParClients(long clientId, DateTime date)
+        {
+            using (ISession session = Dao.GetCurrentSession())
+            {
+                IQuery req = session.CreateQuery("SELECT ( SUM(x.Quantite * x.PrixUnitaire) + ((x.Tva/100) * SUM(x.Quantite * x.PrixUnitaire))) FROM DetailsFacturesClient x WHERE x.FacturesClient.Client = :clientId AND x.DateCreation <= :date");
+                req.SetInt64("clientId", clientId);
+                req.SetDateTime("date", date.Date);
+
+                var result = req.UniqueResult();
+                if (result == null) return 0;
+                return (decimal)req.UniqueResult();
+            }
+        }
+
+        public static decimal GetSumRetourFacturesParClients(long clientId)
+        {
+            using (ISession session = Dao.GetCurrentSession())
+            {
+                IQuery req = session.CreateQuery("SELECT ( SUM(x.Quantite * x.PrixUnitaire) + ((x.Tva/100) * SUM(x.Quantite * x.PrixUnitaire))) FROM DetailsRetourFacturesClient x WHERE x.RetourFacturesClient.FacturesClient.Client = :clientId");
+                req.SetInt64("clientId", clientId);
+
+                var result = req.UniqueResult();
+                if (result == null) return 0;
+                return (decimal)req.UniqueResult();
+            }
+        }
+
+        public static decimal GetSumRetourFacturesParClients(long clientId, DateTime date)
+        {
+            using (ISession session = Dao.GetCurrentSession())
+            {
+                IQuery req = session.CreateQuery("SELECT ( SUM(x.Quantite * x.PrixUnitaire) + ((x.Tva/100) * SUM(x.Quantite * x.PrixUnitaire))) FROM DetailsRetourFacturesClient x WHERE x.RetourFacturesClient.FacturesClient.Client = :clientId AND x.DateCreation <= :date");
+                req.SetInt64("clientId", clientId);
+                req.SetDateTime("date", date.Date);
 
                 var result = req.UniqueResult();
                 if (result == null) return 0;
@@ -364,7 +446,10 @@ namespace BusinessEngine.Manager
             {
                 IQuery req = session.CreateQuery("SELECT x FROM Paiement x WHERE x.Client = :clientId AND x.IsSoldeInitial = false ORDER BY x.DateCreation DESC");
                 req.SetInt64("clientId", clientId);
-                req.SetMaxResults(max);
+
+                if(max > 0)
+                    req.SetMaxResults(max);
+
                 return (List<Paiement>)req.List<Paiement>();
             }
         }
@@ -402,12 +487,26 @@ namespace BusinessEngine.Manager
             }
         }
 
-        public static decimal GetSumPaiementParCLient(long idClient)
+        public static decimal GetSumPaiementParClient(long idClient)
         {
             using (ISession session = Dao.GetCurrentSession())
             {
                 IQuery req = session.CreateQuery("SELECT SUM(x.Versement) FROM Paiement x WHERE x.Client = :idClient");
                 req.SetInt64("idClient", idClient);
+
+                var result = req.UniqueResult();
+                if (result == null) return 0;
+                return req.UniqueResult<decimal>();
+            }
+        }
+
+        public static decimal GetSumPaiementParClient(long idClient, DateTime date)
+        {
+            using (ISession session = Dao.GetCurrentSession())
+            {
+                IQuery req = session.CreateQuery("SELECT SUM(x.Versement) FROM Paiement x WHERE x.Client = :idClient AND x.DateCreation <= :date");
+                req.SetInt64("idClient", idClient);
+                req.SetDateTime("date", date.Date);
 
                 var result = req.UniqueResult();
                 if (result == null) return 0;

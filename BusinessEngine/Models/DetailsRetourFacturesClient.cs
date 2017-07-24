@@ -2,12 +2,12 @@
 using System;
 namespace BusinessEngine.Models
 {
-    public class DetailsFacturesClient : Entity
+    public class DetailsRetourFacturesClient : Entity
     {
         virtual public int Id { get; set; }
         virtual public DateTime DateCreation { get; set; }
         virtual public Produit Produit { get; set; }
-        virtual public FacturesClient FacturesClient { get; set; }
+        virtual public RetourFacturesClient RetourFacturesClient { get; set; }
         virtual public decimal Quantite { get; set; }
         virtual public decimal PrixUnitaire { get; set; }
         virtual public decimal Tva { get; set; }
@@ -15,7 +15,6 @@ namespace BusinessEngine.Models
         
         //Pas en base
         virtual public decimal MontantTtc { get; set; }
-        public decimal QuantiteBlock { get; set; }
-        public decimal QuantiteResteUnite { get; set; }
+        virtual public decimal QuantiteDisponible { get; set; }
     }
 }

@@ -66,7 +66,9 @@
     <Compile Include="DataModel\PanierItem.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="Manager\DataManager.cs" />
+    <Compile Include="Models\DetailsRetourFacturesClient.cs" />
     <Compile Include="Models\DetailsTransfert.cs" />
+    <Compile Include="Models\RetourFacturesClient.cs" />
     <Compile Include="Models\SortieDeCaisse.cs" />
     <Compile Include="Models\StockPhysique.cs" />
     <Compile Include="Models\Transfert.cs" />
@@ -90,7 +92,6 @@
     <Compile Include="Models\PrivilegesUser.cs" />
     <Compile Include="Models\Produit.cs" />
     <Compile Include="Models\ProduitsSortieClient.cs" />
-    <Compile Include="Models\ProduitsApprovisionnement.cs" />
     <Compile Include="Models\ProduitsBonLivraison.cs" />
     <Compile Include="Models\Depot.cs" />
     <Compile Include="Models\TypeTransaction.cs" />
@@ -104,6 +105,8 @@
     <Content Include="ExternalDLLs\MySql.Data.dll" />
     <Content Include="ExternalDLLs\Newtonsoft.Json.dll" />
     <Content Include="ExternalDLLs\NHibernate.dll" />
+    <EmbeddedResource Include="Hibernates\DetailsRetourFacturesClient.hbm.xml" />
+    <EmbeddedResource Include="Hibernates\RetourFacturesClient.hbm.xml" />
     <EmbeddedResource Include="Hibernates\StockPhysique.hbm.xml" />
     <EmbeddedResource Include="Hibernates\DetailsTransfert.hbm.xml">
       <SubType>Designer</SubType>
@@ -138,7 +141,6 @@
     <EmbeddedResource Include="Hibernates\PrivilegesUser.hbm.xml" />
     <EmbeddedResource Include="Hibernates\Produit.hbm.xml" />
     <EmbeddedResource Include="Hibernates\ProduitsSortieClient.hbm.xml" />
-    <EmbeddedResource Include="Hibernates\ProduitsApprovisionnement.hbm.xml" />
     <EmbeddedResource Include="Hibernates\ProduitsBonLivraison.hbm.xml" />
     <EmbeddedResource Include="Hibernates\Depot.hbm.xml">
       <SubType>Designer</SubType>

@@ -19,6 +19,15 @@
                                 <h3 class="bold">{{FicheClient.SommeDue}} F</h3>
 
                                 <button ng-if="(!Profil.IsStockUser)" data-toggle="modal" ng-click="InitPaiement()" data-target="#EffectuerVersement" class="btn green"><i class="icon-money"></i> Effectuer un versement</button>
+                                <br />
+                                <br/>
+                                <div ng-if="(!Profil.IsStockUser)">
+                                    <h4>Solde anterieur</h4>
+                                    <input ng-model="dateAnterieur" placeholder="01/01/2017" type="text" class="m-wrap" />
+                                    <a ng-click="soldeAnterieur(dateAnterieur)" class="btn blue">GO</a>
+                                    <h3 class="bold text-blue">{{soldeAnterieurClient}} FCFA</h3>
+                                </div>
+                                
                             </div>
                         </div>
                     </div>
@@ -28,16 +37,17 @@
             <div class="span9">
                 <div class="tabbable tabbable-custom">
                     <ul class="nav nav-tabs">
-                        <!--<li><a data-target="#journal" data-toggle="tab">Journal</a></li>-->
                         <li class="active"><a data-target="#versements" data-toggle="tab">Versements</a></li>
                         <li><a data-target="#achats" data-toggle="tab">Achats</a></li>
-                        <!--<li><a data-target="#tab_1_3" data-toggle="tab">Produits les plus achetés</a></li>-->
+                        <li><a data-target="#retourProduits" data-toggle="tab">Retour produits</a></li>
                     </ul>
                     <div class="tab-content">
-                        <!--<div class="tab-pane active" id="journal">
-
-                        </div>-->
                         <div class="tab-pane active" id="versements">
+                            <div class="row-fluid">
+                                <div class="span12">
+                                    <a class="btn blue" ng-click="FICHE_ANTERIEURE_CLIENT_DATA()" data-toggle="modal" data-target="#operationsAnterieuresVersement"><i class="icon-archive"></i> Opérations antérieures</a>
+                                </div>
+                            </div>
                             <div class="dataTables_wrapper form-inline" role="grid">
                                 <table class="table table-striped table-bordered table-hover">
                                     <thead>
@@ -52,7 +62,7 @@
                                     </thead>
 
                                     <tbody role="alert" aria-live="polite" aria-relevant="all">
-                                        <tr dir-paginate="paiement in FicheClient.Paiements | itemsPerPage: 20">
+                                        <tr ng-repeat="paiement in FicheClient.Paiements">
                                             <td>{{$index + 1}}</td>
                                             <td>{{paiement.DateCreation | date : 'dd/MM/yyyy HH:mm'}}</td>
                                             <td class="bold">{{paiement.Versement}}</td>
@@ -63,16 +73,21 @@
                                     </tbody>
                                 </table>
 
-                                <div class="row-fluid">
+                                <!--<div class="row-fluid">
                                     <div class="span12">
                                         <div class="dataTables_paginate paging_bootstrap pagination">
                                             <dir-pagination-controls></dir-pagination-controls>
                                         </div>
                                     </div>
-                                </div>
+                                </div>-->
                             </div>
                         </div>
                         <div class="tab-pane" id="achats">
+                            <div class="row-fluid">
+                                <div class="span12">
+                                    <a class="btn blue" ng-click="FICHE_ANTERIEURE_CLIENT_DATA()" data-toggle="modal" data-target="#operationsAnterieuresAchat"><i class="icon-archive"></i> Opérations antérieures</a>
+                                </div>
+                            </div>
                             <div class="dataTables_wrapper form-inline" role="grid">
                                 <table class="table table-striped table-bordered table-hover">
                                     <thead>
@@ -86,28 +101,64 @@
                                     </thead>
 
                                     <tbody role="alert" aria-live="polite" aria-relevant="all">
-                                        <tr dir-paginate="facture in FicheClient.Factures | itemsPerPage: 20">
+                                        <tr ng-repeat="facture in FicheClient.Factures">
                                             <td>{{$index + 1}}</td>
                                             <td>{{facture.DateCreation | date : 'dd/MM/yyyy HH:mm'}}</td>
-                                            <td>{{facture.TotalTtc}}</td>
+                                            <td>{{facture.TotalTtc}} F</td>
                                             <td>{{facture.SessionCaisse.User.Login}}</td>
-                                            <td><a data-toggle="modal" data-target="#detailsFacture" ng-click="DETAILS_FACTURE_CLIENT_DATA(facture)" class="btn mini blue"><i class="icon-info"></i> Détails</a></td>
+                                            <td>
+                                                <a data-toggle="modal" data-target="#detailsFacture" ng-click="DETAILS_FACTURE_CLIENT_DATA(facture)" class="btn mini blue"><i class="icon-info"></i> Détails facture</a>
+                                                <a ng-if="(!Profil.IsUser)" data-toggle="modal" data-target="#retourFacture" ng-click="GetRetourFactureProduits(facture)" class="btn mini red"><i class="icon-arrow-left"></i> Retour produits</a>
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
 
-                                <div class="row-fluid">
+                                <!--<div class="row-fluid">
                                     <div class="span12">
                                         <div class="dataTables_paginate paging_bootstrap pagination">
                                             <dir-pagination-controls></dir-pagination-controls>
                                         </div>
                                     </div>
-                                </div>
+                                </div>-->
                             </div>
                         </div>
-                        <!--<div class="tab-pane" id="tab_1_3">
+                        <div id="retourProduits" class="tab-pane" >
+                            <div class="dataTables_wrapper form-inline" role="grid">
+                                <table class="table table-striped table-bordered table-hover">
+                                    <thead>
+                                        <tr role="row">
+                                            <th role="columnheader"></th>
+                                            <th role="columnheader">Date</th>
+                                            <th role="columnheader">Total TTC</th>
+                                            <th role="columnheader">Retourner par</th>
+                                            <th role="columnheader"></th>
+                                        </tr>
+                                    </thead>
 
-                        </div>-->
+                                    <tbody role="alert" aria-live="polite" aria-relevant="all">
+                                        <tr ng-repeat="retourFacture in FicheClient.RetourFactures">
+                                            <td>{{$index + 1}}</td>
+                                            <td>{{retourFacture.DateCreation | date : 'dd/MM/yyyy HH:mm'}}</td>
+                                            <td>{{retourFacture.TotalTtc}} F</td>
+                                            <td>{{retourFacture.User.Login}}</td>
+                                            <td>
+                                                <a data-toggle="modal" data-target="#detailsRetourFacture" ng-click="DETAILS_RETOUR_FACTURE_CLIENT_DATA(retourFacture)" class="btn mini blue"><i class="icon-info"></i> Détails facture</a>
+                                                <!--<a data-toggle="modal" data-target="#retourFacture" ng-click="GetRetourFactureProduits(facture)" class="btn mini red"><i class="icon-arrow-left"></i> Retour produits</a>-->
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                                <!--<div class="row-fluid">
+                                    <div class="span12">
+                                        <div class="dataTables_paginate paging_bootstrap pagination">
+                                            <dir-pagination-controls></dir-pagination-controls>
+                                        </div>
+                                    </div>
+                                </div>-->
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -170,7 +221,6 @@
     </div>
 </div>
 
-
 <div id="detailsFacture" class="modal hide fade" tabindex="-1" data-width="760" aria-hidden="true">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
@@ -219,6 +269,209 @@
         <div id="footerVente" style="text-align:left">
             <h3>Total : <span class="pull-right text-bold">{{FactureSelect.TotalTtc}} F</span></h3>
         </div>
+        <button type="button" data-dismiss="modal" class="btn">Fermer</button>
+    </div>
+</div>
+
+<div id="detailsRetourFacture" class="modal hide fade" tabindex="-1" data-width="760" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+        <h3>Details retour facture</h3>
+    </div>
+    <div class="modal-body">
+        <div class="row-fluid">
+            <div class="span12 responsive" data-tablet="span6" data-desktop="span12">
+                <div class="title2">{{DetailsRetourFacture.Commentaire}}</div>
+                <div id="detailVente" class="flip-scroll" style="height:250px;">
+                    <table class="table-bordered table-striped table-condensed flip-content">
+                        <thead>
+                            <tr>
+                                <th class="alignleft">DESI.</th>
+                                <th class="aligncenter">QTE</th>
+                                <th class="aligncenter">PU</th>
+                                <th class="aligncenter">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr dir-paginate="retourFactureElem in DetailsRetourFacture.List | itemsPerPage: 8">
+                                <td>{{retourFactureElem.Produit.Libelle}}</td>
+                                <td class="aligncenter">
+                                    <span ng-if="retourFactureElem.TypeColisage == TYPE_VENTE_UNITE_KEY">{{retourFactureElem.Quantite}} {{retourFactureElem.Produit.Unite.Libelle | limitTo : 4}}{{retourFactureElem.Produit.Unite.Libelle.length > 4 ? '.' : ''}}</span>
+                                    <span ng-if="retourFactureElem.TypeColisage == TYPE_VENTE_BLOCK_KEY">{{retourFactureElem.Quantite}} {{retourFactureElem.Produit.Block.Libelle | limitTo : 4}}{{retourFactureElem.Produit.Block.Libelle.length > 4 ? '.' : ''}}</span>
+                                </td>
+                                <td class="aligncenter">
+                                    <span>{{retourFactureElem.PrixUnitaire}}</span>
+                                </td>
+                                <td class="alignright">{{retourFactureElem.MontantTtc}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="row-fluid">
+                        <div class="span12">
+                            <div class="dataTables_paginate paging_bootstrap pagination">
+                                <dir-pagination-controls></dir-pagination-controls>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div id="footerVente" style="text-align:left">
+            <h3>Total : <span class="pull-right text-bold">{{FactureSelect.TotalTtc}} F</span></h3>
+        </div>
+        <button type="button" data-dismiss="modal" class="btn">Fermer</button>
+    </div>
+</div>
+
+<div id="retourFacture" class="modal container hide fade" data-backdrop="static" tabindex="-1" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+        <h3>Retour de produits</h3>
+    </div>
+    <div class="modal-body">
+        <div class="row-fluid">
+            <div class="span12">
+                <div>
+                    <input ng-model="Data.Commentaire" class="m-wrap span12" type="text" placeholder="Commentaire" />
+                </div>
+                <div class="dataTables_wrapper form-inline" role="grid">
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead>
+                            <tr role="row">
+                                <th role="columnheader">Categorie</th>
+                                <th role="columnheader">Produit</th>
+                                <th role="columnheader">Produits à retourner</th>
+                                <th role="columnheader">Quantité existante</th>
+                            </tr>
+                        </thead>
+
+                        <tbody role="alert" aria-live="polite" aria-relevant="all">
+                            <tr dir-paginate="detailsRetour in DetailsRetourFacturesClient | itemsPerPage: 60">
+                                <td>{{detailsRetour.Produit.Categorie.Libelle}}</td>
+                                <td>{{detailsRetour.Produit.Libelle}}</td>
+                                <td>
+                                    <div class="input-append">
+                                        <input ng-model="detailsRetour.Quantite" class="m-wrap" type="number" min="0" max="{{detailsRetour.QuantiteDisponible}}" required>
+                                        <span ng-if="detailsRetour.TypeColisage == TYPE_VENTE_UNITE_KEY" class="add-on">{{detailsRetour.Produit.Unite.Libelle}}</span>
+                                        <span ng-if="detailsRetour.TypeColisage == TYPE_VENTE_BLOCK_KEY" class="add-on">{{detailsRetour.Produit.Block.Libelle}}</span>
+                                    </div>
+
+                                    <div class="input-append">
+                                        <input ng-model="detailsRetour.PrixUnitaire" class="m-wrap" type="number" placeholder="{{detailsRetour.Produit.Block.Libelle}}" min="0" required readonly>
+                                        <span class="add-on">F</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-append">
+                                        <input ng-model="detailsRetour.QuantiteDisponible" class="m-wrap" type="number" min="0" required readonly>
+                                        <span ng-if="detailsRetour.TypeColisage == TYPE_VENTE_UNITE_KEY" class="add-on">{{detailsRetour.Produit.Unite.Libelle}}</span>
+                                        <span ng-if="detailsRetour.TypeColisage == TYPE_VENTE_BLOCK_KEY" class="add-on">{{detailsRetour.Produit.Block.Libelle}}</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="row-fluid">
+                        <div class="span12">
+                            <div class="dataTables_paginate paging_bootstrap pagination">
+                                <dir-pagination-controls></dir-pagination-controls>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" data-dismiss="modal" class="btn" ng-click="Annuler()">Annuler</button>
+        <button type="button" data-dismiss="modal" class="btn blue" ng-click="RetourFactureClientSend()">Valider</button>
+    </div>
+</div>
+
+<div id="operationsAnterieuresVersement" class="modal hide fade" tabindex="-1" data-width="760" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+        <h3>Details des operations anterieures de versement</h3>
+    </div>
+    <div class="modal-body">
+        <div class="row-fluid">
+            <div class="span12 responsive" data-tablet="span6" data-desktop="span12">
+                <!--<div class="title2">Détails de la note</div>-->
+                <div id="detailVente" class="flip-scroll" style="height:250px;">
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead>
+                            <tr role="row">
+                                <th role="columnheader">N°</th>
+                                <th role="columnheader">Date</th>
+                                <th role="columnheader" class="bold">Versement effectué</th>
+                                <th role="columnheader">Montant perçu</th>
+                                <th role="columnheader">Montant rendu (Monnaie)</th>
+                                <th role="columnheader">Utilisateur</th>
+                            </tr>
+                        </thead>
+
+                        <tbody role="alert" aria-live="polite" aria-relevant="all">
+                            <tr ng-repeat="paiement in FicheClientAnterieure.Paiements">
+                                <td>{{$index + 1}}</td>
+                                <td>{{paiement.DateCreation | date : 'dd/MM/yyyy HH:mm'}}</td>
+                                <td class="bold">{{paiement.Versement}}</td>
+                                <td>{{paiement.MontantPercu}}</td>
+                                <td>{{paiement.Monnaie}}</td>
+                                <td>{{paiement.SessionCaisse.User.Login}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" data-dismiss="modal" class="btn">Fermer</button>
+    </div>
+</div>
+
+<div id="operationsAnterieuresAchat" class="modal hide fade" tabindex="-1" data-width="760" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+        <h3>Details des operations anterieures de achat</h3>
+    </div>
+    <div class="modal-body">
+        <div class="row-fluid">
+            <div class="span12 responsive" data-tablet="span6" data-desktop="span12">
+                <!--<div class="title2">Détails de la note</div>-->
+                <div id="detailVente" class="flip-scroll" style="height:250px;">
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead>
+                            <tr role="row">
+                                <th role="columnheader"></th>
+                                <th role="columnheader">Date</th>
+                                <th role="columnheader">Total TTC</th>
+                                <th role="columnheader">Créer par</th>
+                                <th role="columnheader"></th>
+                            </tr>
+                        </thead>
+
+                        <tbody role="alert" aria-live="polite" aria-relevant="all">
+                            <tr ng-repeat="facture in FicheClientAnterieure.Factures">
+                                <td>{{$index + 1}}</td>
+                                <td>{{facture.DateCreation | date : 'dd/MM/yyyy HH:mm'}}</td>
+                                <td>{{facture.TotalTtc}} F</td>
+                                <td>{{facture.SessionCaisse.User.Login}}</td>
+                                <td>
+                                    <a data-toggle="modal" data-target="#detailsFacture" ng-click="DETAILS_FACTURE_CLIENT_DATA(facture)" class="btn mini blue"><i class="icon-info"></i> Détails facture</a>
+                                    <a ng-if="(!Profil.IsUser)" data-toggle="modal" data-target="#retourFacture" ng-click="GetRetourFactureProduits(facture)" class="btn mini red"><i class="icon-arrow-left"></i> Retour produits</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
         <button type="button" data-dismiss="modal" class="btn">Fermer</button>
     </div>
 </div>

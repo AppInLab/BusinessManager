@@ -14,5 +14,7 @@ namespace BusinessEngine.DataModel
         public static string PRIVILEGE_ADMIN_KEY = "_ADMIN_";
         public static string PRIVILEGE_USTOCK_KEY = "_USTOCK_";
         public static string PRIVILEGE_USER_KEY = "_USER_";
+
+        public static string FOURNISSEUR_RETOUR_FACTURE_CLIENT = "RETOUR_FACTURE_CLIENT";
     }
 }

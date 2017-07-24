@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="BusinessEngine.Models" assembly="BusinessEngine">
+  <class name="RetourFacturesClient" table="RetourFacturesClient" lazy="false">
+    
+    <id name="Id">
+      <column name="Id"/>
+      <generator class="native"/>
+    </id>
+
+    <property name="DateCreation">
+      <column name="DateCreation"/>
+    </property>
+
+    <property name="Commentaire">
+      <column name="Commentaire"/>
+    </property>
+    
+    <many-to-one name ="FacturesClient" lazy="false" class ="FacturesClient" column="FacturesClient"/>
+    <many-to-one name ="User" lazy="false" class ="User" column="User"/>
+  </class>
+</hibernate-mapping>

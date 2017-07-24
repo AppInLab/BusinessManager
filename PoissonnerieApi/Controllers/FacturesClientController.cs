@@ -111,6 +111,44 @@ namespace PoissonnerieApi.Controllers
             return responseData;
         }
 
+        // GET api/facturesclient
+        public object GetDetailsRetourFacture(long detailsRetourFacture)
+        {
+            ResponseData responseData;
+            try
+            {
+                var listDetailsRetourFacture = DataManager.GetList<DetailsRetourFacturesClient>("RetourFacturesClient", detailsRetourFacture);
+                string commentaire = "";
+                foreach (var facture in listDetailsRetourFacture)
+                {
+                    var montantHt = facture.PrixUnitaire * facture.Quantite;
+                    var montantTva = (facture.Tva / 100) * montantHt;
+                    var montantTtc = montantHt + montantTva;
+
+                    //facture.TotalHt += montantHt;
+                    //facture.TotalTva += montantTva;
+                    facture.MontantTtc = montantTtc;
+
+                    if (facture.RetourFacturesClient != null)
+                    {
+                        commentaire = facture.RetourFacturesClient.Commentaire;
+                    }
+                }
+
+                var data = new Dictionary<string, object>();
+                data["List"] = listDetailsRetourFacture;
+                data["Commentaire"] = commentaire;
+
+                responseData = ResponseData.GetSuccess(data);
+            }
+            catch (Exception ex)
+            {
+                responseData = ResponseData.GetError(ex.Message);
+            }
+
+            return responseData;
+        }
+
         public object Post([FromBody]JToken data)
         {
             ResponseData responseData;
@@ -222,7 +260,7 @@ namespace PoissonnerieApi.Controllers
                         //Recuperer tous les achats du client
                         var sommeFacturesClient = DataManager.GetSumFacturesParClients(facturesClient.Client.Id);
                         //Recuperer tous les versements du client
-                        var sommeVersementClient = DataManager.GetSumPaiementParCLient(facturesClient.Client.Id);
+                        var sommeVersementClient = DataManager.GetSumPaiementParClient(facturesClient.Client.Id);
                         //Faire la difference pour obetenir la somme dû
                         facturesClient.SommeDue = sommeFacturesClient - sommeVersementClient;
                     }

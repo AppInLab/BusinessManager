@@ -13,6 +13,7 @@ namespace BusinessEngine.Models
         virtual public string Commentaire { get; set; }
         virtual public Fournisseur Fournisseur { get; set; }
         virtual public CommandesFournisseur CommandesFournisseur { get; set; }
+        virtual public RetourFacturesClient RetourFacturesClient { get; set; }
         virtual public bool MarquerRecu { get; set; }//Validation
 
         //--Pas utilisé dans la DB

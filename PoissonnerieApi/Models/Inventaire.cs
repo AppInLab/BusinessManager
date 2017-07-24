@@ -29,6 +29,8 @@ namespace PoissonnerieApi.Models
         //StockPhysiqueResteUnite - StockFinalResteUnite
         public decimal StockDiffResteUnite { get; set; }
 
+        public List<DetailsFacturesClient> DetailsFactureClient { get; set; }
+
         public bool IsVendu { get; set; }
 
     }

@@ -2,6 +2,7 @@
 using BusinessEngine.Models;
 using Newtonsoft.Json.Linq;
 using PoissonnerieApi.Models;
+using PoissonnerieApi.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -59,8 +60,40 @@ namespace PoissonnerieApi.Controllers
             return responseData;
         }
 
+        public object GetSoldeAnterieurClient(int client, string dateAnterieur)
+        {
+            ResponseData responseData;
+            try
+            {
+                var stringToDate = Helper.parseDateWithFrenchCulture(dateAnterieur);
+                stringToDate.AddDays(1);//Prendre en compte la date d'aujoud'hui
+
+                var _client = DataManager.Get<Client>(client);
+
+                //Recuperer tous les achats du client
+                var sommeFacturesClient = DataManager.GetSumFacturesParClients(_client.Id, stringToDate);
+
+                //Recuperer tous les retours du client
+                var sommeRetourFacturesClient = DataManager.GetSumRetourFacturesParClients(_client.Id, stringToDate);
+
+                //Recuperer tous les versements du client
+                var sommeVersementClient = DataManager.GetSumPaiementParClient(_client.Id, stringToDate);
+
+                //Faire la difference pour obetenir la somme dû
+                var sommeDue = sommeFacturesClient - sommeVersementClient - sommeRetourFacturesClient;
+
+                responseData = ResponseData.GetSuccess(sommeDue);
+            }
+            catch (Exception ex)
+            {
+                responseData = ResponseData.GetError(ex.Message);
+            }
+
+            return responseData;
+        }
+
         // GET api/clients/5
-        public object GetFicheClient(int client)
+        public object GetFicheClient(int client, bool anterieure = false)
         {
             ResponseData responseData;
             try
@@ -71,20 +104,35 @@ namespace PoissonnerieApi.Controllers
                 ficheClient.Client = _client;
                 //Recuperer tous les achats du client
                 var sommeFacturesClient = DataManager.GetSumFacturesParClients(_client.Id);
+
+                //Recuperer tous les retours du client
+                var sommeRetourFacturesClient = DataManager.GetSumRetourFacturesParClients(_client.Id);
+                
                 //Recuperer tous les versements du client
-                var sommeVersementClient = DataManager.GetSumPaiementParCLient(_client.Id);
+                var sommeVersementClient = DataManager.GetSumPaiementParClient(_client.Id);
+                
                 //Faire la difference pour obetenir la somme dû
-                ficheClient.SommeDue = sommeFacturesClient - sommeVersementClient;
+                ficheClient.SommeDue = sommeFacturesClient - sommeVersementClient - sommeRetourFacturesClient;
 
                 //Recuperer la liste des 100 derniers versements
-                ficheClient.Paiements = DataManager.GetListPaiementsClientSansSoldeInitial(_client.Id);
+                int max = 0;//Toute la liste
+                if (!anterieure)
+                    max = 100;
+
+                ficheClient.Paiements = DataManager.GetListPaiementsClientSansSoldeInitial(_client.Id, max);
                 foreach (var p in ficheClient.Paiements)
                     p.Monnaie = p.MontantPercu - p.Versement;
 
-                ficheClient.Factures = DataManager.GetListFacturesClient(_client.Id);
+                ficheClient.Factures = DataManager.GetListFacturesClient(_client.Id, max);
                 foreach (var facture in ficheClient.Factures)
                 {
                     facture.TotalTtc = DataManager.GetSumFactures(facture.Id);
+                }
+
+                ficheClient.RetourFactures = DataManager.GetListRetourFacturesClient(_client.Id);
+                foreach (var retour in ficheClient.RetourFactures)
+                {
+                    retour.TotalTtc = DataManager.GetSumRetourFactures(retour.Id);
                 }
 
                 responseData = ResponseData.GetSuccess(ficheClient);

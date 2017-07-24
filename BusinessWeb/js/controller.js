@@ -961,8 +961,29 @@ function ($rootScope, $scope, $http, $routeParams) {
 
     $rootScope.PageName = "Fiche client";
     $scope.idClient = $routeParams.client;
+    $scope.Data = {};
+    //$scope.dateOperation = "";
+    $scope.dateAnterieur = "";
+    $scope.soldeAnterieurClient = 0;
 
     if (isNaN($scope.idClient)) window.location = "#/Home";
+
+    $scope.soldeAnterieur = function (dateAnterieur) {
+        $http.get($rootScope.ServerURL + "Clients?client=" + $scope.idClient + "&dateAnterieur=" + dateAnterieur)
+        .success(function (response) {
+            console.log(response);
+            if (response.ResponseCode == 0) {
+                $scope.soldeAnterieurClient = response.Data;
+            } else {//Error
+                console.log(response);
+                $rootScope.Alert(response.Message);
+            }
+        })
+        .error(function (response) {
+            console.log(response);
+            $rootScope.Alert($rootScope.NetworkError);
+        });
+    }
 
     $scope.InitPaiement = function () {
         $scope.Paiement = {};
@@ -976,6 +997,23 @@ function ($rootScope, $scope, $http, $routeParams) {
             console.log(response);
             if (response.ResponseCode == 0) {
                 $scope.FicheClient = response.Data;
+            } else {//Error
+                console.log(response);
+                $rootScope.Alert(response.Message);
+            }
+        })
+        .error(function (response) {
+            console.log(response);
+            $rootScope.Alert($rootScope.NetworkError);
+        });
+    }
+
+    $scope.FICHE_ANTERIEURE_CLIENT_DATA = function () {
+        $http.get($rootScope.ServerURL + "Clients?client=" + $scope.idClient + "&anterieure=true")
+        .success(function (response) {
+            console.log(response);
+            if (response.ResponseCode == 0) {
+                $scope.FicheClientAnterieure = response.Data;
             } else {//Error
                 console.log(response);
                 $rootScope.Alert(response.Message);
@@ -1007,6 +1045,26 @@ function ($rootScope, $scope, $http, $routeParams) {
         });
     }
 
+    $scope.DETAILS_RETOUR_FACTURE_CLIENT_DATA = function (facture) {
+        $scope.DetailsFacture = {};
+        $scope.FactureSelect = facture;
+
+        $http.get($rootScope.ServerURL + "FacturesClient?detailsRetourFacture=" + facture.Id)
+        .success(function (response) {
+            console.log(response);
+            if (response.ResponseCode == 0) {
+                $scope.DetailsRetourFacture = response.Data;
+            } else {//Error
+                console.log(response);
+                $rootScope.Alert(response.Message);
+            }
+        })
+        .error(function (response) {
+            console.log(response);
+            $rootScope.Alert($rootScope.NetworkError);
+        });
+    }
+
     $scope.SendData = function () {
         $http.post($rootScope.ServerURL + "Paiements", $scope.Paiement)
         .success(function (response) {
@@ -1015,6 +1073,45 @@ function ($rootScope, $scope, $http, $routeParams) {
                 $scope.FICHE_CLIENT_DATA();
 
                 //Imprimer le reçu du versement
+            } else {//Error
+                console.log(response);
+                $rootScope.Alert(response.Message);
+            }
+        })
+        .error(function (response) {
+            console.log(response);
+            $rootScope.Alert($rootScope.NetworkError);
+        });
+    }
+
+    //RETOUR PRODUITS 
+    $scope.GetRetourFactureProduits = function (facture) {
+        $http.get($rootScope.ServerURL + "RetourFacturesClient?facture="+facture.Id)
+        .success(function (response) {
+            console.log(response);
+            if (response.ResponseCode == 0) {
+                $scope.DetailsRetourFacturesClient = response.Data;
+                $scope.Data.DetailsRetourFacturesClient = $scope.DetailsRetourFacturesClient;
+                $scope.Data.UserId = $scope.Profil.Id;
+                $scope.Data.FactureClientId = facture.Id;
+            } else {//Error
+                console.log(response);
+                $rootScope.Alert(response.Message);
+            }
+        })
+        .error(function (response) {
+            console.log(response);
+            $rootScope.Alert($rootScope.NetworkError);
+        });
+    }
+
+    $scope.RetourFactureClientSend = function () {
+        $http.post($rootScope.ServerURL + "RetourFacturesClient", $scope.Data)
+        .success(function (response) {
+            console.log(response);
+            if (response.ResponseCode == 0) {
+                $scope.Data = {};
+                $scope.FICHE_CLIENT_DATA();
             } else {//Error
                 console.log(response);
                 $rootScope.Alert(response.Message);
@@ -2068,7 +2165,7 @@ function ($rootScope, $scope, $http) {
         });
     }
 
-    $scope.CaisseInventairePhysique = null;
+    $scope.CaisseInventairePhysique = null; 
     $scope.GetProduitsPourInventairePhysique = function (caisse) {
         $scope.CaisseInventairePhysique = caisse;
 
@@ -2302,6 +2399,10 @@ function ($rootScope, $scope, $http, $routeParams) {
             console.log(response);
             $rootScope.Alert($rootScope.NetworkError);
         });
+    }
+
+    $scope.detailsProduits = function (inventaire) {
+        $scope.detailsFactureClient = inventaire.DetailsFactureClient;
     }
 
     $rootScope.INVENTAIRE_DATA();
