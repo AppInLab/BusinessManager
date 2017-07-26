@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="BusinessEngine.Models" assembly="BusinessEngine">
+  <class name="InfosFacture" table="InfosFacture" lazy="false">
+    <id name="Id">
+      <column name="Id"/>
+      <generator class="native"/>
+    </id>
+    
+    <property name="Titre">
+      <column name="Titre"/>
+    </property>
+    
+    <property name="Adresse">
+      <column name="Adresse"/>
+    </property>
+    
+    <property name="Ligne1">
+      <column name="Ligne1"/>
+    </property>
+
+    <property name="Ligne2">
+      <column name="Ligne2"/>
+    </property>
+
+    <property name="Ligne3">
+      <column name="Ligne3"/>
+    </property>
+
+    <property name="Message1">
+      <column name="Message1"/>
+    </property>
+
+    <property name="Message2">
+      <column name="Message2"/>
+    </property>
+    
+    <property name="Message3">
+      <column name="Message3"/>
+    </property>
+
+  </class>
+</hibernate-mapping>

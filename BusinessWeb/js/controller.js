@@ -436,11 +436,13 @@ function ($rootScope, $scope, $http, $location, $cookies, $cookieStore, $routePa
     //Start Connexion-------------------------------
     $rootScope.ConnexionSuccess = false;
     $rootScope.Profil = {};
+    $rootScope.FactureData = {};
 
     $rootScope.CheckConnexionState = function () {
         if ($cookies.ConnexionSuccess && !$rootScope.ConnexionSuccess) {
             $rootScope.ConnexionSuccess = $cookies.ConnexionSuccess;
             $rootScope.Profil = JSON.parse($cookies.Profil);
+            $rootScope.FactureData = JSON.parse($cookies.FactureData);
             $rootScope.CheckHauth();
         }
     }
@@ -452,7 +454,10 @@ function ($rootScope, $scope, $http, $location, $cookies, $cookieStore, $routePa
             if (response.ResponseCode == 0) {
                 $rootScope.ConnexionSuccess = $cookies.ConnexionSuccess;
                 $cookies.Profil = JSON.stringify(response.Data);
+                $cookies.FactureData = JSON.stringify(response.Sender);
+
                 $rootScope.Profil = JSON.parse($cookies.Profil);
+                $rootScope.FactureData = JSON.parse($cookies.FactureData);
             } else if (response.ResponseCode == -2) {
                 $rootScope.Deconnexion();
             }
@@ -474,6 +479,7 @@ function ($rootScope, $scope, $http, $location, $cookies, $cookieStore, $routePa
                 if (response.ResponseCode == 0) {
                     $cookies.ConnexionSuccess = true;
                     $cookies.Profil = JSON.stringify(response.Data);
+                    $cookies.FactureData = JSON.stringify(response.Sender);
                     window.location = "index.html";
                 } else {
                     $rootScope.Alert(response.Message);
@@ -487,6 +493,7 @@ function ($rootScope, $scope, $http, $location, $cookies, $cookieStore, $routePa
     $rootScope.Deconnexion = function () {
         $cookieStore.remove('ConnexionSuccess');
         $cookieStore.remove('Profil');
+        $cookieStore.remove('InfosFacture');
         window.location = "index.html";
     }
 

@@ -3,11 +3,11 @@
         <!-- <h1>Invoice</h1> -->
         <span><img alt="" src="{{LienPoisson}}"></span>
         <address>
-            <p style="font-weight:bold">POISSONNERIE LA GLOIRE DE L'INDENIE</p>
-            <p>Abengourou - Marché de cafétou</p>
-            <p>(225) 59 33 17 99</p>
-            <p>(225) 09 61 81 41</p>
-            <p>(225) 01 19 27 17</p>
+            <p style="font-weight:bold">{{FactureData.Titre}}</p>
+            <p>{{FactureData.Adresse}}</p>
+            <p>{{FactureData.Ligne1}}</p>
+            <p>{{FactureData.Ligne2}}</p>
+            <p>{{FactureData.Ligne3}}</p>
         </address>
     </header>
     <article>
@@ -65,10 +65,10 @@
         </table>
     </article>
     <aside>
-        <!-- <h1><span>Additional Notes</span></h1> -->
         <div>
-            <p>Merci de votre visite</p>
-            <p>A bientôt</p>
+            <p>{{FactureData.Message1}}</p>
+            <p>{{FactureData.Message2}}</p>
+            <p>{{FactureData.Message3}}</p>
         </div>
     </aside>
 </div>

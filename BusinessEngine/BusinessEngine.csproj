@@ -96,6 +96,7 @@
     <Compile Include="Models\Depot.cs" />
     <Compile Include="Models\TypeTransaction.cs" />
     <Compile Include="Models\User.cs" />
+    <Compile Include="Models\InfosFacture.cs" />
     <Compile Include="Models\VersementBanque.cs" />
     <Compile Include="Models\Paiement.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -105,6 +106,7 @@
     <Content Include="ExternalDLLs\MySql.Data.dll" />
     <Content Include="ExternalDLLs\Newtonsoft.Json.dll" />
     <Content Include="ExternalDLLs\NHibernate.dll" />
+    <EmbeddedResource Include="Hibernates\InfosFacture.hbm.xml" />
     <EmbeddedResource Include="Hibernates\DetailsRetourFacturesClient.hbm.xml" />
     <EmbeddedResource Include="Hibernates\RetourFacturesClient.hbm.xml" />
     <EmbeddedResource Include="Hibernates\StockPhysique.hbm.xml" />

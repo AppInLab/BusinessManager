@@ -195,17 +195,6 @@ namespace PoissonnerieApi.Controllers
                         {
                             detailsFacture.QuantiteBlock = detailsFacture.Quantite;
                         }
-
-                        //if (detailsFacture.TypeColisage == Constants.TYPE_BLOCK_KEY)
-                        //{
-                        //    detailsFacture.QuantiteBlock = detailsFacture.Quantite;
-                        //}
-                        //else if (detailsFacture.TypeColisage == Constants.TYPE_UNITE_KEY)
-                        //{
-                        //    detailsFacture.QuantiteResteUnite = detailsFacture.Quantite;
-                        //}
-                        //else
-                        //    detailsFacture.QuantiteBlock = detailsFacture.Quantite;
                     }
 
                     var produitsVendus = CalculerQuantiteSortieDuStockProduits(produit, facturesClientVendu);

@@ -1,5 +1,6 @@
 ﻿using BusinessEngine.DataModel;
 using BusinessEngine.Manager;
+using BusinessEngine.Models;
 using Newtonsoft.Json.Linq;
 using PoissonnerieApi.Models;
 using System;
@@ -38,7 +39,9 @@ namespace PoissonnerieApi.Controllers
                         else if (userFound.Privilege.Code == Constants.PRIVILEGE_USER_KEY)
                             userFound.IsUser = true;
 
-                        responseData = ResponseData.GetSuccess(userFound);
+                        var infosFacture = DataManager.Get<InfosFacture>(1);
+
+                        responseData = ResponseData.GetSuccess(userFound, infosFacture);
                     }
                     else
                     {

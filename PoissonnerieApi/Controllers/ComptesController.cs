@@ -80,7 +80,9 @@ namespace PoissonnerieApi.Controllers
                         else if (user.Privilege.Code == Constants.PRIVILEGE_USER_KEY)
                             user.IsUser = true;
 
-                        responseData = ResponseData.GetSuccess(user);
+                        var infosFacture = DataManager.Get<InfosFacture>(1);
+
+                        responseData = ResponseData.GetSuccess(user, infosFacture);
                     }
                     else
                         responseData = ResponseData.GetError("Compte inactif", -2);
