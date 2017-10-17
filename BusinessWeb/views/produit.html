@@ -38,8 +38,7 @@
                         <td>{{produitItem.PrixVenteUniteParDefaut}}</td>
                         <td>{{produitItem.PrixVenteBlockParDefaut}}</td>
                         <td>
-                            <button ng-click="Modifier(produitItem)" data-toggle="modal" data-target="#produit" type="button" class="btn mini default"><i class="icon-edit"></i></button>
-                            <button type="button" class="btn mini red"><i class="icon-trash"></i></button>
+                            <button ng-click="Modifier(produitItem)" data-toggle="modal" data-target="#produit" type="button" class="btn mini blue"><i class="icon-edit"></i></button>
                         </td>
                     </tr>
                 </tbody>
@@ -68,7 +67,7 @@
                     <div class="control-group">
                         <label class="control-label">Libelle</label>
                         <div class="controls">
-                            <input name="libelle" type="text" ng-model="Produit.Libelle" class="m-wrap span12" required ng-minlength="3">
+                            <input ng-disabled="IsModification" name="libelle" type="text" ng-model="Produit.Libelle" class="m-wrap span12" required ng-minlength="3">
                         </div>
                     </div>
                 </div>
@@ -86,7 +85,7 @@
                     </div>
                 </div>
 
-                <div class="span6">
+                <div class="span6" ng-if="!IsModification">
                     <div class="control-group">
                         <label class="control-label">Unité</label>
                         <div class="controls">
@@ -98,8 +97,8 @@
                 </div>
             </div>
 
-            <h4 class="form-section text-bold" ng-show="ShowBlock">Colisage </h4>
-            <div class="row-fluid" ng-show="ShowBlock">
+            <h4 ng-if="!IsModification" class="form-section text-bold" ng-show="ShowBlock">Colisage </h4>
+            <div ng-if="!IsModification" class="row-fluid" ng-show="ShowBlock">
                 <div class="span6">
                     <div class="control-group">
                         <label class="control-label">Block</label>

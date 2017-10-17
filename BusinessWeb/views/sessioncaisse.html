@@ -44,7 +44,7 @@
                                 <div class="control-group">
                                     <label class="control-label" style="width:initial;">Transaction en espèce </label>
                                     <div class="controls">
-                                        <span class="text bold">{{SessionCaisseUser.TotalPaiement}}</span>
+                                        <span class="text bold"> - <!--{{SessionCaisseUser.TotalPaiement}}--></span>
                                     </div>
                                 </div>
                             </div>
@@ -67,7 +67,7 @@
                                 <div class="control-group">
                                     <label class="control-label bold text-green" style="width:initial;">Total espèce theorique </label>
                                     <div class="controls">
-                                        <span class="text bold text-green">{{SessionCaisseUser.TotalEspeceTheorique}}</span>
+                                        <span class="text bold text-green"> - <!--{{SessionCaisseUser.TotalEspeceTheorique}}--></span>
                                     </div>
                                 </div>
                             </div>
@@ -80,7 +80,7 @@
                                 <div class="control-group">
                                     <label class="control-label bold text-blue" style="width:initial;">Total espèce fermeture </label>
                                     <div class="controls">
-                                        <span class="text bold text-blue">{{SessionCaisseUser.TotalEspeceFermeture}}</span>
+                                        <span class="text bold text-blue"> - <!--{{SessionCaisseUser.TotalEspeceFermeture}}--></span>
                                     </div>
                                 </div>
                             </div>
@@ -118,7 +118,7 @@
                                 <td>{{$index + 1}}</td>
                                 <td>{{journal.Date | date : 'dd/MM/yyyy HH:mm'}}</td>
                                 <td>{{journal.Operation}} <span ng-if="journal.MontantFactureAvecVersement > 0"> de [<span class="text-bold">{{journal.MontantFactureAvecVersement}}</span>]</span></td>
-                                <td class="bold">{{journal.Montant}} F</td>
+                                <td class="bold"> - <!--{{journal.Montant}} F--></td>
                                 <td>{{journal.Owner.NomComplet}}</td>
                             </tr>
                         </tbody>
@@ -140,7 +140,7 @@
     <div class="modal-body">
         <div class="row-fluid">
             <div class="span4">
-                <div class="control-group">
+                <div class="control-group" ng-if="Profil.IsSu">
                     <label class="control-label">Total espèce théorique</label>
                     <div class="controls">
                         <input type="text" ng-model="SessionCaisseUser.TotalEspeceTheorique" class="m-wrap span12 bold" disabled>
@@ -157,7 +157,7 @@
                 </div>
             </div>
 
-            <div class="span4">
+            <div class="span4" ng-if="Profil.IsSu">
                 <div class="control-group">
                     <label class="control-label">Différence</label>
                     <div class="controls">

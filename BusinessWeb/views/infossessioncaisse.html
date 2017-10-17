@@ -31,8 +31,14 @@
                         <td>{{sessionItem.DateCloture | date : 'dd/MM/yyyy HH:mm'}}</td>
                         <td>{{sessionItem.FondDeCaisse}}</td>
                         <td><a data-toggle="modal" data-target="#detailssortiedecaisse" ng-click="GetSortieDeCaisse(sessionItem.Id)" ng-if="sessionItem.SortiesDeCaisse > 0" href="" class="icon-info-sign text-error"></a> {{sessionItem.SortiesDeCaisse}}</td>
-                        <td>{{sessionItem.TotalPaiement}}</td>
-                        <td>{{sessionItem.TotalEspeceTheorique}}</td>
+                        <td>
+                            <span ng-if="sessionItem.IsClosed">{{sessionItem.TotalPaiement}}</span>
+                            <span ng-if="!sessionItem.IsClosed">-</span>
+                        </td>
+                        <td>
+                            <span ng-if="sessionItem.IsClosed">{{sessionItem.TotalEspeceTheorique}}</span>
+                            <span ng-if="!sessionItem.IsClosed">-</span>
+                        </td>
                         <td class="bold">{{sessionItem.TotalEspeceFermeture}}</td>
                         <td>{{sessionItem.DifferenceTheoriqueEtFermeture}}</td>
                         <td>

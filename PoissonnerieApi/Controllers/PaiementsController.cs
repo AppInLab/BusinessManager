@@ -43,6 +43,9 @@ namespace PoissonnerieApi.Controllers
 
                 DataManager.Delete(paiement);
                 //Recuperer la session en cours
+                //TODO : Faire la mise à jour de la session de caisse 
+                //Si la session est cloturée.
+
                 return ResponseData.GetSuccess("OK");
             }
             catch (Exception ex)

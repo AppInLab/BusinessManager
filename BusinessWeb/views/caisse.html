@@ -22,8 +22,14 @@
                         <td>{{caisseItem.DateOuverture | date : 'dd/MM/yyyy HH:mm'}}</td>
                         <td>{{caisseItem.DateCloture | date : 'dd/MM/yyyy HH:mm'}}</td>
                         <td><a data-toggle="modal" data-target="#detailssortiedecaisse" ng-click="GetSortieDeCaisse(caisseItem.Id)" ng-if="caisseItem.SortieDeCaisseTotal > 0" href="" class="icon-info-sign text-error"></a> {{caisseItem.SortieDeCaisseTotal}}</td>
-                        <td class="bold">{{caisseItem.EntreeDeCaisseTotal}}</td>
-                        <td class="bold">{{caisseItem.MontantTotalEnCaisse}}</td>
+                        <td class="bold">
+                            <span ng-if="(caisseItem.IsClosed) || (Profil.IsSu)">{{caisseItem.EntreeDeCaisseTotal}} F</span> 
+                            <span ng-if="(!caisseItem.IsClosed) && (!Profil.IsSu)" class="bold">-</span>
+                        </td>
+                        <td class="bold">
+                            <span ng-if="(caisseItem.IsClosed) || (Profil.IsSu)">{{caisseItem.MontantTotalEnCaisse}} F</span> 
+                            <span ng-if="(!caisseItem.IsClosed) && (!Profil.IsSu)" class="bold">-</span>
+                        </td>
                         <td>
                             <span ng-if="!caisseItem.IsClosed" style="color:green;" class="bold">Ouverte</span>
                             <span ng-if="caisseItem.IsClosed" style="color:red;" class="bold">Cloturée</span>

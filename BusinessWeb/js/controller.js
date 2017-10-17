@@ -662,6 +662,7 @@ function ($rootScope, $scope, $http) {
     
     $scope.Modifier = function (data) {
         $scope.Produit = data;
+        $scope.IsModification = true;
         angular.copy($scope.Produits, $scope.CopyOfProduits);
 
         for (var i = 0; i < $scope.Unites.length; i++) {
@@ -671,6 +672,7 @@ function ($rootScope, $scope, $http) {
     }
 
     $scope.Annuler = function () {
+        $scope.IsModification = false;
         $scope.Produits = angular.copy($scope.CopyOfProduits);
     }
 	
@@ -2311,7 +2313,7 @@ function ($rootScope, $scope, $http, $routeParams) {
     $scope.DelItemAction = function (journal, session) {
         $scope.DelItem = journal;
     }
-
+    //
     //JOURNAL 
     $scope.Del = function () {
         if ($scope.DelItem.OpCode === "OP_FACTURE") {

@@ -2,6 +2,7 @@
 using BusinessEngine.DataModels;
 using BusinessEngine.Manager;
 using BusinessEngine.Models;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using PoissonnerieApi.Models;
 using System;
@@ -59,8 +60,12 @@ namespace PoissonnerieApi.Controllers
                     return ResponseData.GetError("L'information que vous essayez de supprimer l'existe pas.");
                 }
 
+                var log = JsonConvert.SerializeObject(data);
+
                 //On recupere tous les versments effectué sur cette facture
                 var paiements = DataManager.GetList<Paiement>("FacturesClient", data.Id);
+                log += JsonConvert.SerializeObject(paiements);
+
                 foreach (var p in paiements)
                 {
                     DataManager.Delete(p);
@@ -68,12 +73,17 @@ namespace PoissonnerieApi.Controllers
 
                 //On recupere tous les details de la facture
                 var detailsFacturesClient = DataManager.GetList<DetailsFacturesClient>("FacturesClient", data.Id);
+                log += JsonConvert.SerializeObject(detailsFacturesClient);
                 foreach (var d in detailsFacturesClient)
                 {
                     DataManager.Delete(d);
                 }
 
                 DataManager.Delete(data);
+
+                //TODO : Faire la mise à jour de la session de caisse 
+                //Si la session est cloturée.
+
                 //Recuperer la session en cours
                 return ResponseData.GetSuccess("OK");
             }
